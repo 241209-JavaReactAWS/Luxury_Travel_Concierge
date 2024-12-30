@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserSevice {
+public class UserService {
     private final UserDAO userDAO;
 
     @Autowired
-    public UserSevice(UserDAO userDAO) {
+    public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
