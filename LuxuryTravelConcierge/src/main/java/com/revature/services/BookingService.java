@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,6 +19,10 @@ public class BookingService {
 
     public List<Booking> getAllBookings() {
         return bookingDAO.findAll();
+    }
+
+    public Optional<Booking> getBookingById(Long id) {
+        return bookingDAO.findById(id);
     }
 
     public Booking createBooking(Booking booking) {
