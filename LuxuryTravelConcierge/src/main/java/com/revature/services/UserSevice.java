@@ -22,7 +22,7 @@ public class UserSevice {
     }
 
     public Optional<User> findUserByUsername(String username){
-        return userDAO.findUserbyUsername(username);
+        return userDAO.findUserByUsername(username);
     }
 
     // register user
@@ -33,7 +33,7 @@ public class UserSevice {
         if(user.getUsername().trim().isEmpty()){
             throw new UsernameException();
         }
-        if(userDAO.findUserbyUsername(user.getUsername()).isPresent()){
+        if(userDAO.findUserByUsername(user.getUsername()).isPresent()){
             throw new UsernameExistsException();
         }
         if(user.getEmail().isEmpty()){
