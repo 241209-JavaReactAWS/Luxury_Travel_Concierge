@@ -1,8 +1,6 @@
-package com.revature.LuxuryTravelConcierge.Models;
+package com.revature.models;
 
 import jakarta.persistence.*;
-import org.hibernate.boot.registry.selector.spi.StrategyCreator;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 @Entity
 @Table(name="room",schema="public")

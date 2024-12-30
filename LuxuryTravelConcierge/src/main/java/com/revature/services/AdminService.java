@@ -1,15 +1,14 @@
-package com.revature.LuxuryTravelConcierge.Services;
+package com.revature.services;
 
 
-import com.revature.LuxuryTravelConcierge.DAOs.AdminDAO;
+import com.revature.DAOS.AdminDAO;
 
-import com.revature.LuxuryTravelConcierge.Models.Admin;
+import com.revature.models.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service

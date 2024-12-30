@@ -1,6 +1,6 @@
-package com.revature.LuxuryTravelConcierge.DAOs;
+package com.revature.DAOS;
 
-import com.revature.LuxuryTravelConcierge.Models.Admin;
+import com.revature.models.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

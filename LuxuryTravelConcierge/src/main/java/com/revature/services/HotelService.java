@@ -1,7 +1,7 @@
-package com.revature.LuxuryTravelConcierge.Services;
+package com.revature.services;
 
-import com.revature.LuxuryTravelConcierge.DAOs.HotelDAO;
-import com.revature.LuxuryTravelConcierge.Models.Hotel;
+import com.revature.DAOS.HotelDAO;
+import com.revature.models.Hotel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

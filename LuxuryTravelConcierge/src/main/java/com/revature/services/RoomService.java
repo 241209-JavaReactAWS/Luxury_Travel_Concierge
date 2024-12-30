@@ -1,7 +1,7 @@
-package com.revature.LuxuryTravelConcierge.Services;
+package com.revature.services;
 
-import com.revature.LuxuryTravelConcierge.DAOs.RoomDAO;
-import com.revature.LuxuryTravelConcierge.Models.Room;
+import com.revature.DAOS.RoomDAO;
+import com.revature.models.Room;
 
 import java.util.List;
 import java.util.Optional;

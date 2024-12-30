@@ -1,4 +1,4 @@
-package com.revature.LuxuryTravelConcierge.Models;
+package com.revature.models;
 
 import jakarta.persistence.*;
 

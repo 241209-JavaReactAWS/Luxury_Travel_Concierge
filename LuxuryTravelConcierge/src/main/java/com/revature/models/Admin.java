@@ -1,8 +1,7 @@
-package com.revature.LuxuryTravelConcierge.Models;
+package com.revature.models;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
