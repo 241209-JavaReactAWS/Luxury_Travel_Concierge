@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.models.Admin;
+import com.revature.models.Hotel;
 import com.revature.services.AdminService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
@@ -43,7 +45,7 @@ public class AdminController {
         if (possibleAdmin.isPresent()) {
 
             session.setAttribute("username", possibleAdmin.get().getUsername());
-            session.setAttribute("AdminId", possibleAdmin.get().getAdminId());
+            session.setAttribute("adminId", possibleAdmin.get().getAdminId());
 //            session.setAttribute("role", possibleAdmin.get().getRole());
         }
         return possibleAdmin
@@ -57,4 +59,19 @@ public class AdminController {
         session.invalidate();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/hotels")
+    public ResponseEntity<Set<Hotel>> getAllHotelsHandler(HttpSession session){
+        Integer curAdminId = (Integer)session.getAttribute("adminId");
+        if(session.isNew() || curAdminId==null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Set<Hotel> hotels = adminService.getAllOwnedHotelsById(curAdminId);
+
+        return new ResponseEntity<>(hotels, HttpStatus.OK);
+    }
+//    @PostMapping("/hotels")
+//    public ResponseEntity<Set<Hotel>> addHotelHandler(HttpSession session){
+//
+//    }
 }

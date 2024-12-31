@@ -14,6 +14,7 @@ public class Room {
     @Column(name="roomType",nullable = false)
     private String roomType;
 
+
     @ManyToOne
     @JoinColumn(name="hotelId")
     private Hotel hotel;

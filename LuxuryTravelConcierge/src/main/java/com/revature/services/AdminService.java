@@ -4,11 +4,14 @@ package com.revature.services;
 import com.revature.DAOS.AdminDAO;
 
 import com.revature.models.Admin;
+import com.revature.models.Hotel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -31,6 +34,11 @@ public class AdminService {
 
     public List<Admin> getAllAdmins() {
         return adminDAO.findAll();
+    }
+    public Set<Hotel> getAllOwnedHotelsById(int adminId){
+        Optional<Admin> account = adminDAO.findById(adminId);
+        return account.map(Admin::getOwnedHotels)
+                .orElse(null);
     }
 
     public Admin createNewAdmin(Admin admin) {
