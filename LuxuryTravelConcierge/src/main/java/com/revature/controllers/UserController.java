@@ -22,7 +22,7 @@ public class UserController {
     }
 
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity registerUserHandler(@RequestBody User user){
         try{
             User newUser = userService.registerUser(user);
@@ -51,6 +51,20 @@ public class UserController {
         }
         catch(Exception e){
             return ResponseEntity.status(HttpStatus.SEE_OTHER).body(null);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> userLoginHandler(@RequestBody User user){
+        try{
+            User returnedUser = userService.userLogin(user);
+            return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
+        }
+        catch(WrongPasswordException | NoUserFoundException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        catch(Exception e){
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).build();
         }
     }
 }

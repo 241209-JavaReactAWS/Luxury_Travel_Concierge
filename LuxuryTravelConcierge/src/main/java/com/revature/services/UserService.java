@@ -50,4 +50,21 @@ public class UserService {
         }
         return userDAO.save(user);
     }
+
+    // login user
+    public User userLogin(User user){
+        Optional<User> possibleUser = userDAO.findUserByUsername(user.getUsername());
+        if (possibleUser.isEmpty()){
+            throw new NoUserFoundException("No user found");
+        }
+        User returnedUser = possibleUser.get();
+
+        if(returnedUser.getPassword().equals(user.getPassword())){
+            return returnedUser;
+        }
+        else{
+            throw new WrongPasswordException("Wrong password");
+        }
+
+    }
 }
