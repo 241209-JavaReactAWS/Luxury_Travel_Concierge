@@ -1,15 +1,12 @@
 package com.revature.controllers;
 
-import com.revature.exceptions.*;
 import com.revature.models.Review;
 import com.revature.services.ReviewService;
-import com.revature.models.User;
-import com.revature.services.ReviewService;
-import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("reviews")
@@ -22,8 +19,33 @@ public class ReviewController {
     }
 
     @GetMapping("/{id}")
-    public Review getReviewWithReplies(@PathVariable Long id){
-        return reviewService.getReviewWithReplies(id);
+    public ResponseEntity<Review> getReviewWithReplies(@PathVariable Long id){
+        Optional<Review> reviewWithReplies = reviewService.getReviewWithReplies(id);
+        return reviewWithReplies.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).build());
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Review> deleteReview(@PathVariable Long id){
+        boolean isDeleted = reviewService.deleteReview(id);
+        if(isDeleted){
+            return ResponseEntity.ok(null);
+        }else{
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Review> postReview(@RequestBody Review review){
+        Review createdReview = reviewService.createReview(review);
+        return ResponseEntity.ok(createdReview);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody String newBody){
+        Optional<Review> updatedReview = reviewService.updateReview(id, newBody);
+        return updatedReview.map(review -> ResponseEntity.status(201).body(review))
+                .orElseGet(() -> ResponseEntity.status(404).build());
     }
 
 }

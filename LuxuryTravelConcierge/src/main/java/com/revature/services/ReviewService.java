@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -26,20 +27,48 @@ public class ReviewService {
         return replies;
     }
 
-    public Review getReviewWithReplies(Long parentReviewId){
-        Review parentReview = reviewDAO.findById(parentReviewId).orElse(null);
 
-        if( parentReview != null){
-            List<Review> childReviews  = reviewDAO.findByParentReview(parentReview);
+
+    public Optional<Review> getReviewWithReplies(Long parentReviewId){
+        Optional<Review> parentReview = reviewDAO.findById(parentReviewId);
+
+        if( parentReview.isPresent()){
+            List<Review> childReviews  = reviewDAO.findByParentReview(parentReview.get());
             for(Review childReview : childReviews){
                 childReview.setReplies(getReplies(childReview));
             }
 
-            parentReview.setReplies(childReviews);
+            parentReview.ifPresent(review -> review.setReplies(childReviews));
         }
 
         return parentReview;
     }
 
+    public boolean deleteReview(Long reviewId){
+        boolean isDeleted = false;
+        if(getReview(reviewId).isPresent()){
+            reviewDAO.deleteById(reviewId);
+            isDeleted = true;
+        }
+        return isDeleted;
+    }
+
+    public Optional<Review> getReview(Long reviewId){
+        return reviewDAO.findById(reviewId);
+    }
+
+    public Review createReview(Review review){
+        return reviewDAO.save(review);
+    }
+
+    public Optional<Review> updateReview(Long reviewId, String newBody){
+        Optional<Review> updateReview = getReview(reviewId);
+        updateReview.ifPresent(review -> {
+            review.setBody(newBody);
+            reviewDAO.save(review);
+        });
+
+        return updateReview;
+    }
 
 }
