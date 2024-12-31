@@ -3,7 +3,9 @@ package com.revature.controllers;
 import com.revature.models.Admin;
 import com.revature.models.Hotel;
 import com.revature.services.AdminService;
+import com.revature.services.HotelService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +19,12 @@ import java.util.Set;
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
+    private final HotelService hotelService;
 
     @Autowired
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService, HotelService hotelService) {
         this.adminService = adminService;
+        this.hotelService = hotelService;
     }
     @GetMapping
     public ResponseEntity<List<Admin>> getAllAdminsHandler(){
@@ -70,8 +74,29 @@ public class AdminController {
 
         return new ResponseEntity<>(hotels, HttpStatus.OK);
     }
-//    @PostMapping("/hotels")
-//    public ResponseEntity<Set<Hotel>> addHotelHandler(HttpSession session){
-//
-//    }
+
+    @PostMapping("/hotels")
+    public ResponseEntity<Admin> addHotelHandler(HttpSession session,
+                                                      @RequestBody Hotel hotel){
+        Integer curAdminId = (Integer)session.getAttribute("adminId");
+        if(session.isNew()||curAdminId==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
+
+
+        if (targetAdmin.isPresent()){
+            Hotel newHotel = new Hotel();
+            newHotel.setName(hotel.getName());
+            newHotel.setImageUrl(hotel.getImageUrl());
+            newHotel.setLocation(hotel.getLocation());
+            newHotel.setAdmin(targetAdmin.get());
+            Hotel createdHotel = hotelService.createNewHotel(newHotel);
+            Admin newAdmin = adminService.addHotelToAdmin(targetAdmin.get(),createdHotel);
+            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

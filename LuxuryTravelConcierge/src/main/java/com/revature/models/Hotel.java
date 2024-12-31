@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -15,6 +16,7 @@ public class Hotel {
     @Column(name="location",nullable = false)
     private String location;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="adminId")
     private Admin admin;

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.revature.DAOS.BookingDAO;
 import com.revature.models.Booking;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BookingService {
     
     private BookingDAO bookingDAO;

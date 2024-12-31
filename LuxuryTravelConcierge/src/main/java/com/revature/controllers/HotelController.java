@@ -23,8 +23,8 @@ public class HotelController {
         return new ResponseEntity<>(hotelService.getAllHotels(),HttpStatus.OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Hotel> registerHandler(@RequestBody Hotel hotel) {
+
+    public ResponseEntity<Hotel> createHandler(@RequestBody Hotel hotel) {
         Hotel possibleHotel = hotelService.createNewHotel(hotel);
 
         if (possibleHotel == null) {
