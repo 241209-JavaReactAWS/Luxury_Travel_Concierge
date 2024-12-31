@@ -14,6 +14,9 @@ public class Booking {
     //Will use a foreign key to room id later
     private Long roomId;
 
+    //Will need to link this to a user
+    private Long userId;
+
     //Can use SQL TO_Date to convert varchar to dates
     private String checkInDate;
 
@@ -36,6 +39,14 @@ public class Booking {
 
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
+    }
+    
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     
     public String getCheckInDate() {
