@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -21,7 +22,7 @@ public class Admin {
     private String firstName;
     @Column (name="lastName",nullable = false)
     private String lastName;
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "admin")
     private Set<Hotel> ownedHotels;
     private String description;

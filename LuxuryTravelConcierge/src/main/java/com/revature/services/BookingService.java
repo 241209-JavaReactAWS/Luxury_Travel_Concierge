@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.DAOS.BookingDAO;
 import com.revature.models.Booking;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BookingService {
     
     private BookingDAO bookingDAO;
