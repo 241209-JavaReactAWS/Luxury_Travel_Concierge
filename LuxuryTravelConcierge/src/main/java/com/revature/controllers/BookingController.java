@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import com.revature.models.Booking;
 import com.revature.services.BookingService;
 
 @RestController
-@RequestMapping("/booking")
+@RequestMapping("/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -29,9 +30,27 @@ public class BookingController {
 
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Booking> createBookingHandler(@RequestBody Booking booking) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Booking> getBookingByIdHandler(@PathVariable Long id) {
 
+        return ResponseEntity.status(200).body(bookingService.getBookingById(id).get());
+
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Booking>> getBookingsByUserIdHandler(@PathVariable Long userId) {
+
+        return ResponseEntity.ok(bookingService.getBookingsByUserId(userId));
+
+    }
+
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<List<Booking>> getBookingsByRoomIdHandler(@PathVariable Long roomId) {
+        return ResponseEntity.ok(bookingService.getBookingsByRoomId(roomId));
+    }
+
+    @PostMapping()
+    public ResponseEntity<Booking> createBookingHandler(@RequestBody Booking booking) {
 
         Booking actualBooking = bookingService.createBooking(booking);
 
@@ -42,10 +61,21 @@ public class BookingController {
         return ResponseEntity.status(201).body(actualBooking);
     }
 
-    @DeleteMapping("/{bookingId}")
-    public ResponseEntity<Booking> deleteBookingHandler(@PathVariable Long itemId) {
+    @PutMapping("{/id}")
+    public ResponseEntity<Booking> updateBookingHandler(@PathVariable Long id, @RequestBody Booking booking) {
+        if (!bookingService.getBookingById(id).isPresent()) {
+            return ResponseEntity.status(404).build();
+        }
+        booking.setBookingId(id);
+        Booking updatedBooking = bookingService.updateBooking(booking);
+        return ResponseEntity.status(201).body(updatedBooking);
 
-        java.util.Optional<Booking> possibleBooking = bookingService.getBookingById(itemId);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Booking> deleteBookingHandler(@PathVariable Long id) {
+
+        java.util.Optional<Booking> possibleBooking = bookingService.getBookingById(id);
 
         if(possibleBooking.isEmpty()) {
             return ResponseEntity.status(404).build();

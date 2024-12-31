@@ -1,5 +1,6 @@
 package com.revature.models;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +13,13 @@ public class Booking {
     private Long bookingId;
 
     //Will use a foreign key to room id later
+    @OneToOne
+    @JoinColumn(name = "roomId", nullable = false)
     private Long roomId;
 
     //Will need to link this to a user
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     private Long userId;
 
     //Can use SQL TO_Date to convert varchar to dates
@@ -48,7 +53,7 @@ public class Booking {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    
+
     public String getCheckInDate() {
         return checkInDate;
     }
