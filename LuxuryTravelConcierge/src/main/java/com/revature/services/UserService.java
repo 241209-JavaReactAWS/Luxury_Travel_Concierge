@@ -1,20 +1,25 @@
 package com.revature.services;
 
+import com.revature.DAOS.RoomDAO;
 import com.revature.DAOS.UserDAO;
 import com.revature.exceptions.*;
+import com.revature.models.Room;
 import com.revature.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
     private final UserDAO userDAO;
+    private final RoomDAO roomDAO;
 
     @Autowired
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, RoomDAO roomDAO) {
         this.userDAO = userDAO;
+        this.roomDAO = roomDAO;
     }
 
     public Optional<User> findUserById(int userId){
@@ -66,5 +71,23 @@ public class UserService {
             throw new WrongPasswordException("Wrong password");
         }
 
+    }
+
+    // adding room to cart/favorites
+    public User addRoomToCart(String username, int roomId){
+        Optional<User> possibleUser = userDAO.findUserByUsername(username);
+        Optional<Room> possibleRoom = roomDAO.findById(roomId);
+        if(possibleUser.isEmpty() || possibleRoom.isEmpty()){
+            return null;
+        }
+
+        Room returnedRoom = possibleRoom.get();
+        User returnedUser = possibleUser.get();
+
+        Set<Room> favorites = returnedUser.getFavorites();
+        favorites.add(returnedRoom);
+        returnedUser.setFavorites(favorites);
+
+        return userDAO.save(returnedUser);
     }
 }

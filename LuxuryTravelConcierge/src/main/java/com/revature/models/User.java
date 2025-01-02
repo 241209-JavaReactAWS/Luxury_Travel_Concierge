@@ -2,6 +2,8 @@ package com.revature.models;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -21,7 +23,19 @@ public class User {
 
     private String last_name;
 
+    @ManyToMany
+    @JoinTable(
+            name="users_rooms",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "room_id")
+    )
+    private Set<Room> favorites;
+
     public User() {
+    }
+
+    public User(Set<Room> favorites) {
+        this.favorites = favorites;
     }
 
     public User(int userId, String username, String password, String email, String address, String first_name, String last_name) {
@@ -32,6 +46,14 @@ public class User {
         this.address = address;
         this.first_name = first_name;
         this.last_name = last_name;
+    }
+
+    public Set<Room> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(Set<Room> favorites) {
+        this.favorites = favorites;
     }
 
     public int getUserId() {
