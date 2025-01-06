@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@keyframes imageShrink {
+    0%{
+        filter: brightness(0);
+        transform: translateX(-65%);
+    }
+    3%{
+        filter: brightness(1);
+        transform: translateX(-65%);
+    }
+    97%{
+        transform: translateX(0);
+        filter:brightness(1)
+    }
+    100%{
+        transform: translateX(0);
+        filter:brightness(0)
+    }
+}
+
+
+
+#LoginPage{
+    background-color: rgb(255, 255, 255);  
+    margin: 0;
+    border: 0;
+    height: calc(100vh - 64px);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+#LoginGraphic{
+    grid-column: 1;
+    overflow: hidden;
+    align-content: center;
+}
+
+#LoginGraphic img{
+    height: 100%;
+    transform: translateX(-65%);
+    animation-name: imageShrink;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    z-index: -1;
+}
+
+#LoginForm{
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border-width: 50px;
+    border-color: rgb(226, 157, 31);
+    border-style: outset;
+}
+
+#LoginForm div{
+    width: 50rem;
+    margin-left:5%;
+}
+
+#textInfo{
+    justify-content: start;
+    margin-bottom: 30px;
+    margin-left: 50px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+#textInfo h1{
+    /* font-family: "Charm", serif; */
+    font-family: "Raleway", serif;
+    font-size: 64px;
+    font-weight: 200;
+    margin-bottom: 10px;
+    width: 700px;
+}
+
+#textInfo h1 + p{
+    margin-top: 0;
+    margin-left: 5px;
+    border-top: 0;
+    border-left: 0;
+    border-bottom: 2px;
+    border-right: 0;
+    padding-bottom: 3px;
+
+    width: 500px;
+
+    border-style: dashed;
+    
+
+    /* font-family: "Charm", serif; */
+    font-family: "Raleway", serif;
+    font-size: 32px;
+    font-weight: 100;
+    color: rgb(199, 132, 6);
+}
+
+#bottomOfLoginForm{
+    display: flex;
+    justify-content: space-between;
+    max-width: 85%;
+    margin-right: 10%;
+}
+
