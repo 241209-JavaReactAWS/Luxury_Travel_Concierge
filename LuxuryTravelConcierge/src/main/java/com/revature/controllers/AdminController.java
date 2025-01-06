@@ -4,6 +4,8 @@ import com.revature.models.Admin;
 import com.revature.models.Hotel;
 import com.revature.services.AdminService;
 import com.revature.services.HotelService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,5 +100,20 @@ public class AdminController {
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping(value="")
+    public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
+        Cookie cookie = new Cookie("Roomy_Residents_Admin_Id",null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/userauth");
+        servlet.addCookie(cookie);
+        return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
+    }
+
+    @GetMapping(value = "")
+    public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_Admin_Id", defaultValue = "none") String cookie){
+        if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
+        return ResponseEntity.status(HttpStatus.OK).body(cookie);
     }
 }
