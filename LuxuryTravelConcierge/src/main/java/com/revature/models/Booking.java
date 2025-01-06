@@ -10,47 +10,47 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookingId;
+    private int bookingId;
 
     //Will use a foreign key to room id later
     @OneToOne
     @JoinColumn(name = "roomId", nullable = false)
-    private Long roomId;
+    private int roomId;
 
     //Will need to link this to a user
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
-    private Long userId;
+    private int userId;
 
     //Can use SQL TO_Date to convert varchar to dates
     private String checkInDate;
 
     private String checkOutDate;
 
-    private Long price;
+    private Double price;
     
 
-    public Long getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(Long bookingId) {
+    public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
 
-    public Long getRoomId() {
+    public int getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(int roomId) {
         this.roomId = roomId;
     }
     
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -71,11 +71,11 @@ public class Booking {
     }
 
 
-    public Long getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
