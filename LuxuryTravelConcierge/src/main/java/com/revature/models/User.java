@@ -23,18 +23,18 @@ public class User {
 
     private String last_name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name="users_rooms",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "room_id")
+        name = "favourite",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "hotelId")
     )
-    private Set<Room> favorites;
+    private Set<Hotel> favorites;
 
     public User() {
     }
 
-    public User(Set<Room> favorites) {
+    public User(Set<Hotel> favorites) {
         this.favorites = favorites;
     }
 
@@ -48,11 +48,11 @@ public class User {
         this.last_name = last_name;
     }
 
-    public Set<Room> getFavorites() {
+    public Set<Hotel> getFavorites() {
         return favorites;
     }
 
-    public void setFavorites(Set<Room> favorites) {
+    public void setFavorites(Set<Hotel> favorites) {
         this.favorites = favorites;
     }
 
