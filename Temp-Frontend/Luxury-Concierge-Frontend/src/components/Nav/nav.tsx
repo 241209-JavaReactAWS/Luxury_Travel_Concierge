@@ -30,7 +30,7 @@ function nav() {
             sx={{ display: { xs: "block", sm: "block" }, cursor: "pointer", color: "black" }}
             onClick={() => navToPage('/')}
           >
-            Roomy Residents
+            Luxury Concierge
           </Typography>
 
           {/* Right-aligned Buttons */}
