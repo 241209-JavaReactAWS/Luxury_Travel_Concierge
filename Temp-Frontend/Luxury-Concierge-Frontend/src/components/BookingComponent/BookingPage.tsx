@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Booking } from "../../interfaces/Booking";
 import axios from "axios";
 import { Room } from "../../interfaces/Room";
+import dayjs from "dayjs";
 
 
 function BookingPage(props : Room) {
@@ -32,6 +33,41 @@ function BookingPage(props : Room) {
   };
 
 
+  const handleBooking = async () => {
+    try {
+      const res = await axios.post(`http://localhost:8080/bookings`, newBooking);
+      console.log(res.data);
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewBooking({
+        ...newBooking,
+        [name]: value
+    });
+};
+
+const handleDateChange = (date: any, field: string) => {
+  const formattedDate = date ? date.format('YYYY-MM-DD') : '';
+  
+  const updatedBooking = { ...newBooking, [field]: formattedDate };
+
+  if (updatedBooking.checkInDate && updatedBooking.checkOutDate) {
+    const checkIn = dayjs(updatedBooking.checkInDate);
+    const checkOut = dayjs(updatedBooking.checkOutDate);
+    
+    const daysDifference = checkOut.diff(checkIn, 'day');
+    
+    const price = daysDifference * 10;
+    updatedBooking.price = price;
+  }
+  setNewBooking(updatedBooking);
+};
+
   return (
     <div className="booking-page">
       <div>
@@ -52,24 +88,27 @@ function BookingPage(props : Room) {
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
           <p>Rooms Available: </p>
-          <p>Price: </p>
+          <p>Price: ${newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
               <DatePicker
                 label="Check-In Date"
+                name="checkInDate"
+                onChange={(date) => handleDateChange(date, 'checkInDate')}
               />
             </div>
             <div>
               <DatePicker
                 label="Check-Out Date"
+                name="checkOutDate"
+                onChange={(date) => handleDateChange(date, 'checkOutDate')}
               />
             </div>
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
+          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleBooking}>Book</Button>
         </DialogActions>
       </Dialog>
     </div>
