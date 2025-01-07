@@ -67,7 +67,7 @@ public class UserController {
         }
     }
 
-    @PostMapping(value="")
+    @PostMapping(value="cookie")
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
         Cookie cookie = new Cookie("Roomy_Residents_User_Id",null);
         cookie.setMaxAge(0);
@@ -76,7 +76,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "cookie")
     public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_User_Id", defaultValue = "none") String cookie){
         if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
         return ResponseEntity.status(HttpStatus.OK).body(cookie);

@@ -102,7 +102,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping(value="")
+    @PostMapping(value="cookie")
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
         Cookie cookie = new Cookie("Roomy_Residents_Admin_Id",null);
         cookie.setMaxAge(0);
@@ -111,7 +111,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }
 
-    @GetMapping(value = "")
+    @GetMapping(value = "cookie")
     public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_Admin_Id", defaultValue = "none") String cookie){
         if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
         return ResponseEntity.status(HttpStatus.OK).body(cookie);

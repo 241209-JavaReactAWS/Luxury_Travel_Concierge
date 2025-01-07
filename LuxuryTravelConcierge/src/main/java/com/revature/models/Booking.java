@@ -14,20 +14,10 @@ public class Booking {
     private int bookingId;
 
     //Will use a foreign key to room id later
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "room",
-        joinColumns = @JoinColumn(name="roomId"),
-            inverseJoinColumns = @JoinColumn(name = "bookingId")
-    )
-    private Room room;
+    private int roomId;
 
     //Will need to link this to a user
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "user",
-            joinColumns = @JoinColumn(name="userId"),
-            inverseJoinColumns = @JoinColumn(name = "bookingId")
-    )
-    private User user;
+    private int userId;
 
     //Can use SQL TO_Date to convert varchar to dates
     private String checkInDate;
@@ -36,16 +26,18 @@ public class Booking {
 
     private int price;
     
-    public Booking(int bookingId, Room room, User user, String checkInDate, String checkOutDate, int price) {
+
+
+    public Booking() {
+    }
+
+    public Booking(int bookingId, int roomId, int userId, String checkInDate, String checkOutDate, int price) {
         this.bookingId = bookingId;
-        this.room = room;
-        this.user = user;
+        this.roomId = roomId;
+        this.userId = userId;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.price = price;
-    }
-
-    public Booking() {
     }
 
 
@@ -57,21 +49,6 @@ public class Booking {
         this.bookingId = bookingId;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public User getUserId() {
-        return user;
-    }
-
-    public void setUserId(User userId) {
-        this.user = userId;
-    }
 
     public String getCheckInDate() {
         return checkInDate;
@@ -98,5 +75,19 @@ public class Booking {
         this.price = price;
     }
 
+    public int getRoomId() {
+        return roomId;
+    }
 
+    public void setRoomId(int roomId) {
+        this.roomId = roomId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }

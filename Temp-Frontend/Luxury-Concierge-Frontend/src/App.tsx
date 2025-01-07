@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Nav from './components/Nav/nav'
 import LoginPage from './components/LoginComponents/LoginPage'
 import BookingPage from './components/BookingComponent/BookingPage'
+import FormTemplate from './components/FormTemplate/FormTemplate'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
         <Nav></Nav>
           <Routes>
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
+            <Route path="/test" element={<FormTemplate></FormTemplate>}></Route>
             <Route path='/allHotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
           </Routes>

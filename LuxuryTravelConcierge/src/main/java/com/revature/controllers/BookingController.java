@@ -61,7 +61,7 @@ public class BookingController {
         return ResponseEntity.status(201).body(actualBooking);
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Booking> updateBookingHandler(@PathVariable Integer id, @RequestBody Booking booking) {
         if (!bookingService.getBookingById(id).isPresent()) {
             return ResponseEntity.status(404).build();
