@@ -28,7 +28,7 @@ function nav() {
             variant="h6"
             component="div"
             sx={{ display: { xs: "block", sm: "block" }, cursor: "pointer", color: "black" }}
-            onClick={() => navToPage('/')}
+            onClick={() => navToPage('/Hotels')}
           >
             Luxury Concierge
           </Typography>
