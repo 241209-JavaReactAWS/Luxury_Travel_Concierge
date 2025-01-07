@@ -16,11 +16,15 @@ function LoginPage() {
         "https://www.travelandleisure.com/thmb/QONX7Ovws-5JgiGJr92OX3Iu8T8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/mashpi-lodge-RAINFRSTHOTEL0122-829d1175038041489e191521d3d727d7.jpg"
     ]
 
-    useEffect(() => {
-        axios.get("")
-        .then(()=>{console.log("onEffectSuccess")})
-        .catch(()=>{console.log("onEffectFailure")})
-    })
+
+    // TODO: When Homepage per user is done, connect to homepage
+    // useEffect(() => {
+    //     axios.get("")
+    //     .then((data)=>{
+    //         if(data.data != "none") window.location.href = Supplementaries.clientLink;
+    //     })
+    //     .catch(()=>{alert("Server Closed Down")})
+    // })
 
     const onSuccess: onSuccess = (data : any) =>{
         setStatus(0);

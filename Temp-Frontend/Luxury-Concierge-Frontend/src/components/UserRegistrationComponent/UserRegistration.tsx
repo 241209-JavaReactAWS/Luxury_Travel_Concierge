@@ -17,7 +17,9 @@ const UserRegistration = () => {
     }
     
     const onFailure: onError = (error : any) =>{
-        setError("Improper Info")
+        console.log(error.response.data)
+        console.log(Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email,address))
+        setError(error.response.data)
     }
 
     const [username,setUsername] = useState("")
@@ -45,9 +47,9 @@ const UserRegistration = () => {
             <div id='bottomRightOfForm'>
                 <div>
                     <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>
-                    <p className='InfoLink'><a href='http://localhost:5173/'>Already a User?</a></p>
+                    <p className='InfoLink'><a href={Supplementaries.clientLink}>Already a User?</a></p>
                 </div>
-                <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint='' statusChanger={setStatus} placeholder='Register as User' 
+                <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink +"users/register"} statusChanger={setStatus} placeholder='Register as User' 
                 data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email,address)}></SubmissionButton>
             </div>
         </div>

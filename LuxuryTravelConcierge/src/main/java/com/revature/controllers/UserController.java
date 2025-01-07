@@ -25,7 +25,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 
-@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
+@RestController
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
@@ -39,6 +40,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity registerUserHandler(@RequestBody User user){
         try{
+            System.out.println(user.getUsername());
+            System.out.println(user.getPassword());
+            System.out.println(user.getFirst_name());
+            System.out.println(user.getLast_name());
+            System.out.println(user.getEmail());
+            System.out.println(user.getAddress());
             User newUser = userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.OK).body(newUser);
         }
@@ -64,7 +71,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No last name");
         }
         catch(Exception e){
-            return ResponseEntity.status(HttpStatus.SEE_OTHER).body(null);
+            return ResponseEntity.status(HttpStatus.SEE_OTHER).body("Something went wrong");
         }
     }
 

@@ -9,11 +9,11 @@ class Supplementaries{
         lastname:string = "", email:string = "", address:string = "", birthday:Date = new Date() ) : UserInterface
     {
         return {
-            "id":id,
+            "userId":id,
             "username":username,
             "password": password,
-            "firstname": firstname,
-            "lastname" : lastname,
+            "first_name": firstname,
+            "last_name" : lastname,
             "email" : email,
             "address" : address,
             "birthday" : birthday

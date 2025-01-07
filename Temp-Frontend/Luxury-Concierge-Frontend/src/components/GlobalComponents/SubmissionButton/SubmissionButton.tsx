@@ -14,7 +14,7 @@ function SubmissionButton(props : EndpointProp) {
       .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "POST"){
-      axios.post(props.endpoint,props.data == null ? props.data : {},{withCredentials:true})
+      axios.post(props.endpoint,props.data != null ? props.data : {},{withCredentials:true})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }
@@ -24,7 +24,7 @@ function SubmissionButton(props : EndpointProp) {
       .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "PUT"){
-      axios.put(props.endpoint,props.data == null ? props.data : {},{withCredentials:true})
+      axios.put(props.endpoint,props.data != null ? props.data : {},{withCredentials:true})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }
