@@ -11,11 +11,11 @@ import java.util.List;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reviewId;
+    private Integer reviewId;
 
     private String body;
 
-    private int rating;
+    private Integer rating;
 
     @ManyToOne
     @JoinColumn(name="userId")
@@ -34,7 +34,7 @@ public class Review {
     @JsonManagedReference // Allow serialization of child reviews
     private List<Review> replies;
 
-    public Review(String body, int rating, User user, Hotel hotel, Review parentReview) {
+    public Review(String body, Integer rating, User user, Hotel hotel, Review parentReview) {
         this.body = body;
         this.rating = rating;
         this.user = user;
@@ -45,11 +45,11 @@ public class Review {
     public Review() {
     }
 
-    public Long getReviewId() {
+    public Integer getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(Long reviewId) {
+    public void setReviewId(Integer reviewId) {
         this.reviewId = reviewId;
     }
 
