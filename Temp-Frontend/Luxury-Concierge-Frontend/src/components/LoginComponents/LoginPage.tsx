@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextInput from '../GlobalComponents/TextInput/TextInput'
 import SubmissionButton from '../GlobalComponents/SubmissionButton/SubmissionButton'
 import UserInterface from '../../interfaces/UserInterface'
 import "./LoginPage.css"
 import Supplementaries from '../../SupplementaryClass'
+import onSuccess from '../../interfaces/onSuccessInterface'
+import onError from '../../interfaces/onErrorInterface'
+import axios from 'axios'
 
 function LoginPage() {
 
@@ -12,6 +15,20 @@ function LoginPage() {
         "https://img.freepik.com/free-photo/beautiful-luxury-outdoor-swimming-pool-hotel-resort_74190-7433.jpg?semt=ais_hybrid",
         "https://www.travelandleisure.com/thmb/QONX7Ovws-5JgiGJr92OX3Iu8T8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/mashpi-lodge-RAINFRSTHOTEL0122-829d1175038041489e191521d3d727d7.jpg"
     ]
+
+    useEffect(() => {
+        axios.get("")
+        .then(()=>{console.log("onEffectSuccess")})
+        .catch(()=>{console.log("onEffectFailure")})
+    })
+
+    const onSuccess: onSuccess = (data : any) =>{
+        console.log("success")
+    }
+    
+    const onFailure: onError = (error : any) =>{
+        console.log("failure")
+    }
 
     function getNewImage(){
         if(image == images.length){
@@ -42,7 +59,8 @@ function LoginPage() {
                 </div>
                 <div id='bottomOfLoginForm'>
                     <p className='ErrorText'>{status == 0 ? "" : "Invalid Username or Password"}</p>
-                    <SubmissionButton endpoint='test' statusChanger={setStatus} placeholder='Log In!' data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                    <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint='test' statusChanger={setStatus} placeholder='Log In!' 
+                    data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
                 </div>
             </div>
         </div>

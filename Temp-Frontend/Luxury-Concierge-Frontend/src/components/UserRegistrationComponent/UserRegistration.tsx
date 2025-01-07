@@ -5,8 +5,18 @@ import SubmissionButton from '../GlobalComponents/SubmissionButton/SubmissionBut
 import Supplementaries from '../../SupplementaryClass'
 import FormTemplate from '../FormTemplate/FormTemplate'
 import "./UserRegistration.css"
+import onSuccess from '../../interfaces/onSuccessInterface'
+import onError from '../../interfaces/onErrorInterface'
 
 const UserRegistration = () => {
+
+    const onSuccess: onSuccess = (data : any) =>{
+        console.log("success")
+    }
+    
+    const onFailure: onError = (error : any) =>{
+        console.log("failure")
+    }
 
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
@@ -34,7 +44,8 @@ const UserRegistration = () => {
                     <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>
                     <p className='InfoLink'><a href='http://localhost:5173/'>Already a User?</a></p>
                 </div>
-                <SubmissionButton endpoint='' statusChanger={setStatus} placeholder='Register as User' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
+                <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint='' statusChanger={setStatus} placeholder='Register as User' 
+                data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email,address)}></SubmissionButton>
             </div>
         </div>
   </>
