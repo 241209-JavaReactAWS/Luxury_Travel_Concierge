@@ -1,20 +1,30 @@
 package com.revature.services;
 
+import com.revature.DAOS.HotelDAO;
+import com.revature.DAOS.RoomDAO;
 import com.revature.DAOS.UserDAO;
 import com.revature.exceptions.*;
+import com.revature.models.Hotel;
+import com.revature.models.Room;
 import com.revature.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
     private final UserDAO userDAO;
+    private final RoomDAO roomDAO;
+    private final HotelDAO hotelDAO;
 
     @Autowired
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, RoomDAO roomDAO,HotelDAO hotelDAO) {
         this.userDAO = userDAO;
+        this.roomDAO = roomDAO;
+        this.hotelDAO = hotelDAO;
     }
 
     public Optional<User> findUserById(int userId){
@@ -67,4 +77,38 @@ public class UserService {
         }
 
     }
+
+    public List<Hotel> getFavoritesForUser(String username) {
+        return userDAO.findFavoritesByUsername(username);
+    }
+    
+
+    public User addHotelToFavorites(String username, int hotelId){
+        Optional<User> possibleUser = userDAO.findUserByUsername(username);
+        Optional<Hotel> possibleHotel = hotelDAO.findById(hotelId);
+        if (possibleUser.isEmpty() || possibleHotel.isEmpty()){
+            return null;
+        }
+        User returnedUser = possibleUser.get();
+        Hotel returnedHotel = possibleHotel.get();
+        Set<Hotel> favorites = returnedUser.getFavorites();
+        favorites.add(returnedHotel);
+        returnedUser.setFavorites(favorites);
+        return userDAO.save(returnedUser);
+    }
+
+    public User removeHotelFromFavorites(String username, int hotelId){
+        Optional<User> possibleUser = userDAO.findUserByUsername(username);
+        Optional<Hotel> possibleHotel = hotelDAO.findById(hotelId);
+        if (possibleUser.isEmpty() || possibleHotel.isEmpty()){
+            return null;
+        }
+        User returnedUser = possibleUser.get();
+        Hotel returnedHotel = possibleHotel.get();
+        Set<Hotel> favorites = returnedUser.getFavorites();
+        favorites.remove(returnedHotel);
+        returnedUser.setFavorites(favorites);
+        return userDAO.save(returnedUser);
+    }
+
 }

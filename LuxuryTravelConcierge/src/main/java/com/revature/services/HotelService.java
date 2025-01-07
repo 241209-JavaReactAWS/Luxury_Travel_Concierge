@@ -36,11 +36,36 @@ public class HotelService {
         return null;
     }
 
-    public Hotel removeTargetHotel(Hotel hotel){
-        Optional<Hotel> targetHotel = hotelDAO.findByName(hotel.getName());
-        if (targetHotel.isPresent()){
 
-        }
+    public Hotel updateHotel(Hotel updatedHotel, int hotelId){
+        return hotelDAO.findById(hotelId)
+            .map(existingHotel -> {
+                existingHotel.setName(updatedHotel.getName());
+                existingHotel.setLocation(updatedHotel.getLocation());
+                existingHotel.setImageUrl(updatedHotel.getImageUrl());
+                return hotelDAO.save(existingHotel);
+            })
+            .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));
     }
+
+    public void deleteHotel(Hotel hotel, int hotelId)  {
+
+        if(hotelDAO.existsById(hotel.getHotelId())){
+            hotelDAO.deleteById(hotelId);
+        }
+        else {
+            throw new IllegalArgumentException("Hotel not found");
+        }        
+    }
+
+    public List<Hotel> searchAllByHotelName(String name){
+        return hotelDAO.findAllByname(name);
+    }
+
+    public List<Hotel> searchByHotelLocation(String location){
+        return hotelDAO.findAllByLocation(location);
+    }
+
+
 
 }
