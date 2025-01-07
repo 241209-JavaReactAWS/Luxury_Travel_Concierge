@@ -47,31 +47,31 @@ function AllHotels() {
             {/* key={hotel.hotelId} */}
                 <Card sx={{ maxWidth: 300 }} >
                     <CardActionArea>
-                    <Box 
-                    sx={{ 
-                        position: 'absolute', 
-                        top: 8, 
-                        right: 8 
-                        }}>
-                        <FavoriteIcon color="disabled" />
-                        {/* disabled" | "action" | "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" */}
-                    </Box>
-                        <CardMedia
-                        component="img"
-                        height="150"
-                        image="src/assets/hotel1.avif"
-                        alt="green iguana"
-                        />
-                        <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                            Name: 
-                            {/* {hotel.hotelName} */}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            Location: 
-                            {/* {hotel.location} */}
-                        </Typography>
-                        </CardContent>
+                    <FavoriteIcon 
+                        color="disabled"
+                        sx={{ 
+                            position: 'absolute', 
+                            top: 8, 
+                            right: 8
+                        }}
+                    />
+                    {/* disabled" | "action" | "inherit" | "primary" | "secondary" | "success" | "error" | "info" | "warning" */}
+                    <CardMedia
+                    component="img"
+                    height="150"
+                    image="src/assets/hotel1.avif"
+                    alt="green iguana"
+                    />
+                    <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                        Name: 
+                        {/* {hotel.hotelName} */}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        Location: 
+                        {/* {hotel.location} */}
+                    </Typography>
+                    </CardContent>
                     </CardActionArea>
                     <CardActions>
                         <Button size="small" color="primary">
