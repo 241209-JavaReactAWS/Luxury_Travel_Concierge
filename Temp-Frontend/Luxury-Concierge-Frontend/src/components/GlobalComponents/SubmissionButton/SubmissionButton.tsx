@@ -10,23 +10,23 @@ function SubmissionButton(props : EndpointProp) {
   function submit(){
     if(props.type == "GET"){
       axios.get(props.endpoint,{withCredentials:true})
-      .then((data : any) => {props.onSuccess(data);props.statusChanger(0)})
-      .catch((error : any) => {props.onError(error);props.statusChanger(1)})
+      .then((data : any) => {props.onSuccess(data)})
+      .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "POST"){
       axios.post(props.endpoint,props.data == null ? props.data : {},{withCredentials:true})
-      .then((data : any) => {props.onSuccess(data);props.statusChanger(0)})
-      .catch((error : any) => {props.onError(error);props.statusChanger(1)})
+      .then((data : any) => {props.onSuccess(data)})
+      .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "DELETE"){
       axios.delete(props.endpoint,{withCredentials:true})
-      .then((data : any) => {props.onSuccess(data);props.statusChanger(0)})
-      .catch((error : any) => {props.onError(error);props.statusChanger(1)})
+      .then((data : any) => {props.onSuccess(data)})
+      .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "PUT"){
       axios.put(props.endpoint,props.data == null ? props.data : {},{withCredentials:true})
-      .then((data : any) => {props.onSuccess(data);props.statusChanger(0)})
-      .catch((error : any) => {props.onError(error);props.statusChanger(1)})
+      .then((data : any) => {props.onSuccess(data)})
+      .catch((error : any) => {props.onError(error)})
     }
     else{
       props.statusChanger(-1)
@@ -34,7 +34,7 @@ function SubmissionButton(props : EndpointProp) {
   }
   
   return (
-    <button id='SubmitButton' onClick={props.statusChanger(0)}>{placeholder}</button>
+    <button id='SubmitButton' onClick={submit}>{placeholder}</button>
   )
 }
 

@@ -11,11 +11,13 @@ import onError from '../../interfaces/onErrorInterface'
 const UserRegistration = () => {
 
     const onSuccess: onSuccess = (data : any) =>{
-        console.log("success")
+        setStatus(0);
+        setError("");
+        window.location.href = "http://localhost:5173/"
     }
     
     const onFailure: onError = (error : any) =>{
-        console.log("failure")
+        setError("Improper Info")
     }
 
     const [username,setUsername] = useState("")
@@ -25,6 +27,7 @@ const UserRegistration = () => {
     const [email,setEmail] = useState("")
     const [status,setStatus] = useState(0)
     const [address,setAddress] = useState("")
+    const [error,setError] = useState("")
 
   let data : any = <>
   
@@ -38,7 +41,7 @@ const UserRegistration = () => {
         <TextInput id="address_input" for="Address" onValueChange={setAddress} width='70%'></TextInput>
         <TextInput id="password_input" for="Password" onValueChange={setPassword} width='70%'></TextInput>
         <div id='bottomOfForm'>
-            <p className='ErrorText'>{status == 0 ? "" : "Invalid Data"}</p>
+            <p className='ErrorText'>{error}</p>
             <div id='bottomRightOfForm'>
                 <div>
                     <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>

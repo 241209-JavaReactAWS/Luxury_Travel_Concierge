@@ -23,11 +23,17 @@ function LoginPage() {
     })
 
     const onSuccess: onSuccess = (data : any) =>{
-        console.log("success")
+        setStatus(0);
+        window.location.href = Supplementaries.clientLink
     }
     
     const onFailure: onError = (error : any) =>{
-        console.log("failure")
+        if(error.response.status == 404){
+            setError("Server is closed")
+        }
+        else{
+            setError("Improper Username or Password")
+        }
     }
 
     function getNewImage(){
@@ -42,6 +48,7 @@ function LoginPage() {
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [status,setStatus] = useState(0)
+    const [error,setError] = useState("")
 
     return (
         <div id='LoginPage'>
@@ -58,9 +65,13 @@ function LoginPage() {
                     <TextInput id="password_input" for="Password" onValueChange={setPassword} width='90%'></TextInput>
                 </div>
                 <div id='bottomOfLoginForm'>
-                    <p className='ErrorText'>{status == 0 ? "" : "Invalid Username or Password"}</p>
-                    <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint='test' statusChanger={setStatus} placeholder='Log In!' 
-                    data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                    <p className='ErrorText'>{error}</p>
+                    <div id='bottomRightOfLoginForm'> 
+                        <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink + 'users/login'} statusChanger={setStatus} placeholder='User Log In!' 
+                        data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                        <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink + 'admin/login'} statusChanger={setStatus} placeholder='Admin Log In!' 
+                        data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                    </div>
                 </div>
             </div>
         </div>

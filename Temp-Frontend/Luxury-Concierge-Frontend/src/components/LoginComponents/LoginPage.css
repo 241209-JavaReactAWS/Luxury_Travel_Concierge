@@ -108,3 +108,9 @@
     margin-right: 10%;
 }
 
+#bottomRightOfLoginForm{
+    display: flex;
+    justify-content: space-between;
+    max-width: 30%;
+}
+
