@@ -16,7 +16,7 @@ import Button from '@mui/material/Button';
 
 function nav() {
   function navToPage(arg0: string): void {
-    throw new Error('Function not implemented.');
+    window.location.href = arg0;
   }
 
   return (
@@ -28,9 +28,9 @@ function nav() {
             variant="h6"
             component="div"
             sx={{ display: { xs: "block", sm: "block" }, cursor: "pointer", color: "black" }}
-            onClick={() => navToPage('/')}
+            onClick={() => navToPage("http://localhost:5173/")}
           >
-            Roomy Residents
+            Luxury Concierge
           </Typography>
 
           {/* Right-aligned Buttons */}
@@ -47,7 +47,7 @@ function nav() {
           >
             <Button variant="contained" color="secondary" 
               sx={{ color: "black", background: "rgba(0, 0, 0, 0.1)" }} 
-              onClick={() => navToPage('/SignUp')}>
+              onClick={() => navToPage("http://localhost:5173/userRegistration")}>
               Sign Up
             </Button>
           </Box>

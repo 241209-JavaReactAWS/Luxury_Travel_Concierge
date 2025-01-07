@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.revature.models.Booking;
 import com.revature.services.BookingService;
 
-@RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
 @RequestMapping("/bookings")
 public class BookingController {
 
@@ -31,21 +31,21 @@ public class BookingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingByIdHandler(@PathVariable Long id) {
+    public ResponseEntity<Booking> getBookingByIdHandler(@PathVariable Integer id) {
 
         return ResponseEntity.status(200).body(bookingService.getBookingById(id).get());
 
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Booking>> getBookingsByUserIdHandler(@PathVariable Long userId) {
+    public ResponseEntity<List<Booking>> getBookingsByUserIdHandler(@PathVariable Integer userId) {
 
         return ResponseEntity.ok(bookingService.getBookingsByUserId(userId));
 
     }
 
     @GetMapping("/room/{roomId}")
-    public ResponseEntity<List<Booking>> getBookingsByRoomIdHandler(@PathVariable Long roomId) {
+    public ResponseEntity<List<Booking>> getBookingsByRoomIdHandler(@PathVariable Integer roomId) {
         return ResponseEntity.ok(bookingService.getBookingsByRoomId(roomId));
     }
 
@@ -61,8 +61,8 @@ public class BookingController {
         return ResponseEntity.status(201).body(actualBooking);
     }
 
-    @PutMapping("{/id}")
-    public ResponseEntity<Booking> updateBookingHandler(@PathVariable Long id, @RequestBody Booking booking) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Booking> updateBookingHandler(@PathVariable Integer id, @RequestBody Booking booking) {
         if (!bookingService.getBookingById(id).isPresent()) {
             return ResponseEntity.status(404).build();
         }
@@ -73,7 +73,7 @@ public class BookingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Booking> deleteBookingHandler(@PathVariable Long id) {
+    public ResponseEntity<Booking> deleteBookingHandler(@PathVariable Integer id) {
 
         java.util.Optional<Booking> possibleBooking = bookingService.getBookingById(id);
 
