@@ -60,7 +60,7 @@ const handleDateChange = (date: any, field: string) => {
     const checkIn = dayjs(updatedBooking.checkInDate);
     const checkOut = dayjs(updatedBooking.checkOutDate);
     
-    const daysDifference = checkOut.diff(checkIn, 'day');
+    const daysDifference = checkOut.diff(checkIn, 'day') + 1;
     
     const price = daysDifference * 10;
     updatedBooking.price = price;
@@ -87,8 +87,8 @@ const handleDateChange = (date: any, field: string) => {
       <DialogTitle>Booking Title (Hotel, so on)</DialogTitle>
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
-          <p>Rooms Available: </p>
-          <p>Price: ${newBooking.price}</p>
+          <p>Rooms Type: {props.roomType}</p>
+          <p>Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
               <DatePicker
