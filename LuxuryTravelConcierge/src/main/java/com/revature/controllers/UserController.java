@@ -2,8 +2,6 @@ package com.revature.controllers;
 
 import java.util.List;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +27,7 @@ import com.revature.models.Hotel;
 import com.revature.models.User;
 import com.revature.services.UserService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -77,9 +76,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> userLoginHandler(@RequestBody User user){
+    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpServletResponse http){
         try{
             User returnedUser = userService.userLogin(user);
+            Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
+            cookie.setMaxAge(10000);
+            http.addCookie(cookie);
             return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
         }
         catch(WrongPasswordException | NoUserFoundException e){
@@ -126,15 +128,14 @@ public class UserController {
 
     @PostMapping(value="cookie")
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("Roomy_Residents_User_Id",null);
+        Cookie cookie = new Cookie("User_Id",null);
         cookie.setMaxAge(0);
-        cookie.setPath("/userauth");
         servlet.addCookie(cookie);
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }
 
     @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_User_Id", defaultValue = "none") String cookie){
+    public ResponseEntity getLoginCookie(@CookieValue(value = "User_Id", defaultValue = "none") String cookie){
         if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
         return ResponseEntity.status(HttpStatus.OK).body(cookie);
     }

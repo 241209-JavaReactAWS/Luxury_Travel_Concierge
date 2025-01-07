@@ -45,7 +45,7 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginHandler(@RequestBody Admin admin, HttpSession session) {
+    public ResponseEntity<?> loginHandler(@RequestBody Admin admin, HttpSession session, HttpServletResponse http) {
         Optional<Admin> possibleAdmin = adminService.loginAdmin(admin);
 
         if (possibleAdmin.isPresent()) {
@@ -53,6 +53,9 @@ public class AdminController {
             session.setAttribute("username", possibleAdmin.get().getUsername());
             session.setAttribute("adminId", possibleAdmin.get().getAdminId());
 //            session.setAttribute("role", possibleAdmin.get().getRole());
+            Cookie cookie = new Cookie("Admin_Id",Integer.toString(possibleAdmin.get().getAdminId()));
+            cookie.setMaxAge(10000);
+            http.addCookie(cookie);
         }
         return possibleAdmin
                 .map(ResponseEntity::ok)
@@ -104,15 +107,14 @@ public class AdminController {
 
     @PostMapping(value="cookie")
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("Roomy_Residents_Admin_Id",null);
+        Cookie cookie = new Cookie("Admin_Id",null);
         cookie.setMaxAge(0);
-        cookie.setPath("/userauth");
         servlet.addCookie(cookie);
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }
 
     @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_Admin_Id", defaultValue = "none") String cookie){
+    public ResponseEntity getLoginCookie(@CookieValue(value = "RAdmin_Id", defaultValue = "none") String cookie){
         if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
         return ResponseEntity.status(HttpStatus.OK).body(cookie);
     }
