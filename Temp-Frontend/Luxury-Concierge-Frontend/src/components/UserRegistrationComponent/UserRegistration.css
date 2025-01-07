@@ -1,0 +1,25 @@
+#nameInputs{
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+}
+
+#bottomOfForm{
+    width: 70%;
+    display: flex;
+    justify-content:space-between;
+}
+
+#bottomRightOfForm{
+    width: 30%;
+    display: flex;
+    justify-content:space-between;
+}
+
+h1{
+    font-family: "Raleway", serif;
+    font-size: 64px;
+    font-weight: 200;
+    margin-bottom: 2rem;
+    width: auto;
+}

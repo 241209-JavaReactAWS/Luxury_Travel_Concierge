@@ -9,6 +9,7 @@ import Nav from './components/Nav/nav'
 import LoginPage from './components/LoginComponents/LoginPage'
 import BookingPage from './components/BookingComponent/BookingPage'
 import FormTemplate from './components/FormTemplate/FormTemplate'
+import UserRegistration from './components/UserRegistrationComponent/UserRegistration'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
+            <Route path="/test" element={<UserRegistration></UserRegistration>}></Route>
           </Routes>
         </BrowserRouter>
     </>

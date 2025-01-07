@@ -5,7 +5,7 @@ const FormTemplate = (props:any) => {
   return (
     <div id='formTemplate'>
         <div id='formInnerData'>
-            <p>a</p>
+            {props.data}
         </div>
     </div>
   )
