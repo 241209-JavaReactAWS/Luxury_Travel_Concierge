@@ -11,8 +11,10 @@ public class Hotel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int hotelId;
+
     @Column(name="hotelName",unique = true,nullable = false)
     private String name;
+
     @Column(name="location",nullable = false)
     private String location;
 
@@ -20,6 +22,7 @@ public class Hotel {
     @ManyToOne
     @JoinColumn(name="adminId")
     private Admin admin;
+    
     private String imageUrl;
 
     @OneToMany(mappedBy = "hotel")

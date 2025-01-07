@@ -20,8 +20,7 @@ function App() {
         <Nav></Nav>
           <Routes>
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
-            <Route path="/test" element={<FormTemplate></FormTemplate>}></Route>
-            <Route path='/allHotels' element={<AllHotels></AllHotels>}></Route>
+            <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
           </Routes>
         </BrowserRouter>

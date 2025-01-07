@@ -1,14 +1,32 @@
 package com.revature.controllers;
 
-import com.revature.exceptions.*;
-import com.revature.models.User;
-import com.revature.services.UserService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.revature.exceptions.NoAddressException;
+import com.revature.exceptions.NoEmailException;
+import com.revature.exceptions.NoFirstNameException;
+import com.revature.exceptions.NoLastNameException;
+import com.revature.exceptions.NoUserFoundException;
+import com.revature.exceptions.PasswordException;
+import com.revature.exceptions.UsernameException;
+import com.revature.exceptions.UsernameExistsException;
+import com.revature.exceptions.WrongPasswordException;
+import com.revature.models.Hotel;
+import com.revature.models.User;
+import com.revature.services.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("users")
@@ -67,18 +85,37 @@ public class UserController {
         }
     }
 
-    @PostMapping(value="cookie")
-    public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("Roomy_Residents_User_Id",null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/userauth");
-        servlet.addCookie(cookie);
-        return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
+    @GetMapping("/favorites")
+    public ResponseEntity<List<Hotel>> getUserFavorites(HttpSession session) {
+        if (session.isNew() || session.getAttribute("username") == null) {
+            return ResponseEntity.status(401).build();
+        }
+        List<Hotel> favorites = userService.getFavoritesForUser((String) session.getAttribute("username"));
+        return ResponseEntity.ok(favorites);
     }
 
-    @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "Roomy_Residents_User_Id", defaultValue = "none") String cookie){
-        if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
-        return ResponseEntity.status(HttpStatus.OK).body(cookie);
+    
+    @PostMapping("/favorites/{hotelId}")
+    public ResponseEntity<User> addHotelToFavorites(HttpSession session, @PathVariable int hotelId){
+        if (session.isNew() || session.getAttribute("username") == null){
+            return ResponseEntity.status(401).build();
+        }
+        User returnedUser = userService.addHotelToFavorites( (String) session.getAttribute("username"), hotelId);
+        if (returnedUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(returnedUser);
+    }
+
+    @DeleteMapping("/favorites/{hotelId}")
+    public ResponseEntity<User> removeHotelFromFavorites(HttpSession session, @PathVariable int hotelId){
+        if (session.isNew() || session.getAttribute("username") == null){
+            return ResponseEntity.status(401).build();
+        }
+        User returnedUser = userService.removeHotelFromFavorites((String) session.getAttribute("username"), hotelId);
+        if (returnedUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(returnedUser);
     }
 }
