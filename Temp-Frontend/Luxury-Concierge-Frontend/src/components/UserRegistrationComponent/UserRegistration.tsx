@@ -30,7 +30,10 @@ const UserRegistration = () => {
         <div id='bottomOfForm'>
             <p className='ErrorText'>{status == 0 ? "" : "Invalid Data"}</p>
             <div id='bottomRightOfForm'>
-                <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>
+                <div>
+                    <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>
+                    <p className='InfoLink'><a href='http://localhost:5173/'>Already a User?</a></p>
+                </div>
                 <SubmissionButton endpoint='' statusChanger={setStatus} placeholder='Register as User' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
             </div>
         </div>
