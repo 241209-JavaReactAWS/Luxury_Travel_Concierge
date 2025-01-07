@@ -24,15 +24,15 @@ public class BookingService {
         return bookingDAO.findAll();
     }
 
-    public Optional<Booking> getBookingById(Long id) {
+    public Optional<Booking> getBookingById(Integer id) {
         return bookingDAO.findById(id);
     }
 
-    public List<Booking> getBookingsByUserId(Long id) {
+    public List<Booking> getBookingsByUserId(Integer id) {
         return bookingDAO.findByUserId(id);
     }
 
-    public List<Booking> getBookingsByRoomId(Long id) {
+    public List<Booking> getBookingsByRoomId(Integer id) {
         return bookingDAO.findByRoomId(id);
     }
 
