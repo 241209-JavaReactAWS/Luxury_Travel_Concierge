@@ -36,4 +36,11 @@ public class HotelService {
         return null;
     }
 
+    public Hotel removeTargetHotel(Hotel hotel){
+        Optional<Hotel> targetHotel = hotelDAO.findByName(hotel.getName());
+        if (targetHotel.isPresent()){
+
+        }
+    }
+
 }
