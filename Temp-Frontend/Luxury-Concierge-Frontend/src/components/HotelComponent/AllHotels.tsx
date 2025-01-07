@@ -43,9 +43,8 @@ function AllHotels() {
             NextIcon={<NavigateNext />} 
             PrevIcon={<NavigateBefore />}
         >
-            {/* {favorites.map((hotel) => ( */}
-            {/* key={hotel.hotelId} */}
-                <Card sx={{ maxWidth: 300 }} >
+            {favorites.map((hotel) => ( 
+                <Card sx={{ maxWidth: 300 }} key={hotel.hotelId} >
                     <CardActionArea>
                     <FavoriteIcon 
                         color="disabled"
@@ -59,17 +58,15 @@ function AllHotels() {
                     <CardMedia
                     component="img"
                     height="150"
-                    image="src/assets/hotel1.avif"
+                    image={hotel.imageUrl}
                     alt="green iguana"
                     />
                     <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        Name: 
-                        {/* {hotel.hotelName} */}
+                        {hotel.hotelName}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Location: 
-                        {/* {hotel.location} */}
+                        Location: {hotel.location}
                     </Typography>
                     </CardContent>
                     </CardActionArea>
@@ -79,7 +76,7 @@ function AllHotels() {
                         </Button>
                     </CardActions>
                 </Card>
-            {/* ))} */}
+            ))}
 
         </Carousel>
         </Box>
