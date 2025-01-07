@@ -100,28 +100,28 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/hotels")
-    public ResponseEntity<Admin> removeHotelHandler(HttpSession session,
-                                                 @RequestBody Hotel hotel){
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew()||curAdminId==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
-
-
-        if (targetAdmin.isPresent()){
-            Hotel targetHotel = new Hotel();
-            targetHotel.setName(hotel.getName());
-            targetHotel.setImageUrl(hotel.getImageUrl());
-            targetHotel.setLocation(hotel.getLocation());
-            targetHotel.setAdmin(targetAdmin.get());
-            Hotel removedHotel = hotelService.removeTargetHotel(targetHotel);
-            Admin newAdmin = adminService.removeHotelFromAdmin(targetAdmin.get(),removedHotel);
-            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @DeleteMapping("/hotels")
+//    public ResponseEntity<Admin> removeHotelHandler(HttpSession session,
+//                                                 @RequestBody Hotel hotel){
+//        Integer curAdminId = (Integer)session.getAttribute("adminId");
+//        if(session.isNew()||curAdminId==null){
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
+//
+//
+//        if (targetAdmin.isPresent()){
+//            Hotel targetHotel = new Hotel();
+//            targetHotel.setName(hotel.getName());
+//            targetHotel.setImageUrl(hotel.getImageUrl());
+//            targetHotel.setLocation(hotel.getLocation());
+//            targetHotel.setAdmin(targetAdmin.get());
+//            Hotel removedHotel = hotelService.removeTargetHotel(targetHotel);
+//            Admin newAdmin = adminService.removeHotelFromAdmin(targetAdmin.get(),removedHotel);
+//            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+//        }
+//        else{
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

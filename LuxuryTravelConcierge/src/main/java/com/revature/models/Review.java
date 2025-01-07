@@ -11,7 +11,7 @@ import java.util.List;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reviewId;
+    private long reviewId;
 
     private String body;
 
@@ -49,7 +49,7 @@ public class Review {
         return reviewId;
     }
 
-    public void setReviewId(Long reviewId) {
+    public void setReviewId(long reviewId) {
         this.reviewId = reviewId;
     }
 
