@@ -25,7 +25,8 @@ public class Booking {
     private String checkOutDate;
 
     private int price;
-    
+
+    private int numberOfGuests;
 
 
     public Booking() {
@@ -89,5 +90,14 @@ public class Booking {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
     }
 }
