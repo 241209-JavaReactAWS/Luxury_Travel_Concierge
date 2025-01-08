@@ -19,6 +19,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class AdminController {
     private final AdminService adminService;
     private final HotelService hotelService;

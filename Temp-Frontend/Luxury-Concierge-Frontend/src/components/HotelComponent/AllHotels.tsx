@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Hotel } from '../../interfaces/Hotel';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, IconButton, InputBase, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, IconButton, InputBase, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Carousel from 'react-material-ui-carousel';
 import NavigateNext from '@mui/icons-material/NavigateNext';
 import NavigateBefore from '@mui/icons-material/NavigateBefore';
@@ -21,8 +21,9 @@ function AllHotels() {
     const [filteredHotels, setFilteredHotels] = useState<Hotel[]>([]);
 
     useEffect(()=>{
-        axios.get<Hotel[]>("http://localhost:8080/hotels")
+        axios.get<Hotel[]>("http://localhost:8080/hotel")
             .then((res)=>{
+                console.log(res.data);
                 setAllHotels(res.data)
                 setFilteredHotels(res.data);
             })
@@ -44,7 +45,7 @@ function AllHotels() {
       const handleSearch = () => {
         const filtered = allHotels.filter(
           (hotel) =>
-            hotel.hotelName.toLowerCase().includes(searchName.toLowerCase()) &&
+            hotel.name.toLowerCase().includes(searchName.toLowerCase()) &&
             hotel.location.toLowerCase().includes(searchLocation.toLowerCase())
         );
         setFilteredHotels(filtered);
@@ -63,63 +64,114 @@ function AllHotels() {
         return favorites.some((fav) => fav.hotelId === hotelId);
     };
 
+    const handleRemoveFromFavorites = (hotelId: number) => {
+        axios
+            .delete(`http://localhost:8080/users/favorites/${hotelId}`, { withCredentials: true })
+            .then(() => {
+                setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
+            })
+            .catch((err) => {
+                console.error("Error removing hotel from favorites:", err);
+                if (err.response) {
+                    console.error("Response Data:", err.response.data);
+                    console.error("Status Code:", err.response.status);
+                    console.error("Headers:", err.response.headers);
+                }
+            });
+    };
 
+    const groupIntoChunks = (array: any[], chunkSize: number) => {
+        const result= [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            result.push(array.slice(i, i + chunkSize));
+        }
+        return result;
+    };
 
-  return (
-    <div>
-        {favorites.length > 0 && ( 
-                <Box sx={{ padding: 4, paddingRight: 7, paddingLeft: 7 }}>
-                    <Carousel NextIcon={<NavigateNext />} PrevIcon={<NavigateBefore />}>
-                        {favorites.map((hotel) => (
-                            <Card sx={{ maxWidth: 300 }} 
-                                key={hotel.hotelId}
-                                >
-                                <CardActionArea>
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: 8,
-                                        right: 8,
-                                        p: 1,
-                                    }}
-                                >
-                                    <FavoriteIcon
-                                        color="disabled"
-                                        // "disabled" | "action" | "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning", SvgIconPropsColorOverrides
-                                        sx={{
-                                            cursor: 'pointer',
-                                            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                            '&:hover': {
-                                                transform: 'scale(1.2)',
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                                    <CardMedia
-                                        component="img"
-                                        height="150"
-                                        image={hotel.imageUrl}
-                                        alt={hotel.hotelName}
-                                    />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            Name:{hotel.hotelName}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                            Location: {hotel.location}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <Button size="small" color="primary">
-                                        More Info
-                                    </Button>
-                                </CardActions>
-                            </Card>
+    const FavoritesCarousel: React.FC<{ favorites: any[]; handleRemoveFromFavorites: any; navigate: any }> = ({ favorites, handleRemoveFromFavorites, navigate }) => {
+        const [activeStep, setActiveStep] = useState(0);
+        const chunkSize = 4; 
+        const maxSteps = Math.ceil(favorites.length / chunkSize);
+
+        const handleNext = () => {
+            if (activeStep < maxSteps - 1) {
+                setActiveStep(activeStep + 1);
+            }
+        };
+
+        const handleBack = () => {
+            if (activeStep > 0) {
+                setActiveStep(activeStep - 1);
+            }
+        };
+
+        return (
+            <Box sx={{ padding: 4, paddingRight: 7, paddingLeft: 7 }}>
+                {favorites.length > 0 && (
+                    <Carousel
+                        NextIcon={<NavigateNext />}
+                        PrevIcon={<NavigateBefore />}
+                        indicatorIconButtonProps={{ style: { display: 'none' } }}
+                        navButtonsAlwaysVisible={true}
+                        sx={{
+
+                            gap: 2,
+                            width: '100%',
+                            overflow: 'hidden',
+                        }}
+                        autoPlay={false}
+                        interval={3000}
+                        navButtonsAlwaysInvisible={false}
+                        navButtonsProps={{
+                            style: { color: 'white' }
+                        }}
+                        animation="slide"
+                    >
+                        {groupIntoChunks(favorites, chunkSize).map((group, groupIndex) => (
+                            <Box key={groupIndex} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                                {group.map((hotel: Hotel) => (
+                                    <Card sx={{ maxWidth: 300, flex: 1 }} key={hotel.hotelId}>
+                                        <CardActionArea>
+                                            <Box sx={{ position: 'absolute', top: 8, right: 8, p: 1 }}>
+                                                <FavoriteIcon
+                                                    color="warning"
+                                                    onClick={() => handleRemoveFromFavorites(hotel.hotelId)}
+                                                    sx={{ cursor: 'pointer', transition: 'transform 0.3s ease', '&:hover': { transform: 'scale(1.2)' } }}
+                                                />
+                                            </Box>
+                                            <CardMedia component="img" height="150" image={hotel.imageUrl} alt={hotel.name} />
+                                            <CardContent>
+                                                <Typography gutterBottom variant="h5" component="div">
+                                                    {hotel.name}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                                                    {hotel.location}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                        <CardActions>
+                                            <Button size="small" color="primary" onClick={() => navigate(`/hotels/${hotel.hotelId}`)}>
+                                                More Info
+                                            </Button>
+                                        </CardActions>
+                                    </Card>
+                                ))}
+                            </Box>
                         ))}
                     </Carousel>
-                </Box>
-            )}
+                )}
+            </Box>
+        );
+    };
+
+    return (
+        <div>
+            <FavoritesCarousel
+                favorites={favorites}
+                handleRemoveFromFavorites={handleRemoveFromFavorites}
+                navigate={navigate}
+            />
+
         <header>
             <Box
                 sx={{
@@ -131,9 +183,6 @@ function AllHotels() {
                     backgroundColor: 'white',
                 }}
             >
-                {/* <Typography variant="h4" sx={{ marginBottom: 2, fontWeight: 'bold' }}>
-                    Search for Your Next Stay
-                </Typography> */}
                 <Paper
                     component="form"
                     sx={{
@@ -183,6 +232,7 @@ function AllHotels() {
                     />
                     <IconButton
                         type="button"
+                        onClick={handleSearch}
                         sx={{
                             p: '10px', 
                             backgroundColor: 'FireBrick', 
@@ -200,9 +250,9 @@ function AllHotels() {
             </Box>
         </header>
         <main style={{ padding: "30px", display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-                {allHotels.map((hotel)=>{ 
-                    return(  
+                {filteredHotels.map((hotel) => (
                         <Card 
+                            key={hotel.hotelId}
                             sx={{
                                 maxWidth: 345,
                                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
@@ -223,7 +273,8 @@ function AllHotels() {
                                     }}
                                 >
                                     <FavoriteBorderIcon
-                                        color="disabled"
+                                        color="warning"
+                                        // "disabled" | "action" | "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning", SvgIconPropsColorOverrides
                                         onClick={() => handleFavorite(hotel)}
                                         sx={{ 
                                             cursor: 'pointer', 
@@ -244,10 +295,10 @@ function AllHotels() {
                             />
                             <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
-                                Name:{hotel.hotelName}
+                                {hotel.name}
                             </Typography>
                             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                Location: {hotel.location} 
+                                {hotel.location} 
                             </Typography>
                             </CardContent>
                         </CardActionArea>
@@ -261,7 +312,7 @@ function AllHotels() {
                             </Button>
                         </CardActions>
                         </Card>
-                    )})} 
+                    ))} 
         </main>
     </div>
   )
