@@ -28,6 +28,8 @@ public class Booking {
 
     private int numberOfGuests;
 
+    private String status;
+
 
     public Booking() {
     }
@@ -99,5 +101,13 @@ public class Booking {
 
     public void setNumberOfGuests(int numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

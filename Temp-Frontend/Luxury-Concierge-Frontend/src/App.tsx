@@ -11,6 +11,7 @@ import BookingPage from './components/BookingComponent/BookingPage'
 import FormTemplate from './components/FormTemplate/FormTemplate'
 import UserRegistration from './components/UserRegistrationComponent/UserRegistration'
 import AdminRegister from './components/RegisterComponents/AdminRegister'
+import BookingAdmin from './components/BookingComponent/BookingAdmin'
 
 function App() {
   const [count, setCount] = useState(0)

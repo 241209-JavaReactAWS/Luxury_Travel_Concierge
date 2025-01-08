@@ -21,7 +21,8 @@ function BookingPage(props : Room) {
     checkInDate: "",
     checkOutDate: "",
     price: 0,
-    capacity: 1
+    numberOfGuests: 1,
+    status: 'Pending'
   })
 
   const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
@@ -70,19 +71,19 @@ const handleDateChange = (date: any, field: string) => {
 };
 
   const increaseCapacity = () => {
-    if (newBooking.capacity < props.capacity) {
+    if (newBooking.numberOfGuests < props.capacity) {
       setNewBooking({
         ...newBooking,
-        capacity: newBooking.capacity + 1
+        numberOfGuests: newBooking.numberOfGuests + 1
       });
     }
   };
 
   const decreaseCapacity = () => {
-    if (newBooking.capacity > 1) {
+    if (newBooking.numberOfGuests > 1) {
       setNewBooking({
         ...newBooking,
-        capacity: newBooking.capacity - 1
+        numberOfGuests: newBooking.numberOfGuests - 1
       });
     }
   };
@@ -96,7 +97,7 @@ const handleDateChange = (date: any, field: string) => {
         <br></br>
 
       </div>
-      <Button onClick={handleClickOpen('paper')}> Find A Reservation </Button>
+      <Button onClick={handleClickOpen('paper')}> Create A Reservation </Button>
 
       <Dialog 
       open={open} 
@@ -107,9 +108,9 @@ const handleDateChange = (date: any, field: string) => {
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
           <p>Rooms Type: {props.roomType}</p>
-          <p>Capacity (max capacity: {props.capacity}): {newBooking.capacity}</p>
-          <Button onClick={decreaseCapacity} disabled={newBooking.capacity <= 1}>-</Button>
-          <Button onClick={increaseCapacity} disabled={newBooking.capacity >= props.capacity}>+</Button>
+          <p>Capacity (max capacity: {props.capacity}): {newBooking.numberOfGuests}</p>
+          <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>
+          <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.capacity}>+</Button>
           
           <p>Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

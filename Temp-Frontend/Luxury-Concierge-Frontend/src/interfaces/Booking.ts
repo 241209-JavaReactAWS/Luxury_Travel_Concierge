@@ -5,5 +5,6 @@ export interface Booking {
     checkInDate: string;
     checkOutDate: string;
     price: number;
-    capacity: number;
+    numberOfGuests: number;
+    status: 'Pending' | 'Accepted' | 'Denied';
   }
