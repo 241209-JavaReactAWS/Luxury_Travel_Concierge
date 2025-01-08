@@ -1,5 +1,6 @@
-#LoginForm div button{
-    width: 15%;
+#SubmitButton{
+    min-width: 15%;
+    width: auto;
     height: 50px;
     background-color: rgb(240, 207, 145);
     border-color: wheat;
@@ -8,10 +9,10 @@
     margin-top: 10px;
 }
 
-#LoginForm div button:hover{
+#SubmitButton:hover{
     background-color: rgb(250, 226, 180);
   }
   
-  #LoginForm div button:active{
-      background-color: rgb(170, 128, 48);
-    }
+#SubmitButton:active{
+    background-color: rgb(170, 128, 48);
+  }

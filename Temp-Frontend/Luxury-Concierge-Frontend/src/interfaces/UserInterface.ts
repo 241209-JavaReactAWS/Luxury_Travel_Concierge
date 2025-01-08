@@ -1,9 +1,9 @@
 interface UserInterface{
-    id ?: number,
+    userId ?: number,
     username ?: string,
     password ?: string,
-    firstname ?: string,
-    lastname ?: string,
+    first_name ?: string,
+    last_name ?: string,
     email ?: string,
     address ?: string,
     birthday ?: Date,

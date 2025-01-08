@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextInput from '../GlobalComponents/TextInput/TextInput'
 import SubmissionButton from '../GlobalComponents/SubmissionButton/SubmissionButton'
 import UserInterface from '../../interfaces/UserInterface'
 import "./LoginPage.css"
 import Supplementaries from '../../SupplementaryClass'
+import onSuccess from '../../interfaces/onSuccessInterface'
+import onError from '../../interfaces/onErrorInterface'
+import axios from 'axios'
 
 function LoginPage() {
 
@@ -12,6 +15,30 @@ function LoginPage() {
         "https://img.freepik.com/free-photo/beautiful-luxury-outdoor-swimming-pool-hotel-resort_74190-7433.jpg?semt=ais_hybrid",
         "https://www.travelandleisure.com/thmb/QONX7Ovws-5JgiGJr92OX3Iu8T8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/mashpi-lodge-RAINFRSTHOTEL0122-829d1175038041489e191521d3d727d7.jpg"
     ]
+
+
+    // TODO: When Homepage per user is done, connect to homepage
+    // useEffect(() => {
+    //     axios.get("")
+    //     .then((data)=>{
+    //         if(data.data != "none") window.location.href = Supplementaries.clientLink;
+    //     })
+    //     .catch(()=>{alert("Server Closed Down")})
+    // })
+
+    const onSuccess: onSuccess = (data : any) =>{
+        setStatus(0);
+        window.location.href = Supplementaries.clientLink
+    }
+    
+    const onFailure: onError = (error : any) =>{
+        if(error.response.status == 404){
+            setError("Server is closed")
+        }
+        else{
+            setError("Improper Username or Password")
+        }
+    }
 
     function getNewImage(){
         if(image == images.length){
@@ -25,6 +52,7 @@ function LoginPage() {
     const [username,setUsername] = useState("")
     const [password,setPassword] = useState("")
     const [status,setStatus] = useState(0)
+    const [error,setError] = useState("")
 
     return (
         <div id='LoginPage'>
@@ -41,8 +69,13 @@ function LoginPage() {
                     <TextInput id="password_input" for="Password" onValueChange={setPassword} width='90%'></TextInput>
                 </div>
                 <div id='bottomOfLoginForm'>
-                    <p className='ErrorText'>{status == 0 ? "" : "Invalid Username or Password"}</p>
-                    <SubmissionButton endpoint='test' statusChanger={setStatus} placeholder='Log In!' data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                    <p className='ErrorText'>{error}</p>
+                    <div id='bottomRightOfLoginForm'> 
+                        <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink + 'users/login'} statusChanger={setStatus} placeholder='User Log In!' 
+                        data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                        <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink + 'admin/login'} statusChanger={setStatus} placeholder='Admin Log In!' 
+                        data={Supplementaries.generateUserJson(NaN,username,password)}></SubmissionButton>
+                    </div>
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.revature.models.Booking;
 import com.revature.services.BookingService;
 
-@RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
 @RequestMapping("/bookings")
 public class BookingController {
 
