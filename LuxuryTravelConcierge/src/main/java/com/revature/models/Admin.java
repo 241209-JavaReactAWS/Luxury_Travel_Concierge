@@ -22,7 +22,7 @@ public class Admin {
     private String firstName;
     @Column (name="lastName",nullable = false)
     private String lastName;
-    @JsonManagedReference
+    @JsonManagedReference(value="admin_hotel")
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private Set<Hotel> ownedHotels;
     private String description;

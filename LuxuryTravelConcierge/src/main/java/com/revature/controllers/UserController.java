@@ -76,9 +76,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpServletResponse http){
+    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpSession session,HttpServletResponse http){
         try{
             User returnedUser = userService.userLogin(user);
+            session.setAttribute("username", returnedUser.getUsername());
+
             Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
             cookie.setMaxAge(10000);
             http.addCookie(cookie);
@@ -95,6 +97,7 @@ public class UserController {
     @GetMapping("/favorites")
     public ResponseEntity<List<Hotel>> getUserFavorites(HttpSession session) {
         if (session.isNew() || session.getAttribute("username") == null) {
+            System.out.println(session.getAttribute("username"));
             return ResponseEntity.status(401).build();
         }
         List<Hotel> favorites = userService.getFavoritesForUser((String) session.getAttribute("username"));
