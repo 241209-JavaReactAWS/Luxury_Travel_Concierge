@@ -82,7 +82,7 @@ const HotelManagementPage: React.FC = () => {
       alert("Hotel updated successfully!");
       setIsEditing(false);
       setSelectedImage(null);
-      fetchHotels();
+      // fetchHotels();
     } catch (error) {
       console.error("Error updating hotel:", error);
       alert("Failed to update hotel.");
@@ -98,7 +98,7 @@ const HotelManagementPage: React.FC = () => {
 
       <div className="hotel-list">
         <h2>Your Hotels</h2>
-        <button onClick={addHotel(newHotel)}>Add Hotels</button>
+        {/* <button onClick={addHotel(newHotel)}>Add Hotels</button> */}
         {hotels.map((hotel) => (
           <div key={hotel.hotelId} className="hotel-card">
             <img src={hotel.imageUrl} alt={hotel.name} className="hotel-image" />
