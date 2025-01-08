@@ -40,12 +40,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity registerUserHandler(@RequestBody User user){
         try{
-            System.out.println(user.getUsername());
-            System.out.println(user.getPassword());
-            System.out.println(user.getFirst_name());
-            System.out.println(user.getLast_name());
-            System.out.println(user.getEmail());
-            System.out.println(user.getAddress());
             User newUser = userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.OK).body(newUser);
         }
@@ -79,9 +73,10 @@ public class UserController {
     public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpServletResponse http){
         try{
             User returnedUser = userService.userLogin(user);
-            Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
-            cookie.setMaxAge(10000);
-            http.addCookie(cookie);
+//            Cookie cookie = new Cookie("User_Id",Integer.toString(returnedUser.getUserId()));
+//            cookie.setMaxAge(10000);
+//            cookie.setPath("../");
+//            http.addCookie(cookie);
             return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
         }
         catch(WrongPasswordException | NoUserFoundException e){
@@ -130,6 +125,7 @@ public class UserController {
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
         Cookie cookie = new Cookie("User_Id",null);
         cookie.setMaxAge(0);
+        cookie.setPath("../");
         servlet.addCookie(cookie);
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }

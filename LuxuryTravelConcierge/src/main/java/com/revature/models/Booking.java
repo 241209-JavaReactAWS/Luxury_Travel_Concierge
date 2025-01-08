@@ -25,7 +25,10 @@ public class Booking {
     private String checkOutDate;
 
     private int price;
-    
+
+    private int numberOfGuests;
+
+    private String status;
 
 
 
@@ -90,5 +93,22 @@ public class Booking {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

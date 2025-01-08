@@ -2,6 +2,13 @@ import React from 'react'
 import "./TextInput.css"
 import TextInputInterface from '../../../interfaces/TextInputInterface'
 
+/*
+  This class is for a standard text input
+  props.width is to define the width of textbox
+  props.onValueChange is the external useState changer function to
+  props.for is what the placeholder says
+  props.id is the id of the item
+*/
 
 
 function TextInput(props : TextInputInterface) {

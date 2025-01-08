@@ -4,15 +4,13 @@ import com.revature.DAOS.ReviewDAO;
 import com.revature.models.Review;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ReviewService {
-    private ReviewDAO reviewDAO;
+    private final ReviewDAO reviewDAO;
 
     @Autowired
     public ReviewService(ReviewDAO reviewDAO){
@@ -26,7 +24,6 @@ public class ReviewService {
         }
         return replies;
     }
-
 
 
     public Optional<Review> getReviewWithReplies(Long parentReviewId){

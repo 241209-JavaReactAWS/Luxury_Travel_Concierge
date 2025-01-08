@@ -11,7 +11,6 @@ import onError from '../../interfaces/onErrorInterface'
 const UserRegistration = () => {
 
     const onSuccess: onSuccess = (data : any) =>{
-        setStatus(0);
         setError("");
         window.location.href = "http://localhost:5173/"
     }
