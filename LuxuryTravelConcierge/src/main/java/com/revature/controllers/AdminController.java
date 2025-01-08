@@ -98,12 +98,55 @@ public class AdminController {
             newHotel.setLocation(hotel.getLocation());
             newHotel.setAdmin(targetAdmin.get());
             Hotel createdHotel = hotelService.createNewHotel(newHotel);
-            Admin newAdmin = adminService.addHotelToAdmin(targetAdmin.get(),createdHotel);
-            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+            Optional<Admin> newAdmin = adminService.getAdminById(curAdminId);
+            return new ResponseEntity<>(newAdmin.get(), HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @PutMapping("/hotels/{hotelId}")
+    public ResponseEntity<Hotel> updateHotelHandler(HttpSession session, @RequestBody Hotel hotel,@PathVariable Integer hotelId){
+        Integer curAdminId = (Integer)session.getAttribute("adminId");
+        if(session.isNew()||curAdminId==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
+        if (targetAdmin.isPresent()){
+            Hotel targetHotel = hotelService.updateHotel(hotel,hotelId);
+            return new ResponseEntity<>(targetHotel,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+    @DeleteMapping("/hotels/{hotelId}")
+    public ResponseEntity<?> removeHotelHandler(HttpSession session,@PathVariable Integer hotelId){
+        Integer curAdminId = (Integer) session.getAttribute("adminId");
+        if(session.isNew()||curAdminId==null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        try {
+            // Check if hotel exists
+            Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
+            if (hotel.isEmpty()) {
+                return new ResponseEntity<>("Hotel not found", HttpStatus.NOT_FOUND);
+            }
+
+            if (!(hotel.get().getAdmin().getAdminId()==curAdminId)) {
+                return new ResponseEntity<>("Unauthorized to delete this hotel", HttpStatus.FORBIDDEN);
+            }
+            hotelService.deleteHotel(hotel.get(),hotelId);
+            return new ResponseEntity<>("Hotel successfully deleted",HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("Error deleting hotel: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
     }
 
     @PostMapping(value="cookie")
