@@ -16,6 +16,7 @@ function App() {
 
   return (
     <>
+    <BookingPage/>
       <BrowserRouter>
         <Nav></Nav>
           <Routes>

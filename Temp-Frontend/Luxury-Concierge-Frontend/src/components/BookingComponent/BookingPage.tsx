@@ -88,6 +88,7 @@ const handleDateChange = (date: any, field: string) => {
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
           <p>Rooms Type: {props.roomType}</p>
+          <p>Capacity: {props.capacity}</p>
           <p>Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
