@@ -12,6 +12,8 @@ import FormTemplate from './components/FormTemplate/FormTemplate'
 import UserRegistration from './components/UserRegistrationComponent/UserRegistration'
 import AdminRegister from './components/RegisterComponents/AdminRegister'
 import BookingAdmin from './components/BookingComponent/BookingAdmin'
+import HotelManagementPage from './components/HotelComponent/HotelManagement'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -25,6 +27,7 @@ function App() {
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
             <Route path="/OwnerRegistration" element={<AdminRegister></AdminRegister>}></Route>
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
+            <Route path="/HotelManagement" element={<HotelManagementPage></HotelManagementPage>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
             <Route path="/UserRegistration" element={<UserRegistration></UserRegistration>}></Route>
           </Routes>

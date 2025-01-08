@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./HotelManagement.css";
+import { Hotel } from "@mui/icons-material";
 
 interface Hotel {
   hotelId: number;
   name: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postalCode: string;
-  phone: string;
-  email: string;
+  location: string;
+  // city: string;
+  // state: string;
+  // country: string;
+  // postalCode: string;
+  // phone: string;
+  // email: string;
   description: string;
   imageUrl: string;
 }
@@ -18,15 +19,16 @@ interface Hotel {
 const HotelManagementPage: React.FC = () => {
   const [hotels, setHotels] = useState<Hotel[]>([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [newHotel, setNewHotel] = useState<Hotel>([]);
   const [currentHotel, setCurrentHotel] = useState<Partial<Hotel>>({
     name: "",
-    address: "",
-    city: "",
-    state: "",
-    country: "",
-    postalCode: "",
-    phone: "",
-    email: "",
+    location: "",
+    // city: "",
+    // state: "",
+    // country: "",
+    // postalCode: "",
+    // phone: "",
+    // email: "",
     description: "",
     imageUrl: "",
   });
@@ -86,6 +88,9 @@ const HotelManagementPage: React.FC = () => {
       alert("Failed to update hotel.");
     }
   };
+  const addHotel = (hotel: Hotel) => {
+    setNewHotel(hotel);
+  }
 
   return (
     <div className="hotel-management">
@@ -93,14 +98,13 @@ const HotelManagementPage: React.FC = () => {
 
       <div className="hotel-list">
         <h2>Your Hotels</h2>
+        <button onClick={addHotel(newHotel)}>Add Hotels</button>
         {hotels.map((hotel) => (
           <div key={hotel.hotelId} className="hotel-card">
             <img src={hotel.imageUrl} alt={hotel.name} className="hotel-image" />
             <h3>{hotel.name}</h3>
             <p>{hotel.description}</p>
-            <p>{hotel.address}, {hotel.city}, {hotel.state}, {hotel.country}</p>
-            <p>Phone: {hotel.phone}</p>
-            <p>Email: {hotel.email}</p>
+            <p>{hotel.location},</p>
             <button onClick={() => handleEditClick(hotel)}>Edit</button>
           </div>
         ))}
@@ -120,13 +124,6 @@ const HotelManagementPage: React.FC = () => {
             name="description"
             placeholder="Description"
             value={currentHotel.description}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={currentHotel.phone}
             onChange={handleInputChange}
           />
           <input
