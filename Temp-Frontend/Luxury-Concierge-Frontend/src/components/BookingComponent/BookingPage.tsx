@@ -20,7 +20,8 @@ function BookingPage(props : Room) {
     userId: 0,
     checkInDate: "",
     checkOutDate: "",
-    price: 0
+    price: 0,
+    capacity: 1
   })
 
   const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
@@ -68,6 +69,24 @@ const handleDateChange = (date: any, field: string) => {
   setNewBooking(updatedBooking);
 };
 
+  const increaseCapacity = () => {
+    if (newBooking.capacity < props.capacity) {
+      setNewBooking({
+        ...newBooking,
+        capacity: newBooking.capacity + 1
+      });
+    }
+  };
+
+  const decreaseCapacity = () => {
+    if (newBooking.capacity > 1) {
+      setNewBooking({
+        ...newBooking,
+        capacity: newBooking.capacity - 1
+      });
+    }
+  };
+
   return (
     <div className="booking-page">
       <div>
@@ -88,7 +107,10 @@ const handleDateChange = (date: any, field: string) => {
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
           <p>Rooms Type: {props.roomType}</p>
-          <p>Capacity: {props.capacity}</p>
+          <p>Capacity (max capacity: {props.capacity}): {newBooking.capacity}</p>
+          <Button onClick={decreaseCapacity} disabled={newBooking.capacity <= 1}>-</Button>
+          <Button onClick={increaseCapacity} disabled={newBooking.capacity >= props.capacity}>+</Button>
+          
           <p>Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
