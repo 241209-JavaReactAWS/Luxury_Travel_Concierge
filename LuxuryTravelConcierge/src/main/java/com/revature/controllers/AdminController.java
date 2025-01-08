@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
+
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
