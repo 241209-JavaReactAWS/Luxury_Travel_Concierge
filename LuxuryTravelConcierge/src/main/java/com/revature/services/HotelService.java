@@ -36,6 +36,7 @@ public class HotelService {
         return null;
     }
 
+
     public Hotel updateHotel(Hotel updatedHotel, int hotelId){
         return hotelDAO.findById(hotelId)
             .map(existingHotel -> {
@@ -64,6 +65,7 @@ public class HotelService {
     public List<Hotel> searchByHotelLocation(String location){
         return hotelDAO.findAllByLocation(location);
     }
+
 
 
 }

@@ -12,6 +12,7 @@ import FormTemplate from './components/FormTemplate/FormTemplate'
 import UserRegistration from './components/UserRegistrationComponent/UserRegistration'
 import AdminRegister from './components/RegisterComponents/AdminRegister'
 import BookingDataChart from './components/BookingDataChart/BookingDataChart'
+import BookingAdmin from './components/BookingComponent/BookingAdmin'
 
 function App() {
 

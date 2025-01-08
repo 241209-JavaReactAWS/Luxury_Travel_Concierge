@@ -11,7 +11,7 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookingId;
+    private long bookingId;
 
     //Will use a foreign key to room id later
     private int roomId;
@@ -27,6 +27,9 @@ public class Booking {
     private int price;
 
     private int numberOfGuests;
+
+    private String status;
+
 
 
     public Booking() {
@@ -46,7 +49,7 @@ public class Booking {
         return bookingId;
     }
 
-    public void setBookingId(int bookingId) {
+    public void setBookingId(long bookingId) {
         this.bookingId = bookingId;
     }
 
@@ -99,5 +102,13 @@ public class Booking {
 
     public void setNumberOfGuests(int numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
