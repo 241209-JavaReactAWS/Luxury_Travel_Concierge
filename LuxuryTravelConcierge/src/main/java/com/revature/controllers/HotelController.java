@@ -36,7 +36,19 @@ public class HotelController {
     //     return new ResponseEntity<>(hotelService.getAllHotels(),HttpStatus.OK);
     // }
 
+    @GetMapping
+    public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,
+                                            @RequestParam(name = "location", required = false) String location){
+        if (name != null) {
+            return hotelService.searchAllByHotelName(name);
+        } else if (location != null) {
+            return hotelService.searchByHotelLocation(location);
+        } else {
+            return hotelService.getAllHotels(); 
+        }
+    }
 
+    @PostMapping
     public ResponseEntity<Hotel> createHandler(@RequestBody Hotel hotel) {
         Hotel possibleHotel = hotelService.createNewHotel(hotel);
 
@@ -101,17 +113,7 @@ public class HotelController {
     }
 
 
-    @GetMapping
-    public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,
-                                            @RequestParam(name = "location", required = false) String location){
-        if (name != null) {
-            return hotelService.searchAllByHotelName(name);
-        } else if (location != null) {
-            return hotelService.searchByHotelLocation(location);
-        } else {
-            return hotelService.getAllHotels(); 
-        }
-    }
+    
 
 
 }
