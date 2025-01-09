@@ -12,11 +12,13 @@ const BookingDataChart = (props:any) => {
     let x = Supplementaries.generateDateRanges(1);
     let y = Supplementaries.filterDateRangesBefore(x,364)
     y = Supplementaries.filterDateRangesAfterToday(y);
+
     Supplementaries.sortDates(y)
     let z = Supplementaries.CreateOccupencyCount(y)
     const chartdata:any[] = Supplementaries.ConvertOccupancyCountJsonToList(z)
     let chartlabels = chartdata.map((row:any) => row.day)
     let chartvalues = chartdata.map((row:any) => row.count)
+    
 
     const option = {
         responsive:true,
@@ -52,10 +54,10 @@ const BookingDataChart = (props:any) => {
         },
     }
 
-    const chartData = 
+    const chartData =
     {
        labels: chartlabels,
-       datasets: 
+       datasets:
            [{
                label: 'Booking for the Year',
                data: chartvalues,
