@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
-@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
-@RequestMapping("/room")
+@RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
+@RequestMapping("room")
 public class RoomController {
 
     private final RoomService roomService;
@@ -30,7 +30,7 @@ public class RoomController {
 
 
     @GetMapping("{hotelId}")
-    public ResponseEntity<List<Room>> getAllRoomsInHotel(@RequestParam Integer hotelId, HttpSession session){
+    public ResponseEntity<List<Room>> getAllRoomsInHotel(@PathVariable Integer hotelId, HttpSession session){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
@@ -41,7 +41,7 @@ public class RoomController {
     }
 
     @PostMapping("{hotelId}")
-    public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@RequestParam Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
@@ -57,7 +57,7 @@ public class RoomController {
     }
 
     @PutMapping("{hotelId}")
-    public ResponseEntity<Room> changeRoom(@RequestBody Room room,@RequestParam Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> changeRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
@@ -72,7 +72,7 @@ public class RoomController {
     }
 
     @DeleteMapping("{hotelId}")
-    public ResponseEntity<Room> deleteRoom(@RequestBody Room room,@RequestParam Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> deleteRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
