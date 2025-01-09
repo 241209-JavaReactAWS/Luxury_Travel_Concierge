@@ -4,11 +4,11 @@ import axios from "axios";
 
 
 function AddRoom() {
-    interface RoomProps {
-        room: Room[];
-    }
+    // interface RoomProps {
+    //     room: Room[];
+    // }
 
-    const [newRoom, setNewRoom] = useState({RoomProps.room});
+    // const [newRoom, setNewRoom] = useState({RoomProps.room});
 
     // const response = async() =>{
     //     await axios.post("/rooms/add" )
