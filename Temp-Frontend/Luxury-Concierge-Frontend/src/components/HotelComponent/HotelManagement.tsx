@@ -72,7 +72,7 @@ const HotelManagementPage: React.FC = () => {
         if (value) formData.append(key, value.toString());
       });
 
-      const response = await fetch(Supplementaries.serverLink + `hotels/${currentHotel.hotelId}`, {
+      const response = await fetch(`${Supplementaries.serverLink}hotels/${currentHotel.hotelId}`, {
         method: "PUT",
         body: formData,
       });

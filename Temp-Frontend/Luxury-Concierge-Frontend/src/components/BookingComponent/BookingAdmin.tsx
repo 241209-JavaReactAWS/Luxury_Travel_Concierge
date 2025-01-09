@@ -50,7 +50,7 @@ export default function BookingAdmin() {
 
   const handleDenyBooking = async (booking: Booking) => {
     try {
-      const response = await axios.put(Supplementaries.serverLink + `bookings/${booking.bookingId}`, {
+      const response = await axios.put(`${Supplementaries.serverLink}bookings/${booking.bookingId}`, {
         ...booking,
         status: 'Denied'
       });
@@ -65,7 +65,7 @@ export default function BookingAdmin() {
 
   const handleDeleteBooking = async (bookingId: number) => {
     try {
-      await axios.delete(Supplementaries.serverLink + `bookings/${bookingId}`);
+      await axios.delete(`${Supplementaries.serverLink}bookings/${bookingId}`);
       setBookings(prev => prev.filter(booking => booking.bookingId !== bookingId));
       setNotification({ open: true, message: 'Booking deleted successfully', severity: 'success' });
     } catch (error) {

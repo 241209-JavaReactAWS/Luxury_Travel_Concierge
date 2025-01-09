@@ -4,9 +4,22 @@ import SubmissionButton from "../GlobalComponents/SubmissionButton/SubmissionBut
 import TextInput from "../GlobalComponents/TextInput/TextInput"
 import "./AdminRegister.css" 
 import FormTemplate from "../FormTemplate/FormTemplate"
+import onSuccess from "../../interfaces/onSuccessInterface"
+import onError from "../../interfaces/onErrorInterface"
 
 
 function AdminRegister() {
+
+  const onSuccess: onSuccess = (data : any) =>{
+    setStatus(0)
+    window.location.href = Supplementaries.clientLink
+}
+
+const onFailure: onError = (error : any) =>{
+    console.log(error.response.data)
+    console.log(Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email,address))
+    setStatus(1)
+}
 
  const [username,setUsername] = useState("")
      const [password,setPassword] = useState("")
@@ -30,7 +43,8 @@ function AdminRegister() {
         <TextInput id="key_input" for="Unique Key" onValueChange={setKey} width="70%"></TextInput>
         <div id='bottomOfForm'>
             <p className='ErrorText'>{status == 0 ? "" : "Invalid Data"}</p>
-                <SubmissionButton endpoint='' statusChanger={setStatus} placeholder='Register as Owner' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
+                <SubmissionButton type="POST" onError={onFailure} onSuccess={onSuccess} endpoint={`${Supplementaries.serverLink}admin/register`} 
+                statusChanger={setStatus} placeholder='Register as Owner' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
             </div>
   </>
   return (
