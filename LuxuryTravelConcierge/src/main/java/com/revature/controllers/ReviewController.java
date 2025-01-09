@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
@@ -16,6 +17,16 @@ public class ReviewController {
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
+    }
+
+    @GetMapping("/hotel/{hotelId}")
+    public ResponseEntity<List<Review>> getReviewsForHotel(@PathVariable Long hotelId) {
+        List<Review> hotelReviewList = reviewService.getAllReviewsForHotelWithReplies(hotelId);
+        if(!hotelReviewList.isEmpty()){
+            return ResponseEntity.status(201).body(hotelReviewList);
+        }else {
+            return ResponseEntity.status(404).build();
+        }
     }
 
     @GetMapping("/{id}")

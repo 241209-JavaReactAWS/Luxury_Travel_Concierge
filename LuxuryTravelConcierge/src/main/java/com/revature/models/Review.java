@@ -17,7 +17,7 @@ public class Review {
 
     private String body;
 
-    private Integer rating;
+    private int rating;
 
     @ManyToOne
     @JoinColumn(name="userId")
@@ -32,11 +32,11 @@ public class Review {
     @JsonBackReference // Prevent circular references
     private Review parentReview;
 
-    @OneToMany(mappedBy = "parentReview", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentReview", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Allow serialization of child reviews
     private List<Review> replies;
 
-    public Review(String body, Integer rating, User user, Hotel hotel, Review parentReview) {
+    public Review(String body, int rating, User user, Hotel hotel, Review parentReview) {
         this.body = body;
         this.rating = rating;
         this.user = user;

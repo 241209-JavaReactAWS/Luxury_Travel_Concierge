@@ -5,7 +5,7 @@ import axios from "axios";
 import Supplementaries from "../../SupplementaryClass";
 
 // Adjust to match your backend base URL
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = Supplementaries.serverLink;
 
 interface HotelReviewsProps {
   hotelId: number;
@@ -18,27 +18,28 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
   const [newReviewRating, setNewReviewRating] = useState<number>(5);
 
   /**
-   * Fetch all reviews for this hotel.
-   * Need extra work for backend to make a specific endopoint for a hotel's all reviews
-   * that returns a list of Review objects (with nested replies).
+   * Fetch all reviews for a hotel, including nested replies.
+   * Backend returns a list of Review objects (with nested replies).
    */
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get<Review[]>(`${API_BASE_URL}reviews/hotel/${hotelId}`);
+      setReviews(res.data);
+    } catch (err) {
+      console.error("Failed to fetch reviews:", err);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get<Review[]>(`${Supplementaries.serverLink}/hotels/${hotelId}/reviews`)
-      .then((res) => {
-        setReviews(res.data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch reviews:", err);
-      });
+    fetchReviews();
   }, [hotelId]);
 
   /**
-   * Handle form submission to create a top-level review.
+   * Handle form submission to create a new top-level review on backend.
+   * After creation, re-fetch the reviews to display the updated list.
    */
   const handleCreateReview = async (e: FormEvent) => {
     e.preventDefault();
-
     const newReviewPayload = {
       body: newReviewBody,
       rating: newReviewRating,
@@ -46,15 +47,10 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
       hotel: { hotelId: hotelId },
       parentReview: null,
     };
-
     try {
-      const response = await axios.post<Review>(
-        `${API_BASE_URL}/reviews`,
-        newReviewPayload
-      );
-      // Update local list of reviews
-      setReviews((prevReviews) => [response.data, ...prevReviews]);
-
+      await axios.post<Review>(`${API_BASE_URL}reviews`, newReviewPayload);
+      // Re-fetch updated data
+      await fetchReviews();
       // Clear form
       setNewReviewBody("");
       setNewReviewRating(5);
@@ -94,7 +90,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
       </form>
 
       {/* Show all reviews (includes nested replies) */}
-      <ReviewList reviews={reviews} hotelId={hotelId} userId={userId} />
+      <ReviewList reviews={reviews} hotelId={hotelId} userId={userId}  onRefresh={fetchReviews} />
     </div>
   );
 };
