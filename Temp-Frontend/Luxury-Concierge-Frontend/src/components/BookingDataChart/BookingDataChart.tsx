@@ -8,11 +8,18 @@ import BarChart from '../GlobalComponents/BarChart/BarChart'
 
 const BookingDataChart = () => {
     let x = Supplementaries.generateDateRanges(200);
+    
     let y = Supplementaries.filterDateRangesBefore(x,364)
     y = Supplementaries.filterDateRangesAfterToday(y);
+
     Supplementaries.sortDates(y)
+    console.log(y)
+
     let z = Supplementaries.CreateOccupencyCount(y)
     const chartdata:any[] = Supplementaries.ConvertOccupancyCountJsonToList(z)
+
+    // console.log(z)
+
     let chartlabels = chartdata.map((row:any) => row.day)
     let chartvalues = chartdata.map((row:any) => row.count)
     
