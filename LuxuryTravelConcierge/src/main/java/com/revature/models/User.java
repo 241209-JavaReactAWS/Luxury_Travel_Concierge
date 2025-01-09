@@ -1,5 +1,8 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -23,9 +26,10 @@ public class User {
 
     private String last_name;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-        name = "favourite",
+        name = "favorite",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "hotelId")
     )
@@ -47,6 +51,7 @@ public class User {
         this.first_name = first_name;
         this.last_name = last_name;
     }
+
 
     public Set<Hotel> getFavorites() {
         return favorites;

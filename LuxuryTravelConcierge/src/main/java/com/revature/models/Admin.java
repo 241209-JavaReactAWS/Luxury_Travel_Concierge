@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="admin",schema="public")
+@Table(name = "admin",schema="public")
 public class Admin {
     @Column(name="adminId")
     @Id
@@ -22,8 +22,8 @@ public class Admin {
     private String firstName;
     @Column (name="lastName",nullable = false)
     private String lastName;
-    @JsonManagedReference
-    @OneToMany(mappedBy = "admin")
+    @JsonManagedReference(value="admin_hotel")
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
     private Set<Hotel> ownedHotels;
     private String description;
     public Admin() {

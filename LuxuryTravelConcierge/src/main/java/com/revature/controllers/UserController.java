@@ -69,13 +69,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpServletResponse http){
+    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpSession session,HttpServletResponse http){
         try{
             User returnedUser = userService.userLogin(user);
-//            Cookie cookie = new Cookie("User_Id",Integer.toString(returnedUser.getUserId()));
-//            cookie.setMaxAge(10000);
-//            cookie.setPath("../");
-//            http.addCookie(cookie);
+
+            session.setAttribute("username", returnedUser.getUsername());
+
+            Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
+            cookie.setMaxAge(10000);
+            http.addCookie(cookie);
+
             return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
         }
         catch(WrongPasswordException | NoUserFoundException e){
@@ -87,6 +90,7 @@ public class UserController {
     }
 
     @GetMapping("/favorites")
+
     public ResponseEntity<List<Hotel>> getUserFavorites(@RequestParam(required = false) String username) {
         // if (username == null || username.isEmpty()) {
         //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); 
@@ -97,6 +101,7 @@ public class UserController {
             return ResponseEntity.ok(favorites);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+
         }
     }
 
