@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
 import { Booking } from "../../interfaces/Booking";
+import Supplementaries from "../../SupplementaryClass";
 
 export default function BookingAdmin() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -17,7 +18,7 @@ export default function BookingAdmin() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:8080/bookings');
+      const response = await axios.get(Supplementaries.serverLink + 'bookings');
       console.log(response.data);
       setBookings(response.data);
     } catch (error) {
@@ -34,7 +35,7 @@ export default function BookingAdmin() {
 
   const handleAcceptBooking = async (booking: Booking) => {
     try {
-      const response = await axios.put(`http://localhost:8080/bookings/${booking.bookingId}`, {
+      const response = await axios.put(Supplementaries.serverLink + `bookings/${booking.bookingId}`, {
         ...booking,
         status: 'Accepted'
       });
@@ -49,7 +50,7 @@ export default function BookingAdmin() {
 
   const handleDenyBooking = async (booking: Booking) => {
     try {
-      const response = await axios.put(`http://localhost:8080/bookings/${booking.bookingId}`, {
+      const response = await axios.put(`${Supplementaries.serverLink}bookings/${booking.bookingId}`, {
         ...booking,
         status: 'Denied'
       });
@@ -64,7 +65,7 @@ export default function BookingAdmin() {
 
   const handleDeleteBooking = async (bookingId: number) => {
     try {
-      await axios.delete(`http://localhost:8080/bookings/${bookingId}`);
+      await axios.delete(`${Supplementaries.serverLink}bookings/${bookingId}`);
       setBookings(prev => prev.filter(booking => booking.bookingId !== bookingId));
       setNotification({ open: true, message: 'Booking deleted successfully', severity: 'success' });
     } catch (error) {

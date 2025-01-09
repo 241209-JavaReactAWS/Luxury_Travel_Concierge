@@ -69,13 +69,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpServletResponse http){
+    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpSession session,HttpServletResponse http){
         try{
             User returnedUser = userService.userLogin(user);
-//            Cookie cookie = new Cookie("User_Id",Integer.toString(returnedUser.getUserId()));
-//            cookie.setMaxAge(10000);
-//            cookie.setPath("../");
-//            http.addCookie(cookie);
+
+            session.setAttribute("username", returnedUser.getUsername());
+
+            Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
+            cookie.setMaxAge(10000);
+            http.addCookie(cookie);
+
             return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
         }
         catch(WrongPasswordException | NoUserFoundException e){
@@ -87,13 +90,13 @@ public class UserController {
     }
 
     @GetMapping("/favorites")
-    public ResponseEntity<List<Hotel>> getUserFavorites(@RequestParam(required = false) String username) {
-        // if (username == null || username.isEmpty()) {
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); 
-        // }
-
+    public ResponseEntity<List<Hotel>> getUserFavorites(HttpSession session) {
+        if (session.isNew() || session.getAttribute("username") == null) {
+            System.out.println(session.getAttribute("username"));
+            return ResponseEntity.status(401).build();
+        }
         try {
-            List<Hotel> favorites = userService.getFavoritesForUser(username);
+            List<Hotel> favorites = userService.getFavoritesForUser((String) session.getAttribute("username"));
             return ResponseEntity.ok(favorites);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -101,37 +104,27 @@ public class UserController {
     }
 
     @PostMapping("/favorites/{hotelId}")
-    public ResponseEntity<User> addHotelToFavorites(@RequestParam(required = false) String username, @PathVariable int hotelId) {
-        // if (username == null || username.isEmpty()) {
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
-        // }
-
-        try {
-            User returnedUser = userService.addHotelToFavorites(username, hotelId);
-            if (returnedUser == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            return ResponseEntity.ok(returnedUser);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public ResponseEntity<User> addHotelToFavorites(HttpSession session, @PathVariable int hotelId){
+        if (session.isNew() || session.getAttribute("username") == null){
+            return ResponseEntity.status(401).build();
         }
+        User returnedUser = userService.addHotelToFavorites( (String) session.getAttribute("username"), hotelId);
+        if (returnedUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(returnedUser);
     }
 
     @DeleteMapping("/favorites/{hotelId}")
-    public ResponseEntity<User> removeHotelFromFavorites(@RequestParam(required = false) String username, @PathVariable int hotelId) {
-        // if (username == null || username.isEmpty()) {
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); 
-        // }
-
-        try {
-            User returnedUser = userService.removeHotelFromFavorites(username, hotelId);
-            // if (returnedUser == null) {
-            //     return ResponseEntity.badRequest().build();
-            // }
-            return ResponseEntity.ok(returnedUser);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public ResponseEntity<User> removeHotelFromFavorites(HttpSession session, @PathVariable int hotelId){
+        if (session.isNew() || session.getAttribute("username") == null){
+            return ResponseEntity.status(401).build();
         }
+        User returnedUser = userService.removeHotelFromFavorites((String) session.getAttribute("username"), hotelId);
+        if (returnedUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(returnedUser);
     }
 
 

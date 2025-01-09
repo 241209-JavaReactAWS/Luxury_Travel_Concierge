@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./HotelManagement.css";
-import { Hotel } from "@mui/icons-material";
+import Supplementaries from "../../SupplementaryClass";
 
 interface Hotel {
   hotelId: number;
@@ -38,7 +38,7 @@ const HotelManagementPage: React.FC = () => {
   useEffect(() => {
     const fetchHotels = async () => {
       try {
-        const response = await fetch("http://localhost:8080/hotels");
+        const response = await fetch(Supplementaries.serverLink + "hotels");
         const data = await response.json();
         setHotels(data);
       } catch (error) {
@@ -73,7 +73,7 @@ const HotelManagementPage: React.FC = () => {
         if (value) formData.append(key, value.toString());
       });
 
-      const response = await fetch(`http://localhost:8080/hotels/${currentHotel.hotelId}`, {
+      const response = await fetch(`${Supplementaries.serverLink}hotels/${currentHotel.hotelId}`, {
         method: "PUT",
         body: formData,
       });

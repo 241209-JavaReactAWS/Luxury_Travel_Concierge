@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Supplementaries from '../../SupplementaryClass';
 
 function nav() {
   function navToPage(arg0: string): void {
@@ -28,7 +29,7 @@ function nav() {
             variant="h6"
             component="div"
             sx={{ display: { xs: "block", sm: "block" }, cursor: "pointer", color: "black" }}
-            onClick={() => navToPage("http://localhost:5173/")}
+            onClick={() => navToPage(Supplementaries.clientLink)}
           >
             Luxury Concierge
           </Typography>
@@ -47,7 +48,7 @@ function nav() {
           >
             <Button variant="contained" color="secondary" 
               sx={{ color: "black", background: "rgba(0, 0, 0, 0.1)" }} 
-              onClick={() => navToPage("http://localhost:5173/userRegistration")}>
+              onClick={() => navToPage(Supplementaries.clientLink + "/userRegistration")}>
               Sign Up
             </Button>
           </Box>

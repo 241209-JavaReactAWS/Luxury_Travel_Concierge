@@ -2,8 +2,8 @@
 import React, { useState, FormEvent } from "react";
 import axios from "axios";
 import { Review } from "../../interfaces/Review";
+import Supplementaries from "../../SupplementaryClass";
 
-const API_BASE_URL = "http://localhost:8080";
 
 interface ReviewListProps {
   reviews: Review[];
@@ -60,9 +60,9 @@ function ReviewItem({ review, hotelId, userId } : ReviewItemProps) {
     };
 
     try {
-      await axios.post(`${API_BASE_URL}/reviews`, replyPayload);
-      // In a real app, you might re-fetch the reviews so the new reply appears immediately.
-      // For simplicity, we'll just reset the form and hide it.
+      await axios.post(`${Supplementaries.serverLink}reviews`, replyPayload);
+      // TODO re-fetch the reviews so the new reply appears immediately.
+      // reset the form and hide it:
       setReplyBody("");
       setReplyRating(5);
       setShowReplyForm(false);

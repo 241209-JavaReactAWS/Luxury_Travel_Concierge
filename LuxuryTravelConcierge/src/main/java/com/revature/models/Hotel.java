@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Hotel {
     @Column(name="location",nullable = false)
     private String location;
 
-    @JsonBackReference
+    @JsonBackReference(value="admin_hotel")
     @ManyToOne
     @JoinColumn(name="adminId")
     private Admin admin;
@@ -28,16 +29,22 @@ public class Hotel {
     @OneToMany(mappedBy = "hotel")
     private Set<Room> rooms;
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "favorites")
+    private Set<User> favoritedBy;
+
     public Hotel() {
     }
 
-    public Hotel(int hotelId, String name, String location, Admin admin, String imageUrl, Set<Room> rooms) {
+
+    public Hotel(int hotelId, String name, String location, Admin admin, String imageUrl, Set<Room> rooms, Set<User> favoritedBy) {
         this.hotelId = hotelId;
         this.name = name;
         this.location = location;
         this.admin = admin;
         this.imageUrl = imageUrl;
         this.rooms = rooms;
+        this.favoritedBy = favoritedBy;
     }
 
     public int getHotelId() {
@@ -86,5 +93,13 @@ public class Hotel {
 
     public void setRooms(Set<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public Set<User> getFavoritedBy() {
+        return favoritedBy;
+    }
+
+    public void setFavoritedBy(Set<User> favoritedBy) {
+        this.favoritedBy = favoritedBy;
     }
 }

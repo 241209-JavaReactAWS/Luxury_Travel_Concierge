@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import { Room } from '../../interfaces/Room'
 import { Hotel } from '../../interfaces/Hotel'
+import Supplementaries from '../../SupplementaryClass';
 
 
 function Rooms() {
@@ -14,9 +15,9 @@ function Rooms() {
 
     useEffect(() => {
         const queryParams = new URLSearchParams(filters).toString();
-        const url = `http://localhost:8080/hotel/${hotelId}/rooms?${queryParams}`;
+        const url = `${Supplementaries.serverLink}hotel/${hotelId}/rooms?${queryParams}`;
 
-        axios.get<Hotel>(`http://localhost:8080/hotel/${hotelId}`)
+        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`)
         .then((res) => {
         setHotel(res.data);
         })

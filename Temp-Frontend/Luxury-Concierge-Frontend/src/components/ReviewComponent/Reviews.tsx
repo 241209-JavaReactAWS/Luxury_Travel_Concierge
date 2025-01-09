@@ -2,6 +2,7 @@ import { useState, useEffect, FormEvent } from "react";
 import { Review } from "../../interfaces/Review";
 import ReviewList from "./ReviewList";
 import axios from "axios";
+import Supplementaries from "../../SupplementaryClass";
 
 // Adjust to match your backend base URL
 const API_BASE_URL = "http://localhost:8080";
@@ -23,7 +24,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
    */
   useEffect(() => {
     axios
-      .get<Review[]>(`${API_BASE_URL}/hotels/${hotelId}/reviews`)
+      .get<Review[]>(`${Supplementaries.serverLink}/hotels/${hotelId}/reviews`)
       .then((res) => {
         setReviews(res.data);
       })
