@@ -10,6 +10,7 @@ import NavigateBefore from '@mui/icons-material/NavigateBefore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SearchIcon from '@mui/icons-material/Search';
+import Supplementaries from '../../SupplementaryClass';
 
 
 function AllHotels() {
@@ -21,7 +22,7 @@ function AllHotels() {
     const [filteredHotels, setFilteredHotels] = useState<Hotel[]>([]);
 
     useEffect(()=>{
-        axios.get<Hotel[]>("http://localhost:8080/hotel")
+        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel")
             .then((res)=>{
                 console.log(res.data);
                 setAllHotels(res.data)
@@ -33,7 +34,7 @@ function AllHotels() {
     },[])
 
     useEffect(() => {
-        axios.get<Hotel[]>('http://localhost:8080/User/favorites', { withCredentials: true })
+        axios.get<Hotel[]>(Supplementaries.serverLink + 'User/favorites', { withCredentials: true })
           .then((res) => {
             setFavorites(res.data); 
           })
@@ -66,7 +67,7 @@ function AllHotels() {
 
     const handleRemoveFromFavorites = (hotelId: number) => {
         axios
-            .delete(`http://localhost:8080/users/favorites/${hotelId}`, { withCredentials: true })
+            .delete(Supplementaries.serverLink + `users/favorites/${hotelId}`, { withCredentials: true })
             .then(() => {
                 setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
             })

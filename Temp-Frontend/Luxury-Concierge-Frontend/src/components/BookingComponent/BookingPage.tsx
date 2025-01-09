@@ -7,6 +7,7 @@ import { Booking } from "../../interfaces/Booking";
 import axios from "axios";
 import { Room } from "../../interfaces/Room";
 import dayjs from "dayjs";
+import Supplementaries from "../../SupplementaryClass";
 
 
 function BookingPage(props : Room) {
@@ -37,7 +38,7 @@ function BookingPage(props : Room) {
 
   const handleBooking = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/bookings`, newBooking);
+      const res = await axios.post(Supplementaries.serverLink + `bookings`, newBooking);
       console.log(res.data);
       handleClose();
     } catch (error) {
