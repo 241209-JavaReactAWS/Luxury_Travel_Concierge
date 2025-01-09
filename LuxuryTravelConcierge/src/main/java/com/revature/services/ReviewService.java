@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -66,6 +67,22 @@ public class ReviewService {
         });
 
         return updateReview;
+    }
+
+    public  List<Review> getAllReviewsForHotelWithReplies(Long hotelId) {
+        List<Review> allReviews = reviewDAO.findByHotel_HotelId(hotelId);
+
+        List<Review> topLevelReviews = allReviews.stream()
+                .filter(r -> r.getParentReview() == null)
+                .collect(Collectors.toList());
+
+        // 3) Recursively fetch the replies for each top-level review
+        for (Review topLevelReview : topLevelReviews) {
+            topLevelReview.setReplies(getReplies(topLevelReview));
+        }
+
+        // 4) Return only the top-level reviews (with their nested replies)
+        return topLevelReviews;
     }
 
 }

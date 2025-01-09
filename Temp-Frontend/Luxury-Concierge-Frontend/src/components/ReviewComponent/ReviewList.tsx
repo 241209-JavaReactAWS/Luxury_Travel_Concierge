@@ -1,5 +1,5 @@
 // ReviewList.tsx
-import React, { useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import axios from "axios";
 import { Review } from "../../interfaces/Review";
 import Supplementaries from "../../SupplementaryClass";
@@ -9,9 +9,10 @@ interface ReviewListProps {
   reviews: Review[];
   hotelId: number;
   userId?: number;
+  onRefresh: () => Promise<void>; // Callback to re-fetch from the parent
 }
 
-function ReviewList({ reviews, hotelId, userId }:ReviewListProps) {
+function ReviewList({ reviews, hotelId, userId, onRefresh }:ReviewListProps) {
   return (
     <div style={{ marginLeft: "1rem" }}>
       {reviews.map((review) => (
@@ -20,6 +21,7 @@ function ReviewList({ reviews, hotelId, userId }:ReviewListProps) {
           review={review}
           hotelId={hotelId}
           userId={userId}
+          onRefresh={onRefresh}
         />
       ))}
     </div>
@@ -32,13 +34,14 @@ interface ReviewItemProps {
   review: Review;
   hotelId: number;
   userId?: number;
+  onRefresh: () => Promise<void>; // Callback to re-fetch from the parent
 }
 
 /**
  * Displays a single review along with a button to reply,
  * and recursively shows any nested replies.
  */
-function ReviewItem({ review, hotelId, userId } : ReviewItemProps) {
+function ReviewItem({ review, hotelId, userId, onRefresh } : ReviewItemProps) {
   const { reviewId, body, rating, replies } = review;
 
   const [showReplyForm, setShowReplyForm] = useState(false);
@@ -61,7 +64,7 @@ function ReviewItem({ review, hotelId, userId } : ReviewItemProps) {
 
     try {
       await axios.post(`${Supplementaries.serverLink}reviews`, replyPayload);
-      // TODO re-fetch the reviews so the new reply appears immediately.
+      await onRefresh();
       // reset the form and hide it:
       setReplyBody("");
       setReplyRating(5);
@@ -77,7 +80,7 @@ function ReviewItem({ review, hotelId, userId } : ReviewItemProps) {
       <p>Body: {body}</p>
       <p>Rating: {rating}</p>
 
-      <button onClick={() => setShowReplyForm((prev) => !prev)}>
+      <button onClick={() => setShowReplyForm(!showReplyForm)}>
         {showReplyForm ? "Cancel Reply" : "Reply"}
       </button>
 
@@ -108,7 +111,12 @@ function ReviewItem({ review, hotelId, userId } : ReviewItemProps) {
 
       {/* Recursive display of any child replies */}
       {replies && replies.length > 0 && (
-        <ReviewList reviews={replies} hotelId={hotelId} userId={userId} />
+        <ReviewList 
+          reviews={replies} 
+          hotelId={hotelId} 
+          userId={userId} 
+          onRefresh={onRefresh} 
+        />
       )}
     </div>
   );
