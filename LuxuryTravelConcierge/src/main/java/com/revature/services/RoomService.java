@@ -3,13 +3,17 @@ package com.revature.services;
 import com.revature.DAOS.RoomDAO;
 import com.revature.models.Hotel;
 import com.revature.models.Room;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RoomService {
     private final RoomDAO roomDAO;
 
+    @Autowired
     public RoomService(RoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }
@@ -26,8 +30,8 @@ public class RoomService {
         return roomDAO.findAll();
     }
 
-    public List<Room> getAllRoomsByHotel(Integer hotelId){
-        return roomDAO.findByHotelId(hotelId);
+    public List<Room> getAllRoomsByHotel(Hotel hotel){
+        return roomDAO.findByHotel(hotel);
     }
 
     public Room createNewRoom(Room room) {

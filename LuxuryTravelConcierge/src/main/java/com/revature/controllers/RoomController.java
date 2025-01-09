@@ -20,14 +20,12 @@ public class RoomController {
 
     private final RoomService roomService;
     private final HotelService hotelService;
-    private final AdminService adminService;
 
 
     @Autowired
-    public RoomController(RoomService roomService, HotelService hotelService, AdminService adminService) {
+    public RoomController(RoomService roomService, HotelService hotelService) {
         this.roomService = roomService;
         this.hotelService = hotelService;
-        this.adminService = adminService;
     }
 
 
@@ -37,7 +35,7 @@ public class RoomController {
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
 
-        List<Room> allRooms = roomService.getAllRoomsByHotel(hotelId);
+        List<Room> allRooms = roomService.getAllRoomsByHotel(gottenHotel.get());
 
         return ResponseEntity.ok(allRooms);
     }
