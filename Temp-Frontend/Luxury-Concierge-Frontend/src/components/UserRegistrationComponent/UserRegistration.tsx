@@ -12,7 +12,7 @@ const UserRegistration = () => {
 
     const onSuccess: onSuccess = (data : any) =>{
         setError("");
-        window.location.href = "http://localhost:5173/"
+        window.location.href = Supplementaries.clientLink
     }
     
     const onFailure: onError = (error : any) =>{

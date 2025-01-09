@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
+import Supplementaries from "../../SupplementaryClass";
 
 // Initialize Stripe with publishable key BY using test card
 const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx"); 
@@ -26,7 +27,7 @@ function PaymentForm(){
 
     try {
       // Create a payment intent on the server
-      const response = await axios.post("http://localhost:8080/payments/create-payment-intent", {
+      const response = await axios.post(Supplementaries.serverLink + "payments/create-payment-intent", {
         amount: amount * 100, // Convert dollars to cents
       });
 
