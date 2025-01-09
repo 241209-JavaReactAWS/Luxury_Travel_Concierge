@@ -48,7 +48,7 @@ function nav() {
           >
             <Button variant="contained" color="secondary" 
               sx={{ color: "black", background: "rgba(0, 0, 0, 0.1)" }} 
-              onClick={() => navToPage(Supplementaries.clientLink + "/userRegistration")}>
+              onClick={() => navToPage(Supplementaries.clientLink + "UserRegistration")}>
               Sign Up
             </Button>
           </Box>
