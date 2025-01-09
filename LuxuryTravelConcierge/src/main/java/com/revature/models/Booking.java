@@ -1,8 +1,11 @@
 package com.revature.models;
 
 
-import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "bookings")
@@ -11,7 +14,7 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookingId;
+    private long bookingId;
 
     //Will use a foreign key to room id later
     private int roomId;
@@ -25,7 +28,11 @@ public class Booking {
     private String checkOutDate;
 
     private int price;
-    
+
+    private int numberOfGuests;
+
+    private String status;
+
 
 
     public Booking() {
@@ -41,11 +48,11 @@ public class Booking {
     }
 
 
-    public int getBookingId() {
-        return bookingId;
+    public long getBookingId() {
+        return this.bookingId;
     }
 
-    public void setBookingId(int bookingId) {
+    public void setBookingId(long bookingId) {
         this.bookingId = bookingId;
     }
 
@@ -89,5 +96,22 @@ public class Booking {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

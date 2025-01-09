@@ -1,3 +1,7 @@
+/*
+    This interface is to mimic the User dataset
+*/
+
 interface UserInterface{
     userId ?: number,
     username ?: string,

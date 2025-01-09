@@ -4,7 +4,7 @@ import { Room } from "./Room";
 
 export interface Hotel {
     hotelId: number;
-    hotelName: string;
+    name: string;
     location: string;
 
     // hotelStreet: string; 

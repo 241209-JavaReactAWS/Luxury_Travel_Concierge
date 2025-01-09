@@ -17,8 +17,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
+
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
@@ -54,9 +55,10 @@ public class AdminController {
             session.setAttribute("username", possibleAdmin.get().getUsername());
             session.setAttribute("adminId", possibleAdmin.get().getAdminId());
 //            session.setAttribute("role", possibleAdmin.get().getRole());
-            Cookie cookie = new Cookie("Admin_Id",Integer.toString(possibleAdmin.get().getAdminId()));
-            cookie.setMaxAge(10000);
-            http.addCookie(cookie);
+//            Cookie cookie = new Cookie("Admin_Id",Integer.toString(possibleAdmin.get().getAdminId()));
+//            cookie.setMaxAge(10000);
+//            cookie.setPath("../");
+//            http.addCookie(cookie);
         }
         return possibleAdmin
                 .map(ResponseEntity::ok)
@@ -152,17 +154,45 @@ public class AdminController {
 
 
 
+
+//    @DeleteMapping("/hotels")
+//    public ResponseEntity<Admin> removeHotelHandler(HttpSession session,
+//                                                 @RequestBody Hotel hotel){
+//        Integer curAdminId = (Integer)session.getAttribute("adminId");
+//        if(session.isNew()||curAdminId==null){
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
+//
+//
+//        if (targetAdmin.isPresent()){
+//            Hotel targetHotel = new Hotel();
+//            targetHotel.setName(hotel.getName());
+//            targetHotel.setImageUrl(hotel.getImageUrl());
+//            targetHotel.setLocation(hotel.getLocation());
+//            targetHotel.setAdmin(targetAdmin.get());
+//            Hotel removedHotel = hotelService.removeTargetHotel(targetHotel);
+//            Admin newAdmin = adminService.removeHotelFromAdmin(targetAdmin.get(),removedHotel);
+//            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
+//        }
+//        else{
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
     @PostMapping(value="cookie")
     public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
         Cookie cookie = new Cookie("Admin_Id",null);
         cookie.setMaxAge(0);
+        cookie.setPath("../");
         servlet.addCookie(cookie);
         return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
     }
 
     @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "RAdmin_Id", defaultValue = "none") String cookie){
+    public ResponseEntity getLoginCookie(@CookieValue(value = "Admin_Id", defaultValue = "none") String cookie){
         if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
         return ResponseEntity.status(HttpStatus.OK).body(cookie);
     }
+
 }

@@ -11,7 +11,9 @@ import java.util.List;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Integer reviewId;
+
 
     private String body;
 
@@ -49,7 +51,9 @@ public class Review {
         return reviewId;
     }
 
+
     public void setReviewId(Integer reviewId) {
+
         this.reviewId = reviewId;
     }
 

@@ -11,10 +11,10 @@ import BookingPage from './components/BookingComponent/BookingPage'
 import FormTemplate from './components/FormTemplate/FormTemplate'
 import UserRegistration from './components/UserRegistrationComponent/UserRegistration'
 import AdminRegister from './components/RegisterComponents/AdminRegister'
+import BookingDataChart from './components/BookingDataChart/BookingDataChart'
+import BookingAdmin from './components/BookingComponent/BookingAdmin'
 
 function App() {
-  const [count, setCount] = useState(0)
-  console.log("App component is rendering");
 
   return (
     <>
@@ -26,6 +26,7 @@ function App() {
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
             <Route path="/UserRegistration" element={<UserRegistration></UserRegistration>}></Route>
+            <Route path="/test" element={<BookingDataChart></BookingDataChart>}></Route>
           </Routes>
         </BrowserRouter>
     </>
