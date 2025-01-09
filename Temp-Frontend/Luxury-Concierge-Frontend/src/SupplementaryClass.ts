@@ -39,9 +39,10 @@ class Supplementaries{
           // Format dates as 'yy-mm-dd'
           const formattedStart = randomStart.toISOString().split('T')[0].slice(2); // Format: yy-mm-dd
           const formattedEnd = randomEnd.toISOString().split('T')[0].slice(2);
-      
+          const amountofpeople =  Math.ceil(Math.random() * 8);
+
           // Add the date range to the array
-          dateRanges.push({ start_date: formattedStart, end_date: formattedEnd });
+          dateRanges.push({ checkInDate: formattedStart, checkOutDate: formattedEnd, numberOfGuests:amountofpeople});
         }
 
         return dateRanges;
@@ -49,8 +50,8 @@ class Supplementaries{
 
     static sortDates(dateList : any){
         dateList.sort((a : any, b : any) => {
-            const dateA : any= new Date(`20${a.start_date}`);
-            const dateB :any= new Date(`20${b.start_date}`);
+            const dateA : any= new Date(`20${a.checkInDate}`);
+            const dateB :any= new Date(`20${b.checkOutDate}`);
             return dateA - dateB;
         });
         
@@ -59,7 +60,7 @@ class Supplementaries{
     static filterDateRangesBefore(data:any,distance:number){
             let dateRanges = [];
             for(let i = 0; i < data.length; i++){
-                const start_date = new Date(`20${data[i].end_date}`)
+                const start_date = new Date(`20${data[i].checkOutDate}`)
                 const farthest_date = new Date()
                 farthest_date.setDate(farthest_date.getDate() - distance)
 
@@ -73,7 +74,7 @@ class Supplementaries{
     static filterDateRangesAfterToday(data:any){
         let dateRanges = [];
             for(let i = 0; i < data.length; i++){
-                const end_date = new Date(`20${data[i].end_date}`)
+                const end_date = new Date(`20${data[i].checkOutDate}`)
                 const earliest_date = new Date()
                 earliest_date.setDate(earliest_date.getDate() + 1)
 
@@ -90,9 +91,9 @@ class Supplementaries{
 
         // Step 1: Process the input data
         data.forEach((booking:any) => {
-            const startDate:any = new Date(`20${booking.start_date}`);
-            const endDate:any = new Date(`20${booking.end_date}`);
-            const peopleCount:any = 1;
+            const startDate:any = new Date(`20${booking.checkInDate}`);
+            const endDate:any = new Date(`20${booking.checkOutDate}`);
+            const peopleCount:number = booking.numberOfGuests;
 
             // Add people count to the start date
             dailyCount[startDate.toISOString().split('T')[0]] = (dailyCount[startDate.toISOString().split('T')[0]] || 0) + peopleCount;
