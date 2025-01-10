@@ -50,7 +50,17 @@ export default function nav() {
 
                         <MenuItem onClick={() => navToPage('/UserRegistration')}>New Account</MenuItem>
 
-                      
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/test')}>Admin Stats</MenuItem>
+                        
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/reviews')}>Reviews</MenuItem>
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem>
 
                     </Menu>
                 </Toolbar>

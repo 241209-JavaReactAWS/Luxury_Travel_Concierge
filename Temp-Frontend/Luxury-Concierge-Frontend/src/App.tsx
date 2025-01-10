@@ -29,7 +29,7 @@ export const authContext = createContext<AuthContextType | null>(null);
 
 
 function App() {
-  
+
 
   return (
     <>
