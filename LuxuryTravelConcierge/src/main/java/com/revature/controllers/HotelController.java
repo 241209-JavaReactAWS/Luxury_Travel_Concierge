@@ -31,33 +31,47 @@ public class HotelController {
         this.hotelService = hotelService;
         this.bookingService = bookingService;
     }
-    // @GetMapping
-    // public ResponseEntity<List<Hotel>> getAllHotelsHandler(){
-    //     return new ResponseEntity<>(hotelService.getAllHotels(),HttpStatus.OK);
-    // }
 
     @GetMapping
-    public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,
-                                            @RequestParam(name = "location", required = false) String location){
-        if (name != null) {
-            return hotelService.searchAllByHotelName(name);
+    public ResponseEntity<List<Hotel>> getHotelByFiltering(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "location", required = false) String location) {
+
+        // Input validation
+        if (name != null && name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (location != null && location.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Hotel> results;
+
+        // Combined filtering logic
+        if (name != null && location != null) {
+            results = hotelService.searchByNameAndLocation(name, location);
+        } else if (name != null) {
+            results = hotelService.searchAllByHotelName(name);
         } else if (location != null) {
-            return hotelService.searchByHotelLocation(location);
+            results = hotelService.searchByHotelLocation(location);
         } else {
-            return hotelService.getAllHotels(); 
+            results = hotelService.getAllHotels();
         }
+
+        return ResponseEntity.ok(results);
     }
+//    public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,
+//                                            @RequestParam(name = "location", required = false) String location){
+//        if (name != null) {
+//            return hotelService.searchAllByHotelName(name);
+//        } else if (location != null) {
+//            return hotelService.searchByHotelLocation(location);
+//        } else {
+//            System.out.println(name);
+//            return hotelService.getAllHotels();
+//        }
+//    }
 
-    @PostMapping
-    public ResponseEntity<Hotel> createHandler(@RequestBody Hotel hotel) {
-        Hotel possibleHotel = hotelService.createNewHotel(hotel);
-
-        if (possibleHotel == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(possibleHotel, HttpStatus.CREATED);
-
-    }
 
     @GetMapping("data/{hotelId}")
     public ResponseEntity<List<Booking>> getAllBookingsOfHotel(@PathVariable int hotelId){
@@ -84,33 +98,33 @@ public class HotelController {
 
     }
 
-    @PutMapping("{hotelId}")
-    public ResponseEntity<Hotel> updateHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
-
-        if (hotel.getHotelId() != hotelId) {
-            return ResponseEntity.badRequest().build(); // Bad Request
-        }
-    
-        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
-        if (existingHotel.isEmpty()) {
-            return ResponseEntity.notFound().build(); // Hotel Not Found
-        }
-        
-        Hotel updatedHotel = hotelService.updateHotel(hotel,hotelId);
-        return ResponseEntity.ok(updatedHotel);
-    }
-
-    @DeleteMapping("{hotelId}")
-    public ResponseEntity<Void> deleteHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
-
-        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
-        if (existingHotel.isEmpty()) {
-            return ResponseEntity.notFound().build(); // Hotel Not Found
-        }
-
-        hotelService.deleteHotel(hotel, hotelId);
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("{hotelId}")
+//    public ResponseEntity<Hotel> updateHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
+//
+//        if (hotel.getHotelId() != hotelId) {
+//            return ResponseEntity.badRequest().build(); // Bad Request
+//        }
+//
+//        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
+//        if (existingHotel.isEmpty()) {
+//            return ResponseEntity.notFound().build(); // Hotel Not Found
+//        }
+//
+//        Hotel updatedHotel = hotelService.updateHotel(hotel,hotelId);
+//        return ResponseEntity.ok(updatedHotel);
+//    }
+//
+//    @DeleteMapping("{hotelId}")
+//    public ResponseEntity<Void> deleteHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
+//
+//        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
+//        if (existingHotel.isEmpty()) {
+//            return ResponseEntity.notFound().build(); // Hotel Not Found
+//        }
+//
+//        hotelService.deleteHotel(hotel, hotelId);
+//        return ResponseEntity.ok().build();
+//    }
 
 
     

@@ -66,6 +66,11 @@ public class HotelService {
         return hotelDAO.findAllByLocation(location);
     }
 
+    public List<Hotel> searchByNameAndLocation(String name, String location) {
+        // Implementation depends on your repository layer
+        return hotelDAO.findByNameContainingIgnoreCaseAndLocationContainingIgnoreCase(name, location);
+    }
+
 
 
 }
