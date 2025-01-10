@@ -12,4 +12,5 @@ public interface HotelDAO extends JpaRepository<Hotel,Integer> {
     Optional<Hotel> findByName(String name);
     List<Hotel> findAllByname(String name);
     List<Hotel> findAllByLocation(String location);
+    List<Hotel> findByNameContainingIgnoreCaseAndLocationContainingIgnoreCase(String name, String location);
 }

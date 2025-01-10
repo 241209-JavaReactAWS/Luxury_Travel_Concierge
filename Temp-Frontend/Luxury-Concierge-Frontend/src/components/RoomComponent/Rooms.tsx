@@ -4,10 +4,10 @@ import axios from 'axios';
 import { Room } from '../../interfaces/Room'
 import { Hotel } from '../../interfaces/Hotel'
 import Supplementaries from '../../SupplementaryClass';
-
+import BookingPage from '../BookingComponent/BookingPage';
 
 function Rooms() {
-    const { hotelId } = useParams<{hotelId: string}>();
+    const { hotelId } = useParams();
     const [rooms, setRooms] = useState<Room[]>([]);
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ function Rooms() {
         setFilters(prevFilters => {
             const updatedFilters = { ...prevFilters, ...newFilters };
             const queryParams = new URLSearchParams(updatedFilters).toString();
-            navigate(`?${queryParams}`, { replace: true }); // This updates the URL without reloading
+            navigate(`?${queryParams}`, { replace: true}); // This updates the URL without reloading
             return updatedFilters;
         });
     };
@@ -51,6 +51,7 @@ return (
             <img src={hotel.imageUrl} alt={`${hotel.name} Image`}/>
             <h1>{hotel.name}</h1>
             <p>
+            Address: {hotel.location}
             Address: {hotel.location}
             </p>
 
@@ -100,6 +101,7 @@ return (
                         <p>Type: {room.roomType}</p>
                         <p>Capacity: {room.maxOccupancy}</p>
                         <p>Status: {room.availability}</p>
+                        <p>Booking: {BookingPage(room)}</p>
                     </li>
                 ))
             ) : ( <p> Unforunately, there are no rooms available for this hotel. Please try again later.</p>)}

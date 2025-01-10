@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { createContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -17,7 +17,19 @@ import HotelManagementPage from './components/HotelComponent/HotelManagement'
 import HotelReviews from './components/ReviewComponent/Reviews'
 import StripePaymentForm from './components/PaymentComponent/Payment'
 
+
+export interface AuthContextType{
+  userName: string,
+  setUsername: (userName: string) => void,
+  role: "nonuser" | "CUSTOMER" | "ADMIN",
+  setRole: (role: "nonuser" | "CUSTOMER" | "ADMIN") => void
+}
+
+export const authContext = createContext<AuthContextType | null>(null);
+
+
 function App() {
+  
 
   return (
     <>
