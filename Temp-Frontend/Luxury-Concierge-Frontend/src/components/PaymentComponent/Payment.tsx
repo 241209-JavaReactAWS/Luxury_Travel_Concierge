@@ -3,6 +3,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import Supplementaries from "../../SupplementaryClass";
+import "./payment.css";
 
 // Initialize Stripe with publishable key BY using test card
 const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx"); 
@@ -55,6 +56,21 @@ function PaymentForm(){
     }
   };
 
+  const cardStyle = {
+    style: {
+      base: {
+        fontSize: "25px", // Increase font size
+        color: "#32325d",
+        "::placeholder": {
+          color: "#aab7c4",
+        },
+      },
+      invalid: {
+        color: "#fa755a",
+      },
+    },
+  };
+
   return (
     <div>
       <h2>Make a Payment</h2>
@@ -71,7 +87,7 @@ function PaymentForm(){
           />
         </div>
         <div>
-          <CardElement />
+          <CardElement options={cardStyle}/>
         </div>
         <button type="submit" disabled={!stripe || isLoading}>
           {isLoading ? "Processing..." : "Pay"}
@@ -84,9 +100,11 @@ function PaymentForm(){
 
 function StripePaymentForm (){
     return (
-        <Elements stripe={stripePromise}>
-            <PaymentForm />
-        </Elements>
+        <div className="elements-container">
+            <Elements stripe={stripePromise}>
+                <PaymentForm />
+            </Elements>
+        </div> 
     )
 };
 
