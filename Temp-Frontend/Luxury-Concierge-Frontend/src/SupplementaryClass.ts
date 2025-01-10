@@ -104,10 +104,25 @@ class Supplementaries{
         // Step 2: Sort the dates and accumulate the counts
         const allDates = Object.keys(dailyCount).sort();
         const result:any = {};
-
+        let finalDate : any;
         allDates.forEach(date => {
             result[date] = dailyCount[date];
+            finalDate = date;
         });
+
+        // Step 3: Fill in the gaps
+        finalDate = new Date(finalDate);
+        let end = new Date();
+        end.setDate(end.getDate() - 1);
+
+        while(finalDate <= end){
+            finalDate = new Date(finalDate);
+            finalDate.setDate(finalDate.getDate() + 1);
+
+            if(!result[finalDate.toISOString().split('T')[0]]){
+                result[finalDate.toISOString().split('T')[0]] = 0.2;
+            }
+        }
 
         return result;
     }

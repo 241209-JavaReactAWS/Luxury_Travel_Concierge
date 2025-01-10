@@ -76,7 +76,7 @@ const BookingDataChart = (props:any) => {
        .then((data)=>{
             let values = data.data;
             let y = Supplementaries.filterDateRangesBefore(values,364)
-
+            y = Supplementaries.filterDateRangesAfterToday(y);
             Supplementaries.sortDates(y)
             let z = Supplementaries.CreateOccupencyCount(y)
             const chartdata:any[] = Supplementaries.ConvertOccupancyCountJsonToList(z)
