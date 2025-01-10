@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
+@RestController
 @RequestMapping("/payments")
 public class PaymentController {
 

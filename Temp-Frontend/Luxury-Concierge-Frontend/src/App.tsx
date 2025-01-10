@@ -13,6 +13,9 @@ import UserRegistration from './components/UserRegistrationComponent/UserRegistr
 import AdminRegister from './components/RegisterComponents/AdminRegister'
 import BookingDataChart from './components/BookingDataChart/BookingDataChart'
 import BookingAdmin from './components/BookingComponent/BookingAdmin'
+import HotelManagementPage from './components/HotelComponent/HotelManagement'
+import HotelReviews from './components/ReviewComponent/Reviews'
+import StripePaymentForm from './components/PaymentComponent/Payment'
 
 function App() {
 
@@ -24,9 +27,12 @@ function App() {
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
             <Route path="/OwnerRegistration" element={<AdminRegister></AdminRegister>}></Route>
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
+            <Route path="/HotelManagement" element={<HotelManagementPage></HotelManagementPage>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
             <Route path="/UserRegistration" element={<UserRegistration></UserRegistration>}></Route>
             <Route path="/test" element={<BookingDataChart></BookingDataChart>}></Route>
+            <Route path="/reviews" element={<HotelReviews hotelId={1}></HotelReviews>}></Route>
+            <Route path="/payment" element={<StripePaymentForm></StripePaymentForm>}></Route>
           </Routes>
         </BrowserRouter>
     </>

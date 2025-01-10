@@ -38,7 +38,7 @@ function BookingPage(props : Room) {
 
   const handleBooking = async () => {
     try {
-      const res = await axios.post(Supplementaries.serverLink + `bookings`, newBooking);
+      const res = await axios.post(`${Supplementaries.serverLink}bookings`, newBooking);
       console.log(res.data);
       handleClose();
     } catch (error) {

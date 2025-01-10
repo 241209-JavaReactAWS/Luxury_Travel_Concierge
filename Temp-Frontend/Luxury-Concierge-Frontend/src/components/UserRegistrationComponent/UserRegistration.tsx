@@ -45,7 +45,7 @@ const UserRegistration = () => {
             <p className='ErrorText'>{error}</p>
             <div id='bottomRightOfForm'>
                 <div>
-                    <p className='InfoLink'><a href='Google.com'>Register as Admin?</a></p>
+                    <p className='InfoLink'><a href={Supplementaries.clientLink + "OwnerRegistration"}>Register as Admin?</a></p>
                     <p className='InfoLink'><a href={Supplementaries.clientLink}>Already a User?</a></p>
                 </div>
                 <SubmissionButton type="POST" onSuccess={onSuccess} onError={onFailure} endpoint={Supplementaries.serverLink +"users/register"} statusChanger={setStatus} placeholder='Register as User' 

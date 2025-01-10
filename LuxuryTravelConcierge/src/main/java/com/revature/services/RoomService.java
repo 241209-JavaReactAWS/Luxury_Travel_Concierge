@@ -1,14 +1,19 @@
 package com.revature.services;
 
 import com.revature.DAOS.RoomDAO;
+import com.revature.models.Hotel;
 import com.revature.models.Room;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class RoomService {
     private final RoomDAO roomDAO;
 
+    @Autowired
     public RoomService(RoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }
@@ -25,12 +30,32 @@ public class RoomService {
         return roomDAO.findAll();
     }
 
+    public List<Room> getAllRoomsByHotel(Hotel hotel){
+        return roomDAO.findByHotel(hotel);
+    }
+
     public Room createNewRoom(Room room) {
         Optional<Room> targetRoom = roomDAO.findByRoomNumber(room.getRoomNumber());
-        if (targetRoom.isEmpty()) {
+        if (targetRoom.isEmpty() && room.getRoomNumber() >= 0 && room.getMaxOccupancy() > 0) {
             return roomDAO.save(room);
         }
         return null;
+    }
+
+    public Room updateRoomInfo(Room room){
+        if(roomDAO.findById(room.getRoomId()).isEmpty()) return null;
+        Optional<Room> targetRoom = roomDAO.findByRoomNumber(room.getRoomNumber());
+        if (room.getRoomNumber() >= 0 && room.getMaxOccupancy() > 0) {
+            return roomDAO.save(room);
+        }
+        return null;
+    }
+
+    public Room deleteRoomById(Room room){
+        Optional<Room> found = roomDAO.findById(room.getRoomId());
+        if(found.isEmpty()) return null;
+        roomDAO.delete(room);
+        return found.get();
     }
 
 }

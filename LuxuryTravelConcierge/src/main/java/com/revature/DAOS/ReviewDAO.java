@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ReviewDAO extends JpaRepository<Review, Long> {
     List<Review> findByParentReview(Review parentReview);
+
+    List<Review> findByHotel_HotelId(Long hotelId);
 }
