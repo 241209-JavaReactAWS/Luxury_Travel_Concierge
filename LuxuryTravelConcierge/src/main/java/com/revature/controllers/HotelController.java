@@ -84,33 +84,33 @@ public class HotelController {
 
     }
 
-    @PutMapping("{hotelId}")
-    public ResponseEntity<Hotel> updateHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
+    // @PutMapping("{hotelId}")
+    // public ResponseEntity<Hotel> updateHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
 
-        if (hotel.getHotelId() != hotelId) {
-            return ResponseEntity.badRequest().build(); // Bad Request
-        }
+    //     if (hotel.getHotelId() != hotelId) {
+    //         return ResponseEntity.badRequest().build(); // Bad Request
+    //     }
     
-        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
-        if (existingHotel.isEmpty()) {
-            return ResponseEntity.notFound().build(); // Hotel Not Found
-        }
+    //     Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
+    //     if (existingHotel.isEmpty()) {
+    //         return ResponseEntity.notFound().build(); // Hotel Not Found
+    //     }
         
-        Hotel updatedHotel = hotelService.updateHotel(hotel,hotelId);
-        return ResponseEntity.ok(updatedHotel);
-    }
+    //     Hotel updatedHotel = hotelService.updateHotel(hotel,hotelId);
+    //     return ResponseEntity.ok(updatedHotel);
+    // }
 
-    @DeleteMapping("{hotelId}")
-    public ResponseEntity<Void> deleteHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
+    // @DeleteMapping("{hotelId}")
+    // public ResponseEntity<Void> deleteHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
 
-        Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
-        if (existingHotel.isEmpty()) {
-            return ResponseEntity.notFound().build(); // Hotel Not Found
-        }
+    //     Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
+    //     if (existingHotel.isEmpty()) {
+    //         return ResponseEntity.notFound().build(); // Hotel Not Found
+    //     }
 
-        hotelService.deleteHotel(hotel, hotelId);
-        return ResponseEntity.ok().build();
-    }
+    //     hotelService.deleteHotel(hotel, hotelId);
+    //     return ResponseEntity.ok().build();
+    // }
 
 
     

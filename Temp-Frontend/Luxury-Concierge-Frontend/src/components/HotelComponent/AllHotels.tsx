@@ -215,7 +215,7 @@ function AllHotels() {
                         value={searchName}
                         onChange={(e) => setSearchName(e.target.value)}
                     />
-                    <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                    <Divider sx={{ height: 28, m: 0.5, paddding:"10px" }} orientation="vertical" />
                     <InputBase
                         sx={{
                             ml: 1,
@@ -275,7 +275,6 @@ function AllHotels() {
                                 >
                                     <FavoriteBorderIcon
                                         color="warning"
-                                        // "disabled" | "action" | "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning", SvgIconPropsColorOverrides
                                         onClick={() => handleFavorite(hotel)}
                                         sx={{ 
                                             cursor: 'pointer', 
