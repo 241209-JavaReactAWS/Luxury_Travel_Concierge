@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import com.revature.DAOS.HotelDAO;
 import com.revature.models.Booking;
 import com.revature.models.Hotel;
 import com.revature.models.Room;
@@ -35,6 +36,13 @@ public class HotelController {
     // public ResponseEntity<List<Hotel>> getAllHotelsHandler(){
     //     return new ResponseEntity<>(hotelService.getAllHotels(),HttpStatus.OK);
     // }
+
+    @GetMapping("{hotelId}")
+    public ResponseEntity<Hotel> getHotelById(@PathVariable Integer hotelId){
+        Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
+        if (hotel.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(hotel.get());
+    }
 
     @GetMapping
     public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,

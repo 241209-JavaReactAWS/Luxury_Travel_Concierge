@@ -29,7 +29,7 @@ function LoginPage() {
     const onSuccess: onSuccess = (data : any) =>{
         setStatus(0);
         alert("Success")
-        window.location.href = Supplementaries.clientLink
+        window.location.href = Supplementaries.clientLink + "Hotels"
     }
     
     const onFailure: onError = (error : any) =>{

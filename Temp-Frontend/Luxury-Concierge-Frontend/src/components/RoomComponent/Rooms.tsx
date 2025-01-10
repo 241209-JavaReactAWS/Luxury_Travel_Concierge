@@ -12,19 +12,19 @@ function Rooms() {
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
     const [filters, setFilters] = useState({ availability: '', roomType: '', capacity: ''});
+    
 
     useEffect(() => {
-        const queryParams = new URLSearchParams(filters).toString();
-        const url = `${Supplementaries.serverLink}hotel/${hotelId}/rooms?${queryParams}`;
-
-        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`)
+        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true})
         .then((res) => {
         setHotel(res.data);
         })
         .catch((error) => {
-    console.error("Error fetching hotel details", error);
+            console.error("Error fetching hotel details", error);
         });
-        axios.get<Room[]>(url)
+        
+        
+        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`)
             .then((res) => {
                 setRooms(res.data);
             })
@@ -48,13 +48,12 @@ return (
         <header>
         {hotel ? (
         <div className="hotel-summary">
-            <img src={hotel.hotelImage} alt={`${hotel.hotelName} Image`} />
-            <h1>{hotel.hotelName}</h1>
+            <img src={hotel.imageUrl} alt={`${hotel.name} Image`}/>
+            <h1>{hotel.name}</h1>
             <p>
-            Address: {hotel.hotelStreet}, {hotel.hotelCity}, {hotel.hotelState} {hotel.hotelZipcode}
+            Address: {hotel.location}
             </p>
-            <p>Phone: {hotel.hotelPhoneNumber}</p>
-            <p>Email: {hotel.hotelEmail}</p>
+
         </div>
         ) : (
         <p>Loading hotel details...</p>
@@ -96,10 +95,10 @@ return (
         <ul>
                 {rooms.length > 0 ? (rooms.map(room => (
                     <li key={room.roomId}>
-                        <img src={room.roomImage} alt={`${room.roomName}`} style={{ width: '200px', height: '150px' }} />
+                        <img src={room.imageUrl} alt={`${room.roomName}`} style={{ width: '200px', height: '150px' }} />
                         <h3>{room.roomName}</h3>
                         <p>Type: {room.roomType}</p>
-                        <p>Capacity: {room.capacity}</p>
+                        <p>Capacity: {room.maxOccupancy}</p>
                         <p>Status: {room.availability}</p>
                     </li>
                 ))

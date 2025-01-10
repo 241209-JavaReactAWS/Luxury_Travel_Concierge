@@ -22,7 +22,7 @@ function AllHotels() {
     const [filteredHotels, setFilteredHotels] = useState<Hotel[]>([]);
 
     useEffect(()=>{
-        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel")
+        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel",{ withCredentials: true})
             .then((res)=>{
                 console.log(res.data);
                 setAllHotels(res.data)

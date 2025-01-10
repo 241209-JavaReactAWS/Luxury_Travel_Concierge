@@ -75,10 +75,6 @@ public class UserController {
 
             session.setAttribute("username", returnedUser.getUsername());
 
-            Cookie cookie = new Cookie("User_Id",Integer.toString(user.getUserId()));
-            cookie.setMaxAge(10000);
-            http.addCookie(cookie);
-
             return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
         }
         catch(WrongPasswordException | NoUserFoundException e){
@@ -126,22 +122,5 @@ public class UserController {
         }
         return ResponseEntity.ok(returnedUser);
     }
-
-
-    @PostMapping(value="cookie")
-    public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("User_Id",null);
-        cookie.setMaxAge(0);
-        cookie.setPath("../");
-        servlet.addCookie(cookie);
-        return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
-    }
-
-    @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "User_Id", defaultValue = "none") String cookie){
-        if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
-        return ResponseEntity.status(HttpStatus.OK).body(cookie);
-    }
-
 
 }
