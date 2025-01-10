@@ -48,16 +48,16 @@ public class HotelController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Hotel> createHandler(@RequestBody Hotel hotel) {
-        Hotel possibleHotel = hotelService.createNewHotel(hotel);
-
-        if (possibleHotel == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(possibleHotel, HttpStatus.CREATED);
-
-    }
+//    @PostMapping
+//    public ResponseEntity<Hotel> createHandler(@RequestBody Hotel hotel) {
+//        Hotel possibleHotel = hotelService.createNewHotel(hotel);
+//
+//        if (possibleHotel == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(possibleHotel, HttpStatus.CREATED);
+//
+//    }
 
     @GetMapping("data/{hotelId}")
     public ResponseEntity<List<Booking>> getAllBookingsOfHotel(@PathVariable int hotelId){
