@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Room {
 
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="hotelId")
     private Hotel hotel;
 
