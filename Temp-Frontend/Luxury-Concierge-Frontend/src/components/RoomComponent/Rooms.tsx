@@ -101,7 +101,7 @@ return (
                         <p>Type: {room.roomType}</p>
                         <p>Capacity: {room.maxOccupancy}</p>
                         <p>Status: {room.availability}</p>
-                        <p>Booking: {BookingPage(room)}</p>
+                        <p>Booking: <BookingPage {...room} /></p>
                     </li>
                 ))
             ) : ( <p> Unforunately, there are no rooms available for this hotel. Please try again later.</p>)}
