@@ -34,11 +34,11 @@ public class RoomController {
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
-
         List<Room> allRooms = roomService.getAllRoomsByHotel(gottenHotel.get());
 
         return ResponseEntity.ok(allRooms);
     }
+
 
     @PostMapping("{hotelId}")
     public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){

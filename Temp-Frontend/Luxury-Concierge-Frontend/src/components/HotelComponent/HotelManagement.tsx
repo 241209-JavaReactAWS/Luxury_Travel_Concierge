@@ -7,12 +7,6 @@ interface Hotel {
   hotelId: number;
   name: string;
   location: string;
-  // city: string;
-  // state: string;
-  // country: string;
-  // postalCode: string;
-  // phone: string;
-  // email: string;
   description: string;
   imageUrl: string;
 }
@@ -29,12 +23,6 @@ const HotelManagementPage: React.FC = () => {
   const [currentHotel, setCurrentHotel] = useState<Partial<Hotel>>({
     name: "",
     location: "",
-    // city: "",
-    // state: "",
-    // country: "",
-    // postalCode: "",
-    // phone: "",
-    // email: "",
     description: "",
     imageUrl: "",
   });
@@ -42,19 +30,11 @@ const HotelManagementPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch hotels owned by the logged-in user
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const response = await fetch(Supplementaries.serverLink + "hotels");
-        const data = await response.json();
-        setHotels(data);
-      } catch (error) {
-        console.error("Error fetching hotels:", error);
-      }
-    };
-
-    fetchHotels();
-  }, []);
+useEffect(() => {
+  axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+        .then((response) => {setHotels(response.data);})
+        .catch((error) => {throw new Error("Failed to fetch hotels");});
+    }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -73,6 +53,27 @@ const HotelManagementPage: React.FC = () => {
     setCurrentHotel(hotel);
   };
 
+  const handleCreateHotel = async () => {
+    let data : any = {
+      name: newHotel.name,
+      location: newHotel.location,
+      description: newHotel.description,
+      imageUrl: newHotel.imageUrl,
+    }
+    setNewHotel({ name: "", location: "", description: "", imageUrl: "" });
+    setIsModalOpen(false);
+
+    await axios.post(`${Supplementaries.serverLink}admin/hotels`, data, { withCredentials: true })
+    .then((response) => {
+        setHotels([...hotels, response.data]);
+    })
+    .catch((error) => { throw new Error("Failed to add hotel"); });
+
+    axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+        .then((response) => {setHotels(response.data);})
+        .catch((error) => {throw new Error("Failed to fetch hotels");});
+  }
+
   const handleUpdateHotel = async () => {
     try {
       const formData = new FormData();
@@ -81,41 +82,17 @@ const HotelManagementPage: React.FC = () => {
         if (value) formData.append(key, value.toString());
       });
 
-      const response = await fetch(`${Supplementaries.serverLink}hotels/${currentHotel.hotelId}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error("Failed to update hotel");
-      alert("Hotel updated successfully!");
-      setIsEditing(false);
-      setSelectedImage(null);
-      // fetchHotels();
+      axios.put(`${Supplementaries.serverLink}hotel/${currentHotel.hotelId}`, formData, { withCredentials: true })
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Hotel updated successfully!");
+          setIsEditing(false);
+          setSelectedImage(null);
+        }
+      })
+      .catch((error) => { throw new Error("Failed to update hotel"); });
     } catch (error) {
       console.error("Error updating hotel:", error);
-      alert("Failed to update hotel.");
-    }
-  };
-  const handleAddHotel = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${Supplementaries.serverLink}hotels`,
-        newHotel
-      );
-      if (response.status === 201) {
-        alert("Hotel added successfully");
-        setHotels([...hotels, response.data]);
-        setNewHotel({
-          name: "",
-          location: "",
-          description: "",
-          imageUrl: "",
-        });
-        setIsModalOpen(false);
-      }
-    } catch (error) {
-      console.error("Error adding hotel:", error);
     }
   };
 
@@ -140,7 +117,7 @@ const HotelManagementPage: React.FC = () => {
               &times;
             </span>
             <h2>Add New Hotel</h2>
-            <form onSubmit={handleAddHotel}>
+            <form onSubmit={handleCreateHotel}>
               <label>
                 Name:
                 <input

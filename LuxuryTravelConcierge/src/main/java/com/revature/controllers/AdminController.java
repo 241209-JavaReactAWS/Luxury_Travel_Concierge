@@ -92,6 +92,9 @@ public class AdminController {
         }
         Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
 
+        System.out.println(hotel.getName());
+        System.out.println(hotel.getImageUrl());
+        System.out.println(hotel.getLocation());
 
         if (targetAdmin.isPresent()){
             Hotel newHotel = new Hotel();
