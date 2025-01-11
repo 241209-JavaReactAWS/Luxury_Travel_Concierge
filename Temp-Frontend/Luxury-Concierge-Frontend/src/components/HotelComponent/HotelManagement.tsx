@@ -42,17 +42,17 @@ const HotelManagementPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch hotels owned by the logged-in user
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const response = await fetch(Supplementaries.serverLink + "hotels");
-        const data = await response.json();
-        setHotels(data);
-      } catch (error) {
-        console.error("Error fetching hotels:", error);
-      }
-    };
+  const fetchHotels = async () => {
+    try {
+      const response = await fetch(Supplementaries.serverLink + "hotels");
+      const data = await response.json();
+      setHotels(data);
+    } catch (error) {
+      console.error("Error fetching hotels:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchHotels();
   }, []);
 
@@ -71,6 +71,7 @@ const HotelManagementPage: React.FC = () => {
   const handleEditClick = (hotel: Hotel) => {
     setIsEditing(true);
     setCurrentHotel(hotel);
+    setIsModalOpen(true);
   };
 
   const handleUpdateHotel = async () => {
@@ -90,7 +91,8 @@ const HotelManagementPage: React.FC = () => {
       alert("Hotel updated successfully!");
       setIsEditing(false);
       setSelectedImage(null);
-      // fetchHotels();
+      setIsModalOpen(false);
+      fetchHotels();
     } catch (error) {
       console.error("Error updating hotel:", error);
       alert("Failed to update hotel.");

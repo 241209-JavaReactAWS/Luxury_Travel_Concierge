@@ -44,8 +44,14 @@ const onFailure: onError = (error : any) =>{
         <TextInput id="key_input" for="Unique Key" onValueChange={setKey} width="70%"></TextInput>
       <div id='bottomOfForm'>
             <p className='ErrorText'>{status == 0 ? "" : "Invalid Data"}</p>
-                <SubmissionButton type="POST" onError={onFailure} onSuccess={onSuccess} endpoint={`${Supplementaries.serverLink}admin/register`} 
-                statusChanger={setStatus} placeholder='Register as Owner' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
+            <div id="bottomRightOfForm">
+              <div>
+                    <p className='InfoLink'><a href={Supplementaries.clientLink + "UserRegistration"}>Register as User?</a></p>
+                    <p className='InfoLink'><a href={Supplementaries.clientLink}>Already a User?</a></p>
+              </div>
+                  <SubmissionButton type="POST" onError={onFailure} onSuccess={onSuccess} endpoint={`${Supplementaries.serverLink}admin/register`} 
+                  statusChanger={setStatus} placeholder='Register as Owner' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
+              </div>
             </div>
   </>
   return (

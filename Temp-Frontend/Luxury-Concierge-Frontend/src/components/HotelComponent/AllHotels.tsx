@@ -19,10 +19,12 @@ function AllHotels() {
     const navigate = useNavigate()
     const [searchName, setSearchName] = useState('');
     const [searchLocation, setSearchLocation] = useState('');
+    const [suggestedLocations, setSuggestedLocations] = useState([]);
+    const [popularLocations, setPopularLocations] = useState([]);
     const [filteredHotels, setFilteredHotels] = useState<Hotel[]>([]);
 
     useEffect(()=>{
-        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel")
+        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel",{ withCredentials: true})
             .then((res)=>{
                 console.log(res.data);
                 setAllHotels(res.data)
@@ -67,7 +69,7 @@ function AllHotels() {
 
     const handleRemoveFromFavorites = (hotelId: number) => {
         axios
-            .delete(Supplementaries.serverLink + `users/favorites/${hotelId}`, { withCredentials: true })
+            .delete(`${Supplementaries.serverLink}User/favorites/${hotelId}`, { withCredentials: true })
             .then(() => {
                 setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
             })

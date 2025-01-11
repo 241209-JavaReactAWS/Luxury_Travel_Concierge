@@ -18,18 +18,17 @@ function LoginPage() {
 
 
     // TODO: When Homepage per user is done, connect to homepage
-    // useEffect(() => {
-    //     axios.get(Supplementaries.serverLink + "/users/cookie")
-    //     .then((data)=>{
-    //         if(data.data != "null") window.location.href = Supplementaries.clientLink;
-    //     })
-    //     .catch(()=>{alert("Server Closed Down")})
-    // })
+    useEffect(() => {
+        axios.get(Supplementaries.serverLink + "users/user", {withCredentials: true})
+        .then((data)=>{
+            window.location.href = Supplementaries.clientLink + "Hotels";
+        })
+
+    },[])
 
     const onSuccess: onSuccess = (data : any) =>{
         setStatus(0);
-        alert("Success")
-        window.location.href = Supplementaries.clientLink
+        window.location.href = Supplementaries.clientLink + "Hotels"
     }
     
     const onFailure: onError = (error : any) =>{
