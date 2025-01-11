@@ -25,7 +25,7 @@ public class Hotel {
     private Admin admin;
     
     private String imageUrl;
-
+    private String description;
     @OneToMany(mappedBy = "hotel")
     private Set<Room> rooms;
 
@@ -37,7 +37,7 @@ public class Hotel {
     }
 
 
-    public Hotel(int hotelId, String name, String location, Admin admin, String imageUrl, Set<Room> rooms, Set<User> favoritedBy) {
+    public Hotel(int hotelId, String name, String location, Admin admin, String imageUrl, Set<Room> rooms, Set<User> favoritedBy, String description) {
         this.hotelId = hotelId;
         this.name = name;
         this.location = location;
@@ -45,6 +45,7 @@ public class Hotel {
         this.imageUrl = imageUrl;
         this.rooms = rooms;
         this.favoritedBy = favoritedBy;
+        this.description = description;
     }
 
     public int getHotelId() {
@@ -101,5 +102,13 @@ public class Hotel {
 
     public void setFavoritedBy(Set<User> favoritedBy) {
         this.favoritedBy = favoritedBy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

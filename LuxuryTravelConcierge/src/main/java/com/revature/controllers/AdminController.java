@@ -92,15 +92,13 @@ public class AdminController {
         }
         Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
 
-        System.out.println(hotel.getName());
-        System.out.println(hotel.getImageUrl());
-        System.out.println(hotel.getLocation());
 
         if (targetAdmin.isPresent()){
             Hotel newHotel = new Hotel();
             newHotel.setName(hotel.getName());
             newHotel.setImageUrl(hotel.getImageUrl());
             newHotel.setLocation(hotel.getLocation());
+            newHotel.setDescription(hotel.getDescription());
             newHotel.setAdmin(targetAdmin.get());
             Hotel createdHotel = hotelService.createNewHotel(newHotel);
             Optional<Admin> newAdmin = adminService.getAdminById(curAdminId);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./HotelManagement.css";
 import Supplementaries from "../../SupplementaryClass";
 import axios from "axios";
+import CardComponent from "../CardComponent/CardComponent";
 
 interface Hotel {
   hotelId: number;
@@ -167,13 +168,7 @@ useEffect(() => {
         <h2>Your Hotels</h2>
         {/* <button onClick={addHotel(newHotel)}>Add Hotels</button> */}
         {hotels.map((hotel) => (
-          <div key={hotel.hotelId} className="hotel-card">
-            <img src={hotel.imageUrl} alt={hotel.name} className="hotel-image" />
-            <h3>{hotel.name}</h3>
-            <p>{hotel.description}</p>
-            <p>{hotel.location},</p>
-            <button onClick={() => handleEditClick(hotel)}>Edit</button>
-          </div>
+          <CardComponent hotelId={hotel.hotelId} imageUrl={hotel.imageUrl} name={hotel.name} description={hotel.description} location={hotel.location} interactive={true} word="Manage" handle={() => handleEditClick(hotel)} />
         ))}
       </div>
 

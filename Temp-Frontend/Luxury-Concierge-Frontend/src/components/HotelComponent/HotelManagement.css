@@ -21,8 +21,8 @@
   
   .hotel-image {
     max-width: 100%;
-    max-height: 20vh;
-    overflow-y: hidden;
+    max-height: 400px;
+    overflow: hidden;
     height: auto;
     width: auto;
     border-radius: 8px;
