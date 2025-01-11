@@ -4,27 +4,28 @@ import axios from 'axios';
 import { Room } from '../../interfaces/Room'
 import { Hotel } from '../../interfaces/Hotel'
 import Supplementaries from '../../SupplementaryClass';
-
+import BookingPage from '../BookingComponent/BookingPage';
+import BookingDataChart from '../BookingDataChart/BookingDataChart';
 
 function Rooms() {
-    const { hotelId } = useParams<{hotelId: string}>();
+    const { hotelId } = useParams();
     const [rooms, setRooms] = useState<Room[]>([]);
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
     const [filters, setFilters] = useState({ availability: '', roomType: '', capacity: ''});
+    
 
     useEffect(() => {
-        const queryParams = new URLSearchParams(filters).toString();
-        const url = `${Supplementaries.serverLink}hotel/${hotelId}/rooms?${queryParams}`;
-
-        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`)
+        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true})
         .then((res) => {
         setHotel(res.data);
         })
         .catch((error) => {
-    console.error("Error fetching hotel details", error);
+            console.error("Error fetching hotel details", error);
         });
-        axios.get<Room[]>(url)
+        
+        
+        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`)
             .then((res) => {
                 setRooms(res.data);
             })
@@ -38,7 +39,7 @@ function Rooms() {
         setFilters(prevFilters => {
             const updatedFilters = { ...prevFilters, ...newFilters };
             const queryParams = new URLSearchParams(updatedFilters).toString();
-            navigate(`?${queryParams}`, { replace: true }); // This updates the URL without reloading
+            navigate(`?${queryParams}`, { replace: true}); // This updates the URL without reloading
             return updatedFilters;
         });
     };
@@ -48,13 +49,13 @@ return (
         <header>
         {hotel ? (
         <div className="hotel-summary">
-            <img src={hotel.hotelImage} alt={`${hotel.hotelName} Image`} />
-            <h1>{hotel.hotelName}</h1>
+            <img src={hotel.imageUrl} alt={`${hotel.name} Image`}/>
+            <h1>{hotel.name}</h1>
             <p>
-            Address: {hotel.hotelStreet}, {hotel.hotelCity}, {hotel.hotelState} {hotel.hotelZipcode}
+            Address: {hotel.location}
+            Address: {hotel.location}
             </p>
-            <p>Phone: {hotel.hotelPhoneNumber}</p>
-            <p>Email: {hotel.hotelEmail}</p>
+
         </div>
         ) : (
         <p>Loading hotel details...</p>
@@ -96,17 +97,21 @@ return (
         <ul>
                 {rooms.length > 0 ? (rooms.map(room => (
                     <li key={room.roomId}>
-                        <img src={room.roomImage} alt={`${room.roomName}`} style={{ width: '200px', height: '150px' }} />
+                        <img src={room.imageUrl} alt={`${room.roomName}`} style={{ width: '200px', height: '150px' }} />
                         <h3>{room.roomName}</h3>
                         <p>Type: {room.roomType}</p>
-                        <p>Capacity: {room.capacity}</p>
+                        <p>Capacity: {room.maxOccupancy}</p>
                         <p>Status: {room.availability}</p>
+                        <p>Booking: <BookingPage {...room} /></p>
                     </li>
                 ))
             ) : ( <p> Unforunately, there are no rooms available for this hotel. Please try again later.</p>)}
         </ul>
         </main>
     </div>
+            <div id="chart-container" style={{width:'70%', marginTop:'50px', marginLeft:'auto', marginRight:'auto', marginBottom:'50px', backgroundColor:'#f5f5f5', padding:'20px', borderRadius:'10px', border:'1px solid #db9d17'}}>
+                <BookingDataChart hotelId={hotelId}/>
+            </div>
     </div>
 )
 }

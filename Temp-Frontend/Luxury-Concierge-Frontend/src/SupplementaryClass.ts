@@ -50,8 +50,8 @@ class Supplementaries{
 
     static sortDates(dateList : any){
         dateList.sort((a : any, b : any) => {
-            const dateA : any= new Date(`20${a.checkInDate}`);
-            const dateB :any= new Date(`20${b.checkOutDate}`);
+            const dateA : any= new Date(`${a.checkInDate}`);
+            const dateB :any= new Date(`${b.checkOutDate}`);
             return dateA - dateB;
         });
         
@@ -60,7 +60,7 @@ class Supplementaries{
     static filterDateRangesBefore(data:any,distance:number){
             let dateRanges = [];
             for(let i = 0; i < data.length; i++){
-                const start_date = new Date(`20${data[i].checkOutDate}`)
+                const start_date = new Date(`${data[i].checkOutDate}`)
                 const farthest_date = new Date()
                 farthest_date.setDate(farthest_date.getDate() - distance)
 
@@ -74,7 +74,7 @@ class Supplementaries{
     static filterDateRangesAfterToday(data:any){
         let dateRanges = [];
             for(let i = 0; i < data.length; i++){
-                const end_date = new Date(`20${data[i].checkOutDate}`)
+                const end_date = new Date(`${data[i].checkOutDate}`)
                 const earliest_date = new Date()
                 earliest_date.setDate(earliest_date.getDate() + 1)
 
@@ -91,28 +91,38 @@ class Supplementaries{
 
         // Step 1: Process the input data
         data.forEach((booking:any) => {
-            const startDate:any = new Date(`20${booking.checkInDate}`);
-            const endDate:any = new Date(`20${booking.checkOutDate}`);
+            const startDate:any = new Date(`${booking.checkInDate}`);
+            const endDate:any = new Date(`${booking.checkOutDate}`);
             const peopleCount:number = booking.numberOfGuests;
 
-            // Add people count to the start date
-            dailyCount[startDate.toISOString().split('T')[0]] = (dailyCount[startDate.toISOString().split('T')[0]] || 0) + peopleCount;
-
-            // Subtract people count on the day after the end date
-            const nextDay = new Date(endDate);
-            nextDay.setDate(nextDay.getDate() + 1);
-            dailyCount[nextDay.toISOString().split('T')[0]] = (dailyCount[nextDay.toISOString().split('T')[0]] || 0) - peopleCount;
+            while(startDate < endDate){
+                dailyCount[startDate.toISOString().split('T')[0]] = (dailyCount[startDate.toISOString().split('T')[0]] || 0) + peopleCount;
+                startDate.setDate(startDate.getDate() + 1);
+            }
         });
 
         // Step 2: Sort the dates and accumulate the counts
         const allDates = Object.keys(dailyCount).sort();
-        let accumulatedCount = 0;
         const result:any = {};
-
+        let finalDate : any;
         allDates.forEach(date => {
-            accumulatedCount += dailyCount[date];
-            result[date] = accumulatedCount;
+            result[date] = dailyCount[date];
+            finalDate = date;
         });
+
+        // Step 3: Fill in the gaps
+        finalDate = new Date(finalDate);
+        let end = new Date();
+        end.setDate(end.getDate() - 1);
+
+        while(finalDate <= end){
+            finalDate = new Date(finalDate);
+            finalDate.setDate(finalDate.getDate() + 1);
+
+            if(!result[finalDate.toISOString().split('T')[0]]){
+                result[finalDate.toISOString().split('T')[0]] = 0.2;
+            }
+        }
 
         return result;
     }

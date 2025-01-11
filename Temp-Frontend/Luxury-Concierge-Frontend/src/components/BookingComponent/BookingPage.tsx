@@ -72,7 +72,7 @@ const handleDateChange = (date: any, field: string) => {
 };
 
   const increaseCapacity = () => {
-    if (newBooking.numberOfGuests < props.capacity) {
+    if (newBooking.numberOfGuests < props.maxOccupancy) {
       setNewBooking({
         ...newBooking,
         numberOfGuests: newBooking.numberOfGuests + 1
@@ -109,9 +109,9 @@ const handleDateChange = (date: any, field: string) => {
         <DialogContent>
           <p>Room Name: {props.roomName}</p>
           <p>Rooms Type: {props.roomType}</p>
-          <p>Capacity (max capacity: {props.capacity}): {newBooking.numberOfGuests}</p>
+          <p>Capacity (max capacity: {props.maxOccupancy}): {newBooking.numberOfGuests}</p>
           <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>
-          <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.capacity}>+</Button>
+          <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.maxOccupancy}>+</Button>
           
           <p>Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

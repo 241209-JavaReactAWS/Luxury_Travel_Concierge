@@ -1,63 +1,70 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Supplementaries from '../../SupplementaryClass';
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom"
+import axios from "axios";
+import { AppBar, Box, Button, Container, Divider, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 
-function nav() {
-  function navToPage(arg0: string): void {
-    window.location.href = arg0;
-  }
 
-  return (
-    <> 
+export default function nav() {
+    const navigate = useNavigate();
 
-      <AppBar component="nav" sx={{ background: "WhiteSmoke" }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{ display: { xs: "block", sm: "block" }, cursor: "pointer", color: "black" }}
-            onClick={() => navToPage(Supplementaries.clientLink)}
-          >
-            Luxury Concierge
-          </Typography>
+    //State for the dropdown menu
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-          {/* Right-aligned Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              justifyContent: "flex-end",
-              alignItems: "center",
-              flexWrap: "wrap",
-              maxWidth: "100%",
-              paddingRight: "50px"
-            }}
-          >
-            <Button variant="contained" color="secondary" 
-              sx={{ color: "black", background: "rgba(0, 0, 0, 0.1)" }} 
-              onClick={() => navToPage(Supplementaries.clientLink + "UserRegistration")}>
-              Sign Up
-            </Button>
-          </Box>
+    const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
-    </>
-  )
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    let navToPage = (location: string) => {
+        navigate(location)
+        handleMenuClose();
+    }
+
+    return (
+        <AppBar position="sticky">
+            <Container>
+                <Toolbar>
+                    {/* button for the dropdown menu */}
+                    <Button color="inherit" onClick={handleMenuClick}>
+                        Menu
+                    </Button>
+
+                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                        Luxury Concierge
+                    </Typography>
+
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}>
+                        <MenuItem onClick={() => navToPage('/')}>Login</MenuItem>
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/Hotels')}>Hotels Listing</MenuItem>
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/UserRegistration')}>New Account</MenuItem>
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/test')}>Admin Stats</MenuItem>
+                        
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/reviews')}>Reviews</MenuItem>
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem>
+
+                    </Menu>
+                </Toolbar>
+            </Container>
+        </AppBar>
+    );
 }
-
-export default nav
