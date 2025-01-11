@@ -12,7 +12,6 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import SearchIcon from '@mui/icons-material/Search';
 import Supplementaries from '../../SupplementaryClass';
 
-
 function AllHotels() {
     const [allHotels,setAllHotels]=useState<Hotel[]>([])
     const [favorites, setFavorites] = useState<Hotel[]>([])

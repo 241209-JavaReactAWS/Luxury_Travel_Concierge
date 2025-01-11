@@ -6,15 +6,17 @@ import jakarta.persistence.*;
 @Entity
 @Table(name="room",schema="public")
 public class Room {
+
     @Column(name="roomId")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomId;
+
     @Column(name="roomNumber",unique = true,nullable = false)
     private int roomNumber;
+
     @Column(name="roomType",nullable = false)
     private String roomType;
-
 
     @ManyToOne
     @JsonIgnore
@@ -23,19 +25,30 @@ public class Room {
 
     @Column(name="imageUrl")
     private String imageUrl;
+
     @Column(name="maxOccupancy",nullable = false)
     private int maxOccupancy;
+
+    @Column(name="isAvailable", nullable = false)
+    private boolean isAvailable;
+
+    @Column(name="status", nullable = false)
+    private String status;
+
+    
 
     public Room() {
     }
 
-    public Room(int roomId, int roomNumber, String roomType, Hotel hotel, String imageUrl, int maxOccupancy) {
+    public Room(int roomId, int roomNumber, String roomType, Hotel hotel, String imageUrl, int maxOccupancy, boolean isAvailable, String status) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.hotel = hotel;
         this.imageUrl = imageUrl;
         this.maxOccupancy = maxOccupancy;
+        this.isAvailable = true;
+        this.status = "Available";
     }
 
     public int getRoomId() {
@@ -84,5 +97,21 @@ public class Room {
 
     public void setMaxOccupancy(int maxOccupancy) {
         this.maxOccupancy = maxOccupancy;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
