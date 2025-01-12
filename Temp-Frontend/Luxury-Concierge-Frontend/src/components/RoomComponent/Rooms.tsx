@@ -109,9 +109,6 @@ return (
         </ul>
         </main>
     </div>
-            <div id="chart-container" style={{width:'70%', marginTop:'50px', marginLeft:'auto', marginRight:'auto', marginBottom:'50px', backgroundColor:'#f5f5f5', padding:'20px', borderRadius:'10px', border:'1px solid #db9d17'}}>
-                <BookingDataChart hotelId={hotelId}/>
-            </div>
     </div>
 )
 }

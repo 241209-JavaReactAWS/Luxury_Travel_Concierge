@@ -19,7 +19,13 @@ function TextInput(props : TextInputInterface) {
     props.onValueChange(event.target.value);
   };
 
-  const type : string = props.id == "password_input" ? "password" : "text";
+  let type : string;
+  if(props.type == "email"){
+    type = "email"
+  } else if(props.type == "password"){
+    type = "password"
+  }
+  else{ type = "text" }
 
   return (
     <>

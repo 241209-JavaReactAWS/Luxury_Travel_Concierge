@@ -50,8 +50,7 @@ useEffect(() => {
   };
 
   const handleEditClick = (hotel: Hotel) => {
-    setIsEditing(true);
-    setCurrentHotel(hotel);
+    window.location.href = Supplementaries.clientLink + "HotelManagement/" + hotel.hotelId;
   };
 
   const handleCreateHotel = async () => {
@@ -75,26 +74,8 @@ useEffect(() => {
         .catch((error) => {throw new Error("Failed to fetch hotels");});
   }
 
-  const handleUpdateHotel = async () => {
-    try {
-      const formData = new FormData();
-      if (selectedImage) formData.append("image", selectedImage);
-      Object.entries(currentHotel).forEach(([key, value]) => {
-        if (value) formData.append(key, value.toString());
-      });
-
-      axios.put(`${Supplementaries.serverLink}hotel/${currentHotel.hotelId}`, formData, { withCredentials: true })
-      .then((response) => {
-        if (response.status === 200) {
-          alert("Hotel updated successfully!");
-          setIsEditing(false);
-          setSelectedImage(null);
-        }
-      })
-      .catch((error) => { throw new Error("Failed to update hotel"); });
-    } catch (error) {
-      console.error("Error updating hotel:", error);
-    }
+  const handleUpdateHotel = () => {
+    window.location.href = Supplementaries.clientLink + "HotelManagement/" + currentHotel.hotelId;
   };
 
   const openModal = () => {
