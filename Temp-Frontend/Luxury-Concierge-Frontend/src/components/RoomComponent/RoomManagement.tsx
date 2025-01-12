@@ -108,7 +108,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                                 {room.roomType}
                             </TableCell>
                             <TableCell>
-                                {room.pricePerNight} 
+                                {room.price} 
                             </TableCell>
                             <TableCell>
                                 {room.maxOccupancy}

@@ -6,5 +6,5 @@ export interface Room {
     availability: boolean;
     imageUrl: string;
     status: String;
-    pricePerNight: number;
+    price: number;
 }

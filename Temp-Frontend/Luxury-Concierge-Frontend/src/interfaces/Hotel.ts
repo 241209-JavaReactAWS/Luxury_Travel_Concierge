@@ -1,5 +1,3 @@
-//import { Owner } from "./Owner";
-
 import { Room } from "./Room";
 
 export interface Hotel {

@@ -35,13 +35,13 @@ public class Room {
     @Column(name="status", nullable = false)
     private String status;
 
-    @Column(name="pricePerNight", nullable = false)
-    private double pricePerNight;
+    @Column(name="price", nullable = false)
+    private double price;
 
     public Room() {
     }
 
-    public Room(int roomId, int roomNumber, String roomType, Hotel hotel, String imageUrl, int maxOccupancy, boolean isAvailable, String status, double pricePerNight) {
+    public Room(int roomId, int roomNumber, String roomType, Hotel hotel, String imageUrl, int maxOccupancy, boolean isAvailable, String status, double price) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
@@ -50,7 +50,7 @@ public class Room {
         this.maxOccupancy = maxOccupancy;
         this.isAvailable = true;
         this.status = "Available";
-        this. pricePerNight=pricePerNight;
+        this. price=price;
     }
 
     public int getRoomId() {
@@ -117,11 +117,11 @@ public class Room {
         this.status = status;
     }
 
-    public double getPricePerNight() {
-        return pricePerNight;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPricePerNight(double pricePerNight) {
-        this.pricePerNight = pricePerNight;
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

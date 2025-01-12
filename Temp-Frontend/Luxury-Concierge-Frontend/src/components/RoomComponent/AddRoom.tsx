@@ -19,7 +19,7 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
         availability: true,
         imageUrl: '',
         status: 'Available',
-        pricePerNight: 0,
+        price: 0,
     });
 
     useEffect(() => {
@@ -117,7 +117,7 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
                       label="Price Per Night"
                       name="pricePerNight"
                       type="number"
-                      value={room.pricePerNight}
+                      value={room.price}
                       onChange={handleChange}
                       variant="filled"
                   />
