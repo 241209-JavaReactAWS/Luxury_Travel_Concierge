@@ -19,7 +19,6 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
-
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
@@ -54,16 +53,9 @@ public class AdminController {
 
             session.setAttribute("username", possibleAdmin.get().getUsername());
             session.setAttribute("adminId", possibleAdmin.get().getAdminId());
-//            session.setAttribute("role", possibleAdmin.get().getRole());
-//            Cookie cookie = new Cookie("Admin_Id",Integer.toString(possibleAdmin.get().getAdminId()));
-//            cookie.setMaxAge(10000);
-//            cookie.setPath("../");
-//            http.addCookie(cookie);
+            return ResponseEntity.ok().build();
         }
-        return possibleAdmin
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/logout")
@@ -76,11 +68,11 @@ public class AdminController {
     public ResponseEntity<Set<Hotel>> getAllHotelsHandler(HttpSession session){
         Integer curAdminId = (Integer)session.getAttribute("adminId");
         if(session.isNew() || curAdminId==null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Set<Hotel> hotels = adminService.getAllOwnedHotelsById(curAdminId);
 
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
+        return ResponseEntity.ok().body(hotels);
     }
 
     @PostMapping("/hotels")
@@ -105,7 +97,7 @@ public class AdminController {
             return new ResponseEntity<>(newAdmin.get(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/hotels/{hotelId}")

@@ -128,7 +128,7 @@ public class UserController {
         return ResponseEntity.ok(returnedUser);
     }
 
-    @GetMapping("user")
+    @GetMapping("/user")
     public ResponseEntity obtainUserSession(HttpSession session){
         Object object = session.getAttribute("username");
         if(object == null) return ResponseEntity.notFound().build();

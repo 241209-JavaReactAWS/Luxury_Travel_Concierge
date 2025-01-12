@@ -149,7 +149,7 @@ useEffect(() => {
         <h2>Your Hotels</h2>
         {/* <button onClick={addHotel(newHotel)}>Add Hotels</button> */}
         {hotels.map((hotel) => (
-          <CardComponent hotelId={hotel.hotelId} imageUrl={hotel.imageUrl} name={hotel.name} description={hotel.description} location={hotel.location} interactive={true} word="Manage" handle={() => handleEditClick(hotel)} />
+          <CardComponent hotelId={hotel.hotelId} key={hotel.hotelId} imageUrl={hotel.imageUrl} name={hotel.name} description={hotel.description} location={hotel.location} interactive={true} word="Manage" handle={() => handleEditClick(hotel)} />
         ))}
       </div>
 
