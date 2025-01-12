@@ -85,4 +85,31 @@ public class RoomController {
         if(newRoom == null) ResponseEntity.notFound().build();
         return ResponseEntity.status(HttpStatus.OK).body(newRoom);
     }
+
+    @PutMapping("/markAsReserved/{roomId}")
+    public ResponseEntity<Room> markRoomAsReserved(@PathVariable int roomId) {
+        Room updatedRoom = roomService.markRoomAsReserved(roomId);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @PutMapping("/markAsAvailable/{roomId}")
+    public ResponseEntity<Room> markRoomAsAvailable(@PathVariable int roomId) {
+        Room updatedRoom = roomService.markRoomAsAvailable(roomId);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @PutMapping("/updateStatus/{roomId}")
+    public ResponseEntity<Room> updateRoomStatus(@PathVariable int roomId, @RequestParam String status) {
+        Room updatedRoom = roomService.updateRoomStatus(roomId, status);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
+    }
 }
