@@ -58,4 +58,41 @@ public class RoomService {
         return found.get();
     }
 
+    public Room markRoomAsReserved(int roomId) {
+        Optional<Room> targetRoom = roomDAO.findById(roomId);
+        if (targetRoom.isPresent()) {
+            Room room = targetRoom.get();
+            room.setAvailable(false);
+            room.setStatus("Reserved");
+            return roomDAO.save(room);
+        }
+        return null;
+    }
+
+    public Room markRoomAsAvailable(int roomId) {
+        Optional<Room> targetRoom = roomDAO.findById(roomId);
+        if (targetRoom.isPresent()) {
+            Room room = targetRoom.get();
+            room.setAvailable(true);
+            room.setStatus("Available");
+            return roomDAO.save(room);
+        }
+        return null;
+    }
+
+    public Room updateRoomStatus(int roomId, String status) {
+        Optional<Room> targetRoom = roomDAO.findById(roomId);
+        if (targetRoom.isPresent()) {
+            Room room = targetRoom.get();
+            room.setStatus(status);
+            if ("Available".equalsIgnoreCase(status)) {
+                room.setAvailable(true);
+            } else {
+                room.setAvailable(false);
+            }
+            return roomDAO.save(room);
+        }
+        return null;
+    }
+
 }
