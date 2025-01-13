@@ -2,17 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./HotelManagement.css";
 import Supplementaries from "../../SupplementaryClass";
 import axios from "axios";
+import CardComponent from "../CardComponent/CardComponent";
 
 interface Hotel {
   hotelId: number;
   name: string;
   location: string;
-  // city: string;
-  // state: string;
-  // country: string;
-  // postalCode: string;
-  // phone: string;
-  // email: string;
   description: string;
   imageUrl: string;
 }
@@ -29,12 +24,6 @@ const HotelManagementPage: React.FC = () => {
   const [currentHotel, setCurrentHotel] = useState<Partial<Hotel>>({
     name: "",
     location: "",
-    // city: "",
-    // state: "",
-    // country: "",
-    // postalCode: "",
-    // phone: "",
-    // email: "",
     description: "",
     imageUrl: "",
   });
@@ -42,19 +31,11 @@ const HotelManagementPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch hotels owned by the logged-in user
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const response = await fetch(Supplementaries.serverLink + "hotels");
-        const data = await response.json();
-        setHotels(data);
-      } catch (error) {
-        console.error("Error fetching hotels:", error);
-      }
-    };
-
-    fetchHotels();
-  }, []);
+useEffect(() => {
+  axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+        .then((response) => {setHotels(response.data);})
+        .catch((error) => {throw new Error("Failed to fetch hotels");});
+    }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -69,54 +50,32 @@ const HotelManagementPage: React.FC = () => {
   };
 
   const handleEditClick = (hotel: Hotel) => {
-    setIsEditing(true);
-    setCurrentHotel(hotel);
+    window.location.href = Supplementaries.clientLink + "HotelManagement/" + hotel.hotelId;
   };
 
-  const handleUpdateHotel = async () => {
-    try {
-      const formData = new FormData();
-      if (selectedImage) formData.append("image", selectedImage);
-      Object.entries(currentHotel).forEach(([key, value]) => {
-        if (value) formData.append(key, value.toString());
-      });
-
-      const response = await fetch(`${Supplementaries.serverLink}hotels/${currentHotel.hotelId}`, {
-        method: "PUT",
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error("Failed to update hotel");
-      alert("Hotel updated successfully!");
-      setIsEditing(false);
-      setSelectedImage(null);
-      // fetchHotels();
-    } catch (error) {
-      console.error("Error updating hotel:", error);
-      alert("Failed to update hotel.");
+  const handleCreateHotel = async () => {
+    let data : any = {
+      name: newHotel.name,
+      location: newHotel.location,
+      description: newHotel.description,
+      imageUrl: newHotel.imageUrl,
     }
-  };
-  const handleAddHotel = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${Supplementaries.serverLink}hotels`,
-        newHotel
-      );
-      if (response.status === 201) {
-        alert("Hotel added successfully");
+    setNewHotel({ name: "", location: "", description: "", imageUrl: "" });
+    setIsModalOpen(false);
+
+    await axios.post(`${Supplementaries.serverLink}admin/hotels`, data, { withCredentials: true })
+    .then((response) => {
         setHotels([...hotels, response.data]);
-        setNewHotel({
-          name: "",
-          location: "",
-          description: "",
-          imageUrl: "",
-        });
-        setIsModalOpen(false);
-      }
-    } catch (error) {
-      console.error("Error adding hotel:", error);
-    }
+    })
+    .catch((error) => { throw new Error("Failed to add hotel"); });
+
+    axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+        .then((response) => {setHotels(response.data);})
+        .catch((error) => {throw new Error("Failed to fetch hotels");});
+  }
+
+  const handleUpdateHotel = () => {
+    window.location.href = Supplementaries.clientLink + "HotelManagement/" + currentHotel.hotelId;
   };
 
   const openModal = () => {
@@ -140,7 +99,7 @@ const HotelManagementPage: React.FC = () => {
               &times;
             </span>
             <h2>Add New Hotel</h2>
-            <form onSubmit={handleAddHotel}>
+            <form onSubmit={handleCreateHotel}>
               <label>
                 Name:
                 <input
@@ -190,13 +149,7 @@ const HotelManagementPage: React.FC = () => {
         <h2>Your Hotels</h2>
         {/* <button onClick={addHotel(newHotel)}>Add Hotels</button> */}
         {hotels.map((hotel) => (
-          <div key={hotel.hotelId} className="hotel-card">
-            <img src={hotel.imageUrl} alt={hotel.name} className="hotel-image" />
-            <h3>{hotel.name}</h3>
-            <p>{hotel.description}</p>
-            <p>{hotel.location},</p>
-            <button onClick={() => handleEditClick(hotel)}>Edit</button>
-          </div>
+          <CardComponent hotelId={hotel.hotelId} key={hotel.hotelId} imageUrl={hotel.imageUrl} name={hotel.name} description={hotel.description} location={hotel.location} interactive={true} word="Manage" handle={() => handleEditClick(hotel)} />
         ))}
       </div>
 

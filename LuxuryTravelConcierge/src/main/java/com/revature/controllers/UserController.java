@@ -2,6 +2,8 @@ package com.revature.controllers;
 
 import java.util.List;
 
+import com.revature.models.Admin;
+import com.revature.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +31,13 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("users")
 public class UserController {
     private final UserService userService;
+    private final AdminService adminService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AdminService adminService) {
         this.userService = userService;
+        this.adminService = adminService;
+
     }
 
 
@@ -121,6 +126,17 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(returnedUser);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity obtainUserSession(HttpSession session){
+        Object object = session.getAttribute("username");
+        if(object == null) return ResponseEntity.notFound().build();
+        String username = object.toString();
+        String role;
+        if(userService.findUserByUsername(username).isPresent()) return ResponseEntity.ok("CUSTOMER");
+        if(adminService.getAdminByUsername(username).isPresent()) return ResponseEntity.ok("ADMIN");
+        return ResponseEntity.notFound().build();
     }
 
 }

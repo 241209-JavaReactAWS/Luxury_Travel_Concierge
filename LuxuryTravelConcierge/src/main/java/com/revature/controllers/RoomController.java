@@ -34,11 +34,11 @@ public class RoomController {
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
-
         List<Room> allRooms = roomService.getAllRoomsByHotel(gottenHotel.get());
 
         return ResponseEntity.ok(allRooms);
     }
+
 
     @PostMapping("{hotelId}")
     public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
@@ -84,5 +84,32 @@ public class RoomController {
 
         if(newRoom == null) ResponseEntity.notFound().build();
         return ResponseEntity.status(HttpStatus.OK).body(newRoom);
+    }
+
+    @PutMapping("/markAsReserved/{roomId}")
+    public ResponseEntity<Room> markRoomAsReserved(@PathVariable int roomId) {
+        Room updatedRoom = roomService.markRoomAsReserved(roomId);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @PutMapping("/markAsAvailable/{roomId}")
+    public ResponseEntity<Room> markRoomAsAvailable(@PathVariable int roomId) {
+        Room updatedRoom = roomService.markRoomAsAvailable(roomId);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @PutMapping("/updateStatus/{roomId}")
+    public ResponseEntity<Room> updateRoomStatus(@PathVariable int roomId, @RequestParam String status) {
+        Room updatedRoom = roomService.updateRoomStatus(roomId, status);
+        if (updatedRoom == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedRoom);
     }
 }

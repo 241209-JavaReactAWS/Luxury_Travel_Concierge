@@ -8,6 +8,7 @@ interface TextInputInterface{
     onValueChange: any,
     statusChanger ?: any,
     width ?: string
+    type ?: string
 }
 
 export default TextInputInterface

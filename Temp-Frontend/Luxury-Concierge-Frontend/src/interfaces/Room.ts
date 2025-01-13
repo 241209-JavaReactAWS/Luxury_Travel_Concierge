@@ -5,4 +5,6 @@ export interface Room {
     maxOccupancy: number;
     availability: boolean;
     imageUrl: string;
+    status: String;
+    price: number;
 }

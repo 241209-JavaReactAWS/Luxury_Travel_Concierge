@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface RoomDAO extends JpaRepository<Room,Integer> {
     Optional<Room> findByRoomNumber(int roomNumber);
     List<Room> findByHotel(Hotel hotel);
+    List<Room> findByHotelAndStatus(Hotel hotel, String status);
+    List<Room> findByHotelAndIsAvailable(Hotel hotel, boolean isAvailable);
 }

@@ -19,7 +19,6 @@ import java.util.Set;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")
-
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
@@ -31,6 +30,7 @@ public class AdminController {
         this.hotelService = hotelService;
     }
     @GetMapping
+    @Transactional
     public ResponseEntity<List<Admin>> getAllAdminsHandler(){
         return new ResponseEntity<>(adminService.getAllAdmins(),HttpStatus.OK);
     }
@@ -54,16 +54,9 @@ public class AdminController {
 
             session.setAttribute("username", possibleAdmin.get().getUsername());
             session.setAttribute("adminId", possibleAdmin.get().getAdminId());
-//            session.setAttribute("role", possibleAdmin.get().getRole());
-//            Cookie cookie = new Cookie("Admin_Id",Integer.toString(possibleAdmin.get().getAdminId()));
-//            cookie.setMaxAge(10000);
-//            cookie.setPath("../");
-//            http.addCookie(cookie);
+            return ResponseEntity.ok().build();
         }
-        return possibleAdmin
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/logout")
@@ -76,11 +69,11 @@ public class AdminController {
     public ResponseEntity<Set<Hotel>> getAllHotelsHandler(HttpSession session){
         Integer curAdminId = (Integer)session.getAttribute("adminId");
         if(session.isNew() || curAdminId==null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Set<Hotel> hotels = adminService.getAllOwnedHotelsById(curAdminId);
 
-        return new ResponseEntity<>(hotels, HttpStatus.OK);
+        return ResponseEntity.ok().body(hotels);
     }
 
     @PostMapping("/hotels")
@@ -98,13 +91,14 @@ public class AdminController {
             newHotel.setName(hotel.getName());
             newHotel.setImageUrl(hotel.getImageUrl());
             newHotel.setLocation(hotel.getLocation());
+            newHotel.setDescription(hotel.getDescription());
             newHotel.setAdmin(targetAdmin.get());
             Hotel createdHotel = hotelService.createNewHotel(newHotel);
             Optional<Admin> newAdmin = adminService.getAdminById(curAdminId);
             return new ResponseEntity<>(newAdmin.get(), HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
     @PutMapping("/hotels/{hotelId}")
@@ -179,20 +173,6 @@ public class AdminController {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //    }
-
-    @PostMapping(value="cookie")
-    public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("Admin_Id",null);
-        cookie.setMaxAge(0);
-        cookie.setPath("../");
-        servlet.addCookie(cookie);
-        return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
-    }
-
-    @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "Admin_Id", defaultValue = "none") String cookie){
-        if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
-        return ResponseEntity.status(HttpStatus.OK).body(cookie);
-    }
+    
 
 }

@@ -40,9 +40,10 @@ public class HotelService {
     public Hotel updateHotel(Hotel updatedHotel, int hotelId){
         return hotelDAO.findById(hotelId)
             .map(existingHotel -> {
-                existingHotel.setName(updatedHotel.getName());
-                existingHotel.setLocation(updatedHotel.getLocation());
-                existingHotel.setImageUrl(updatedHotel.getImageUrl());
+                if(!updatedHotel.getName().isBlank())existingHotel.setName(updatedHotel.getName());
+                if(!updatedHotel.getDescription().isBlank())existingHotel.setDescription(updatedHotel.getDescription());
+                if(!updatedHotel.getLocation().isBlank())existingHotel.setLocation(updatedHotel.getLocation());
+                if(!updatedHotel.getImageUrl().isBlank())existingHotel.setImageUrl(updatedHotel.getImageUrl());
                 return hotelDAO.save(existingHotel);
             })
             .orElseThrow(() -> new IllegalArgumentException("Hotel not found"));

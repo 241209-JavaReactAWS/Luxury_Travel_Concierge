@@ -16,6 +16,7 @@ import BookingAdmin from './components/BookingComponent/BookingAdmin'
 import HotelManagementPage from './components/HotelComponent/HotelManagement'
 import HotelReviews from './components/ReviewComponent/Reviews'
 import StripePaymentForm from './components/PaymentComponent/Payment'
+import HotelSettings from './components/HotelSettings/HotelSettings'
 
 
 export interface AuthContextType{
@@ -40,6 +41,7 @@ function App() {
             <Route path="/OwnerRegistration" element={<AdminRegister></AdminRegister>}></Route>
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/HotelManagement" element={<HotelManagementPage></HotelManagementPage>}></Route>
+            <Route path="/HotelManagement/:hotelId" element={<HotelSettings></HotelSettings>}></Route>
             <Route path="/hotels/:hotelId" element={<Rooms />} />
             <Route path="/UserRegistration" element={<UserRegistration></UserRegistration>}></Route>
             <Route path="/test" element={<BookingDataChart></BookingDataChart>}></Route>

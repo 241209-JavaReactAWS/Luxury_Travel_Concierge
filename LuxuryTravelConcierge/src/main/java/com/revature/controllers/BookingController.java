@@ -12,16 +12,19 @@ import org.springframework.web.bind.annotation.*;
 
 import com.revature.models.Booking;
 import com.revature.services.BookingService;
+import com.revature.services.RoomService;
 
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
 @RequestMapping("/bookings")
 public class BookingController {
 
     private final BookingService bookingService;
+    private final RoomService roomService;
 
     @Autowired
-    public BookingController(BookingService bookingService) {
+    public BookingController(BookingService bookingService, RoomService roomService) {
         this.bookingService = bookingService;
+        this.roomService=roomService;
     }
 
     @GetMapping
@@ -103,7 +106,8 @@ public class BookingController {
         }
 
         bookingService.deleteBooking(possibleBooking.get());
-
+        
+        roomService.markRoomAsAvailable(possibleBooking.get().getRoomId());
         return ResponseEntity.status(204).body(possibleBooking.get());
     }
     
