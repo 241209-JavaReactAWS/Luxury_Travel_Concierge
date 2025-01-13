@@ -85,6 +85,10 @@ export default function nav() {
 
                         {role != "" ? <MenuItem onClick={() => logout()}>LogOut</MenuItem>: <></>}
 
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>
+
                     </Menu>
                 </Toolbar>
             </Container>

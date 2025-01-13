@@ -159,4 +159,25 @@ public class UserController {
         if(adminService.getAdminByUsername(username).isPresent()) return ResponseEntity.ok("ADMIN");
         return ResponseEntity.notFound().build();
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/userId")
+    public ResponseEntity getUserId(@AuthenticationPrincipal UserDetails userDetails){
+        Object object = userDetails.getUsername();
+        if(object == null) return ResponseEntity.notFound().build();
+        String username = object.toString();
+        User user = userService.findUserByUsername(username).get();
+        return ResponseEntity.ok(user.getUserId());
+
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails){
+        Object object = userDetails.getUsername();
+        if(object == null) return ResponseEntity.notFound().build();
+        String username = object.toString();
+        User user = userService.findUserByUsername(username).get();
+        return ResponseEntity.ok(user);
+    }
 }

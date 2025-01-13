@@ -107,7 +107,7 @@ const handleDateChange = (date: any, field: string) => {
       fullWidth={true}>
       <DialogTitle>Booking Title (Hotel, so on)</DialogTitle>
         <DialogContent>
-          <p>Room Name: {props.roomNumber}</p>
+          <p>Room Name: {props.roomName}</p>
           <p>Rooms Type: {props.roomType}</p>
           <p>Capacity (max capacity: {props.maxOccupancy}): {newBooking.numberOfGuests}</p>
           <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>

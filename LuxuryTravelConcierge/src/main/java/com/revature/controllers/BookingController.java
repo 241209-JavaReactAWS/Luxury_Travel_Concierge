@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.revature.models.Booking;
 import com.revature.services.BookingService;
+import com.revature.services.EmailService;
 import com.revature.services.RoomService;
+import com.revature.services.UserService;
 
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
 @RequestMapping("/bookings")
@@ -21,11 +23,15 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final RoomService roomService;
+    private final UserService userService;
+    private final EmailService emailService;
 
     @Autowired
-    public BookingController(BookingService bookingService, RoomService roomService) {
+    public BookingController(BookingService bookingService, RoomService roomService, UserService userService, EmailService emailService) {
         this.bookingService = bookingService;
         this.roomService=roomService;
+        this.userService=userService;
+        this.emailService = emailService;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -62,28 +68,40 @@ public class BookingController {
     @PostMapping()
     public ResponseEntity<Booking> createBookingHandler(@RequestBody Booking booking) {
         
+        
+        List<Booking> bookings = bookingService.getAllBookings();
+        
+        // Check for overlapping bookings using local date and the same room
+        for (Booking b : bookings) {
+            boolean overlap = false;
+            LocalDate bCheckInDate = LocalDate.parse(b.getCheckInDate());
+            LocalDate bCheckOutDate = LocalDate.parse(b.getCheckOutDate());
+            LocalDate actualCheckInDate = LocalDate.parse(booking.getCheckInDate());
+            LocalDate actualCheckOutDate = LocalDate.parse(booking.getCheckOutDate());
+            
+            if(bCheckInDate.isBefore(actualCheckOutDate) && bCheckOutDate.isAfter(actualCheckInDate) && b.getRoomId() == booking.getRoomId()) {
+                overlap = true;
+            }
+            
+            if(overlap) {
+                return ResponseEntity.status(409).build();
+            }
+        }
+        
         Booking actualBooking = bookingService.createBooking(booking);
 
         if(actualBooking == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        List<Booking> bookings = bookingService.getAllBookings();
+        String userEmail = userService.findUserById(booking.getUserId()).get().getEmail();
 
-        // Check for overlapping bookings using local date and the same room
-        for (Booking b : bookings) {
-            boolean sameRoom = b.getRoomId() == booking.getRoomId();
-            boolean overlap = LocalDate.parse(booking.getCheckInDate()).isBefore(LocalDate.parse(b.getCheckOutDate())) &&
-                              LocalDate.parse(booking.getCheckOutDate()).isAfter(LocalDate.parse(b.getCheckInDate()));
-            boolean sameDates = booking.getCheckInDate().equals(b.getCheckInDate()) || 
-                                booking.getCheckOutDate().equals(b.getCheckOutDate());
-        
-            if (sameRoom && (overlap || sameDates)) {
-                return ResponseEntity.status(409).build();
-            }
+        if(userEmail == null) {
+            return ResponseEntity.status(404).build();
         }
+
+        emailService.sendBookingConfirmationEmail(userEmail, booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getPrice());
         
-        roomService.markRoomAsReserved(booking.getRoomId());
         return ResponseEntity.status(201).body(actualBooking);
     }
 
