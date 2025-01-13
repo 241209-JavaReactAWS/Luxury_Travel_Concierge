@@ -71,10 +71,6 @@ export default function nav() {
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
-                        {role != "" ? <MenuItem onClick={() => navToPage('/reviews')}>Reviews</MenuItem> : <></>}
-
-                        {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
-
                         {role != "" ? <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
