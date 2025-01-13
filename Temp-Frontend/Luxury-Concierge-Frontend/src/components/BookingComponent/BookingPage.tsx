@@ -13,6 +13,9 @@ import MuiAlert from '@mui/material/Alert';
 function BookingPage(props: Room) {
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
+  const [bookedDates, setBookedDates] = useState<string[]>([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [newBooking, setNewBooking] = useState<Booking>({
     bookingId: 0,
     roomId: 0,
@@ -23,11 +26,6 @@ function BookingPage(props: Room) {
     numberOfGuests: 1,
     status: 'Pending'
   });
-
-  const [bookedDates, setBookedDates] = useState<string[]>([]);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
 
   useEffect(() => {
     const fetchUserIdAndBookedDates = async () => {
