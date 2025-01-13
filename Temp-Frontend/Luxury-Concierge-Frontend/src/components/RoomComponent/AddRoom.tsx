@@ -119,7 +119,7 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
               <div>
                   <TextField
                       label="Price Per Night"
-                      name="pricePerNight"
+                      name="price"
                       type="number"
                       value={room.price}
                       onChange={handleChange}

@@ -95,4 +95,33 @@ public class RoomService {
         return null;
     }
 
+    public List<Room> searchByRoomTypeIsAvailabiltyAndMaxOccupancy(String roomType, boolean isAvailable, int maxOccupancy) {
+        return roomDAO.findByRoomTypeAndIsAvailableAndMaxOccupancy(roomType, isAvailable, maxOccupancy);
+    }
+
+    public List<Room> searchByRoomTypeAndIsAvailabilty(String roomType, boolean isAvailable) {
+        return roomDAO.findByRoomTypeAndIsAvailable(roomType, isAvailable);
+    }
+
+    public List<Room> searchByIsAvailabiltyAndMaxOccupancy(boolean isAvailable, int maxOccupancy) {
+        return roomDAO.findByIsAvailableAndMaxOccupancy(isAvailable, maxOccupancy);
+    }
+
+    public List<Room> searchByRoomTypeAndMaxOccupancy(String roomType, int maxOccupancy) {
+        return roomDAO.findByRoomTypeAndMaxOccupancy(roomType, maxOccupancy);
+    }
+
+    public List<Room> searchByRoomType(String roomType) {
+        return roomDAO.findByRoomType(roomType);
+    }
+    
+    public List<Room> searchByIsAvailable(boolean isAvailable) {
+        return roomDAO.findByIsAvailable(isAvailable);
+    }
+    
+    public List<Room> searchByMaxOccupancy(int maxOccupancy) {
+        return roomDAO.findByMaxOccupancy(maxOccupancy);
+    }
+    
+
 }

@@ -30,14 +30,40 @@ public class RoomController {
 
 
     @GetMapping("{hotelId}")
-    public ResponseEntity<List<Room>> getAllRoomsInHotel(@PathVariable Integer hotelId, HttpSession session){
+    public ResponseEntity<List<Room>> getAllRoomsInHotel(@PathVariable Integer hotelId, HttpSession session,
+                                                        @RequestParam(name = "roomType", required = false) String roomType,
+                                                        @RequestParam(name = "isAvailable", required = false) Boolean isAvailable,
+                                                        @RequestParam(name = "maxOccupancy", required = false) Integer maxOccupancy)
+    {
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
-        if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
+        if (gottenHotel.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
-        List<Room> allRooms = roomService.getAllRoomsByHotel(gottenHotel.get());
+        List<Room> allRooms;
+
+        if (roomType != null && isAvailable != null && maxOccupancy != null) {
+            allRooms = roomService.searchByRoomTypeIsAvailabiltyAndMaxOccupancy(roomType, isAvailable, maxOccupancy);
+        } else if (roomType != null && isAvailable != null) {
+            allRooms = roomService.searchByRoomTypeAndIsAvailabilty(roomType, isAvailable);
+        } else if (isAvailable != null && maxOccupancy != null) {
+            allRooms = roomService.searchByIsAvailabiltyAndMaxOccupancy(isAvailable, maxOccupancy);
+        } else if (roomType != null && maxOccupancy != null) {
+            allRooms = roomService.searchByRoomTypeAndMaxOccupancy(roomType, maxOccupancy); 
+        } else if (roomType != null) {
+            allRooms = roomService.searchByRoomType(roomType);
+        } else if (isAvailable != null) {
+            allRooms = roomService.searchByIsAvailable(isAvailable);
+        } else if (maxOccupancy != null) {
+            allRooms = roomService.searchByMaxOccupancy(maxOccupancy);
+        } else {
+            allRooms = roomService.getAllRoomsByHotel(gottenHotel.get());
+        }
 
         return ResponseEntity.ok(allRooms);
+
     }
+
 
 
     @PostMapping("{hotelId}")
