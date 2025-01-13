@@ -38,12 +38,8 @@ export default function nav() {
     }
 
     let logout = () => {
-        axios.post(Supplementaries.serverLink+"admin/logout", {}, { withCredentials:true, headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                } })
-            .then(() => {
-                navToPage('/')
-            })
+        localStorage.removeItem("token")
+        navigate("/")
     }
 
     return (
