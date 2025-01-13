@@ -58,7 +58,7 @@ public class BookingController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/room/{roomId}")
     public ResponseEntity<List<Booking>> getBookingsByRoomIdHandler(@PathVariable Integer roomId) {
         return ResponseEntity.ok(bookingService.getBookingsByRoomId(roomId));
@@ -88,18 +88,18 @@ public class BookingController {
             }
         }
         
-        Booking actualBooking = bookingService.createBooking(booking);
-
-        if(actualBooking == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
         String userEmail = userService.findUserById(booking.getUserId()).get().getEmail();
-
+        
         if(userEmail == null) {
             return ResponseEntity.status(404).build();
         }
-
+        
+        Booking actualBooking = bookingService.createBooking(booking);
+        
+        if(actualBooking == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        
         emailService.sendBookingConfirmationEmail(userEmail, booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getPrice());
         
         return ResponseEntity.status(201).body(actualBooking);

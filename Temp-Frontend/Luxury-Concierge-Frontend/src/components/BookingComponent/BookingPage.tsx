@@ -30,10 +30,10 @@ function BookingPage(props: Room) {
   useEffect(() => {
     const fetchUserIdAndBookedDates = async () => {
       try {
-        const userResponse = await axios.get(`${Supplementaries.serverLink}users/userId`, {
+        const userResponse = await axios.get(`${Supplementaries.serverLink}users/currentUser`, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") }
         });
-        const userId = userResponse.data?.userId;
+        const userId = userResponse.data.userId;
         console.log("Fetched userId:", userId);
 
         setNewBooking((prevBooking) => ({
@@ -75,7 +75,7 @@ function BookingPage(props: Room) {
     setScroll(scrollType);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     setOpen(false);
   };
 
@@ -102,7 +102,7 @@ function BookingPage(props: Room) {
       const checkOut = dayjs(updatedBooking.checkOutDate);
       
       const daysDifference = checkOut.diff(checkIn, 'day') + 1;
-      const price = daysDifference * 10;
+      const price = daysDifference * props.price;
       updatedBooking.price = price;
     }
     setNewBooking(updatedBooking);
@@ -147,11 +147,14 @@ function BookingPage(props: Room) {
         <DialogContent>
           <p>Room Name: {props.roomId}</p>
           <p>Room Type: {props.roomType}</p>
-          <p>Capacity (max capacity: {props.maxOccupancy}): {newBooking.numberOfGuests}</p>
+          <p>Price Per Day: {props.price}</p>
+          <p>Max Occupancy: {props.maxOccupancy}</p>
+          <p># of Person(s):    {newBooking.numberOfGuests}
           <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>
           <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.maxOccupancy}>+</Button>
+          </p>
           
-          <p>Price: {newBooking.price}</p>
+          <p>Total Price: {newBooking.price}</p>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <div>
               <DatePicker
