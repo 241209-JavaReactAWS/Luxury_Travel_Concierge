@@ -1,4 +1,4 @@
-package com.revature.security;
+package com.revature.Security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -23,7 +23,7 @@ public class JwtFilter extends UsernamePasswordAuthenticationFilter {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             try {
-                String username = JwtUtil.validateToken(token.substring(7));
+                String username = com.revature.security.JwtUtil.validateToken(token.substring(7));
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 SecurityContextHolder.getContext().setAuthentication(
