@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "7783793D1B2C55A5F58996E59A548";
+    private static final String SECRET_KEY = "your-256-bit-secret-your-256-bit-secret";
     // 1 day expiration time
     private static final long EXPIRATION_TIME = 60 * 60 * 24 * 1000;
 
