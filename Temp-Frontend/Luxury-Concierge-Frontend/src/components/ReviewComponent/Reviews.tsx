@@ -16,6 +16,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReviewBody, setNewReviewBody] = useState<string>("");
   const [newReviewRating, setNewReviewRating] = useState<number>(5);
+  const [hotelName,setHotelName] = useState<string>("__________");
 
   /**
    * Fetch all reviews for a hotel, including nested replies.
@@ -32,6 +33,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
 
   useEffect(() => {
     fetchReviews();
+    axios.get(`${API_BASE_URL}hotel/${hotelId}`).then((res) => { setHotelName(res.data.name) });
   }, [hotelId]);
 
   /**
@@ -61,7 +63,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
 
   return (
     <div>
-      <h2>Reviews for Hotel #{hotelId}</h2>
+      <h2>Reviews for {hotelName}</h2>
 
       {/* Form: Create top-level review */}
       <form onSubmit={handleCreateReview}>
