@@ -169,13 +169,11 @@ return (
                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    Name: {room.roomNumber}
-                                </Typography>
+                                {/* <Typography component="div" variant="h5">
+                                    {room.roomName}
+                                </Typography> */}
                                 <Typography
-                                    variant="subtitle1"
-                                    component="div"
-                                    sx={{ color: 'text.secondary' }}
+                                    component="div" variant="h5"
                                 >
                                     Type: {room.roomType}
                                 </Typography>
@@ -184,7 +182,7 @@ return (
                                     component="div"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Max Occupancy: 
+                                    Guest: 
                                     {room.maxOccupancy}
                                 </Typography>
                                 <Typography
@@ -202,12 +200,14 @@ return (
                 <p>Unfortunately, there are no rooms available for this hotel. Please try again later.</p>
             )}
         
+        
         </main>
 
     </div>
     <div style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
         <HotelReviews hotelId={parseInt(hotelId)} userId={1}/>
     </div>
+    
     </div>
 )
 }
