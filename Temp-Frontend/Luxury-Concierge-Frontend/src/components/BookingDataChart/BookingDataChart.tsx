@@ -9,14 +9,6 @@ import { useEffect, useState } from "react";
 
 
 const BookingDataChart = (props:any) => {
-    // let x = Supplementaries.generateDateRanges(200);
-    // console.log(x)
-    // let y = Supplementaries.filterDateRangesBefore(x,364)
-    // y = Supplementaries.filterDateRangesAfterToday(y);
-
-    // Supplementaries.sortDates(y)
-    // let z = Supplementaries.CreateOccupencyCount(y)
-    // const chartdata:any[] = Supplementaries.ConvertOccupancyCountJsonToList(z)
     let chartlabels = ["Empty Set"]
     let chartvalues = [0]
     let title = "Error Getting Data"
@@ -72,7 +64,9 @@ const BookingDataChart = (props:any) => {
 
 
     useEffect(() => {
-       axios.get(Supplementaries.serverLink+`hotel/data/${props.hotelId}`,{withCredentials:true})
+       axios.get(Supplementaries.serverLink+`hotel/data/${props.hotelId}`,{withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
        .then((data)=>{
             let values = data.data;
             let y = Supplementaries.filterDateRangesBefore(values,364)
@@ -85,7 +79,7 @@ const BookingDataChart = (props:any) => {
             chartlabels = chartdata.map((row:any) => row.day)
             chartvalues = chartdata.map((row:any) => row.count)
             
-            title = "Occupency"
+            title = "Occupancy"
             setChartData({
                 labels: chartlabels,
                 datasets:

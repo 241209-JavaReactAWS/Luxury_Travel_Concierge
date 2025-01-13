@@ -30,7 +30,9 @@ function Rooms() {
     }
 
     useEffect(() => {
-        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true})
+        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true, headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }})
         .then((res) => {
         setHotel(res.data);
         })
@@ -38,12 +40,16 @@ function Rooms() {
             console.error("Error fetching hotel details", error);
         });
 
-        axios.get(`${Supplementaries.serverLink}users/userId`, { withCredentials: true })
+        axios.get(`${Supplementaries.serverLink}users/userId`, { withCredentials: true, headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        } })
         .then((response) => { setUserId(response.data) })
         .catch((error) => { setUserId(-1) })
         
-        const queryParams = new URLSearchParams(filters).toString();
-        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}?${queryParams}`)
+        
+        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`,{headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }})
             .then((res) => {
                 console.log('Rooms fetched:', res.data);
                 setRooms(res.data);
@@ -226,12 +232,14 @@ return (
                 <p>Unfortunately, there are no rooms available for this hotel. Please try again later.</p>
             )}
         
+        
         </main>
 
     </div>
     <div style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
         <HotelReviews hotelId={parseInt(hotelId)} userId={1}/>
     </div>
+    
     </div>
 )
 }

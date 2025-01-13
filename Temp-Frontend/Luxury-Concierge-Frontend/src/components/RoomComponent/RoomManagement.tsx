@@ -17,7 +17,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
 
     const fetchRooms = async () => {
         try {
-            const response = await axios.get(`${Supplementaries.serverLink}room/${hotelId}`, { withCredentials: true });
+            const response = await axios.get(`${Supplementaries.serverLink}room/${hotelId}`, { withCredentials: true, headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            } });
             setRooms(response.data);
         } catch (error) {
             console.error('Error fetching rooms:', error);
@@ -29,6 +31,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
             await axios.put(`${Supplementaries.serverLink}room/updateStatus/${roomId}`, null, {
                 params: { status: newStatus },
                 withCredentials: true,
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
             });
             alert(`Room status updated to ${newStatus}`);
             fetchRooms();
@@ -46,7 +51,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
         }
 
         try {
-            await axios.delete(`${Supplementaries.serverLink}room/delete/${roomId}`, { withCredentials: true });
+            await axios.delete(`${Supplementaries.serverLink}room/delete/${roomId}`, { withCredentials: true, headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            } });
             alert('Room deleted successfully');
             fetchRooms();
         } catch (error) {

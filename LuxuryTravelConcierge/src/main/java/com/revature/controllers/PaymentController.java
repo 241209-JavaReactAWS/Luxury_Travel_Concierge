@@ -3,6 +3,7 @@ package com.revature.controllers;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class PaymentController {
         Stripe.apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create-payment-intent")
     public Map<String, String> createPaymentIntent(@RequestBody Map<String, Object> paymentRequest) {
         try {

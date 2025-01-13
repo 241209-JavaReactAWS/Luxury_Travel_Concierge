@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class HotelController {
         this.bookingService = bookingService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("{hotelId}")
     public ResponseEntity<Hotel> getHotelById(@PathVariable Integer hotelId){
         Optional<Hotel> hotel = hotelService.getHotelById(hotelId);
@@ -40,6 +42,7 @@ public class HotelController {
         return ResponseEntity.ok(hotel.get());
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<List<Hotel>> getHotelByFiltering(
             @RequestParam(name = "name", required = false) String name,
@@ -68,19 +71,8 @@ public class HotelController {
 
         return ResponseEntity.ok(results);
     }
-//    public List<Hotel> getHotelByFiltering( @RequestParam(name = "name", required = false) String name,
-//                                            @RequestParam(name = "location", required = false) String location){
-//        if (name != null) {
-//            return hotelService.searchAllByHotelName(name);
-//        } else if (location != null) {
-//            return hotelService.searchByHotelLocation(location);
-//        } else {
-//            System.out.println(name);
-//            return hotelService.getAllHotels();
-//        }
-//    }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("data/{hotelId}")
     public ResponseEntity<List<Booking>> getAllBookingsOfHotel(@PathVariable int hotelId){
         Optional<Hotel> existingHotel = hotelService.getHotelById(hotelId);
@@ -106,6 +98,7 @@ public class HotelController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{hotelId}")
     public ResponseEntity<Hotel> updateHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
 
@@ -122,6 +115,7 @@ public class HotelController {
         return ResponseEntity.ok(updatedHotel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{hotelId}")
     public ResponseEntity<Void> deleteHotel(@PathVariable int hotelId, @RequestBody Hotel hotel){
 

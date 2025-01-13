@@ -30,7 +30,9 @@ function AllHotels() {
     };
 
     useEffect(()=>{
-        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel",{ withCredentials: true})
+        axios.get<Hotel[]>(Supplementaries.serverLink + "hotel",{ withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
             .then((res)=>{
                 console.log(res.data);
                 setAllHotels(res.data)
@@ -42,7 +44,9 @@ function AllHotels() {
     },[])
 
     useEffect(() => {
-        axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials: true })
+        axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
           .then((res) => {
             setFavorites(res.data); 
           })
@@ -90,7 +94,9 @@ function AllHotels() {
 
     const handleRemoveFromFavorites = (hotelId: number) => {
         axios
-            .delete(`${Supplementaries.serverLink}users/favorites/${hotelId}`, { withCredentials: true })
+            .delete(`${Supplementaries.serverLink}users/favorites/${hotelId}`, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
             .then(() => {
                 setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
             })

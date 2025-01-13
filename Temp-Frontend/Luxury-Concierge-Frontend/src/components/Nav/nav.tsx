@@ -10,7 +10,9 @@ export default function nav() {
     const [role, setRole] = useState<string>("");
 
     useEffect(() => {
-        axios.get(Supplementaries.serverLink + "users/user", { withCredentials: true })
+        axios.get(Supplementaries.serverLink + "users/user", { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
         .then((response) => {
             setRole(response.data)
         }).catch((error) => {
@@ -36,7 +38,9 @@ export default function nav() {
     }
 
     let logout = () => {
-        axios.post(Supplementaries.serverLink+"admin/logout", {}, { withCredentials: true })
+        axios.post(Supplementaries.serverLink+"admin/logout", {}, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
             .then(() => {
                 navToPage('/')
             })
@@ -71,10 +75,6 @@ export default function nav() {
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
-                        {role != "" ? <MenuItem onClick={() => navToPage('/reviews')}>Reviews</MenuItem> : <></>}
-
-                        {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
-
                         {role != "" ? <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
@@ -84,6 +84,10 @@ export default function nav() {
                         {role == "ADMIN" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
                         {role != "" ? <MenuItem onClick={() => logout()}>LogOut</MenuItem>: <></>}
+
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>
 
                     </Menu>
                 </Toolbar>

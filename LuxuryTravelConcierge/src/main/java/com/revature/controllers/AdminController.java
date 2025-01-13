@@ -1,7 +1,9 @@
 package com.revature.controllers;
 
+import com.revature.DAOS.DTOs.UserDTO;
 import com.revature.models.Admin;
 import com.revature.models.Hotel;
+import com.revature.security.JwtUtil;
 import com.revature.services.AdminService;
 import com.revature.services.HotelService;
 import jakarta.servlet.http.Cookie;
@@ -11,6 +13,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,28 +53,33 @@ public class AdminController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginHandler(@RequestBody Admin admin, HttpSession session, HttpServletResponse http) {
+    public ResponseEntity<?> loginHandler(@RequestBody Admin admin, @AuthenticationPrincipal UserDetails userDetails, HttpServletResponse http) {
         Optional<Admin> possibleAdmin = adminService.loginAdmin(admin);
 
         if (possibleAdmin.isPresent()) {
 
-            session.setAttribute("username", possibleAdmin.get().getUsername());
-            session.setAttribute("adminId", possibleAdmin.get().getAdminId());
-            return ResponseEntity.ok().build();
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(possibleAdmin.get().getUsername());
+            userDTO.setUserId(possibleAdmin.get().getAdminId());
+            userDTO.setToken(JwtUtil.generateToken(possibleAdmin.get().getUsername()));
+            userDTO.setRole("ADMIN");
+            return ResponseEntity.ok().body(userDTO);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/logout")
-    public ResponseEntity<?> logoutHandler(HttpSession session) {
-        session.invalidate();
+    public ResponseEntity<?> logoutHandler(@AuthenticationPrincipal UserDetails userDetails) {
+        SecurityContextHolder.clearContext();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/hotels")
-    public ResponseEntity<Set<Hotel>> getAllHotelsHandler(HttpSession session){
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew() || curAdminId==null) {
+    public ResponseEntity<Set<Hotel>> getAllHotelsHandler(@AuthenticationPrincipal UserDetails userDetails){
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Set<Hotel> hotels = adminService.getAllOwnedHotelsById(curAdminId);
@@ -76,12 +87,13 @@ public class AdminController {
         return ResponseEntity.ok().body(hotels);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/hotels")
-    public ResponseEntity<Admin> addHotelHandler(HttpSession session,
+    public ResponseEntity<Admin> addHotelHandler(@AuthenticationPrincipal UserDetails userDetails,
                                                       @RequestBody Hotel hotel){
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew()||curAdminId==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
 
@@ -93,19 +105,20 @@ public class AdminController {
             newHotel.setLocation(hotel.getLocation());
             newHotel.setDescription(hotel.getDescription());
             newHotel.setAdmin(targetAdmin.get());
-            Hotel createdHotel = hotelService.createNewHotel(newHotel);
             Optional<Admin> newAdmin = adminService.getAdminById(curAdminId);
+            hotelService.createNewHotel(newHotel);
             return new ResponseEntity<>(newAdmin.get(), HttpStatus.OK);
         }
         else{
             return ResponseEntity.notFound().build();
         }
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/hotels/{hotelId}")
-    public ResponseEntity<Hotel> updateHotelHandler(HttpSession session, @RequestBody Hotel hotel,@PathVariable Integer hotelId){
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew()||curAdminId==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<Hotel> updateHotelHandler(@AuthenticationPrincipal UserDetails userDetails, @RequestBody Hotel hotel,@PathVariable Integer hotelId){
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
         if (targetAdmin.isPresent()){
@@ -118,11 +131,12 @@ public class AdminController {
 
 
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/hotels/{hotelId}")
-    public ResponseEntity<?> removeHotelHandler(HttpSession session,@PathVariable Integer hotelId){
-        Integer curAdminId = (Integer) session.getAttribute("adminId");
-        if(session.isNew()||curAdminId==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<?> removeHotelHandler(@AuthenticationPrincipal UserDetails userDetails,@PathVariable Integer hotelId) {
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if (!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try {
             // Check if hotel exists
@@ -131,48 +145,15 @@ public class AdminController {
                 return new ResponseEntity<>("Hotel not found", HttpStatus.NOT_FOUND);
             }
 
-            if (!(hotel.get().getAdmin().getAdminId()==curAdminId)) {
+            if (!(hotel.get().getAdmin().getAdminId() == curAdminId)) {
                 return new ResponseEntity<>("Unauthorized to delete this hotel", HttpStatus.FORBIDDEN);
             }
-            hotelService.deleteHotel(hotel.get(),hotelId);
-            return new ResponseEntity<>("Hotel successfully deleted",HttpStatus.OK);
-        }
-        catch (Exception e) {
+            hotelService.deleteHotel(hotel.get(), hotelId);
+            return new ResponseEntity<>("Hotel successfully deleted", HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>("Error deleting hotel: " + e.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-
     }
-
-
-
-
-
-//    @DeleteMapping("/hotels")
-//    public ResponseEntity<Admin> removeHotelHandler(HttpSession session,
-//                                                 @RequestBody Hotel hotel){
-//        Integer curAdminId = (Integer)session.getAttribute("adminId");
-//        if(session.isNew()||curAdminId==null){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//        Optional<Admin> targetAdmin = adminService.getAdminById(curAdminId);
-//
-//
-//        if (targetAdmin.isPresent()){
-//            Hotel targetHotel = new Hotel();
-//            targetHotel.setName(hotel.getName());
-//            targetHotel.setImageUrl(hotel.getImageUrl());
-//            targetHotel.setLocation(hotel.getLocation());
-//            targetHotel.setAdmin(targetAdmin.get());
-//            Hotel removedHotel = hotelService.removeTargetHotel(targetHotel);
-//            Admin newAdmin = adminService.removeHotelFromAdmin(targetAdmin.get(),removedHotel);
-//            return new ResponseEntity<>(newAdmin, HttpStatus.OK);
-//        }
-//        else{
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-    
-
 }
