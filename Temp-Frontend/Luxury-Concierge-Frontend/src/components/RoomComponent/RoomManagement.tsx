@@ -77,7 +77,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Image</TableCell>
-                        <TableCell >Name</TableCell>
+                        <TableCell >Number</TableCell>
                         <TableCell >Type</TableCell>
                         <TableCell >Price</TableCell>
                         <TableCell >Max Occupancy</TableCell>
@@ -95,14 +95,14 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                         >
                             <TableCell component="th" scope="row">
                                 <Avatar src={room.imageUrl} 
-                                    alt={`Room image of ${room.roomName}`}
+                                    alt={`Room image of ${room.roomNumber}`}
                                 >
                                     
                                     {room.imageUrl}
                                 </Avatar>
                             </TableCell>
                             <TableCell>
-                                {room.roomName}
+                                {room.roomNumber}
                             </TableCell>
                             <TableCell>
                                 {room.roomType}

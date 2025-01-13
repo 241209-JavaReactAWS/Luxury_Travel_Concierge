@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Room } from '../../interfaces/Room';
 import { Box, Button, TextField } from '@mui/material';
+import Supplementaries from '../../SupplementaryClass';
 
 interface AddRoomProps {
     hotelId: number;
@@ -11,12 +12,15 @@ interface AddRoomProps {
 }
 
 function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
+
+    const [pricePerNight, setPricePerNight] = useState<number>(0);
     const [room, setRoom] = useState<Room>({
         roomId: 0,
-        roomName: '',
+        roomNumber: 0,
+        hotel: hotelId,
         roomType: '',
         maxOccupancy: 0,
-        availability: true,
+        isAvailable: true,
         imageUrl: '',
         status: 'Available',
         price: 0,
@@ -40,14 +44,14 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
         try {
             if (roomToEdit) {
                 await axios.put(
-                    `http://localhost:8080/room/update/${room.roomId}`,
-                    { ...room, hotelId },
+                    `${Supplementaries.serverLink}room/${hotelId}`,
+                    { ...room },
                     { withCredentials: true }
                 );
                 alert('Room updated successfully');
                 onSave();
             } else {
-                await axios.post(`http://localhost:8080/room/add`, { ...room, hotelId }, { withCredentials: true });
+                await axios.post(`${Supplementaries.serverLink}room/${hotelId}`, { ...room}, { withCredentials: true });
                 alert('Room added successfully');
                 onSave();
             }
@@ -77,9 +81,9 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
               <h3>{roomToEdit ? 'Edit Room' : 'Add Room'}</h3>
               <div>
                   <TextField
-                      label="Name"
-                      name="roomName"
-                      value={room.roomName}
+                      label="Number"
+                      name="roomNumber"
+                      value={room.roomNumber}
                       onChange={handleChange}
                       variant="filled"
                   />
