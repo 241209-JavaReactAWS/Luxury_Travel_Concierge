@@ -81,10 +81,10 @@ function BookingPage(props: Room) {
 
   const handleBooking = async () => {
     try {
+      handleClose();
       const res = await axios.post(`${Supplementaries.serverLink}bookings`, newBooking, { 
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       });
-      handleClose();
     } catch (error) {
       console.error("Error booking:", error);
       setErrorMessage("Booking failed. Please try again.");
