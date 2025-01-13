@@ -42,7 +42,7 @@ function AllHotels() {
     },[])
 
     useEffect(() => {
-        axios.get<Hotel[]>(Supplementaries.serverLink + 'User/favorites', { withCredentials: true })
+        axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials: true })
           .then((res) => {
             setFavorites(res.data); 
           })
@@ -64,7 +64,7 @@ function AllHotels() {
                 Array.isArray(hotel.rooms) &&
                 hotel.rooms.length > 0 &&
                 hotel.rooms.some((room) => {
-                    const roomPrice = room.pricePerNight;
+                    const roomPrice = room.price;
                     return (
                         (minPrice ? roomPrice >= minPrice : true) &&
                         (maxPrice ? roomPrice <= maxPrice : true)
@@ -90,7 +90,7 @@ function AllHotels() {
 
     const handleRemoveFromFavorites = (hotelId: number) => {
         axios
-            .delete(`${Supplementaries.serverLink}User/favorites/${hotelId}`, { withCredentials: true })
+            .delete(`${Supplementaries.serverLink}users/favorites/${hotelId}`, { withCredentials: true })
             .then(() => {
                 setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
             })
