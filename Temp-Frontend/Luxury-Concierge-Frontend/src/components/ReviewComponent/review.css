@@ -1,0 +1,73 @@
+/* HotelReviews.css */
+
+/* Container for the entire reviews section */
+.hotel-reviews-container {
+    width: 60%;
+    margin: 2rem auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title styling */
+  .hotel-reviews-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  /* The review form container */
+  .review-form {
+    margin-bottom: 2rem;
+  }
+  
+  /* Labels for form fields */
+  .review-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  /* Textarea for review body */
+  .review-form textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Input for rating */
+  .review-form .rating-input {
+    width: 60px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    margin-left: 0.3rem;
+    text-align: center;
+    padding: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Submit button */
+  .review-form .submit-button {
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    background-color: #3f51b5; /* Indigo */
+    color: #fff;
+    transition: background-color 0.3s;
+  }
+  
+  .review-form .submit-button:hover {
+    background-color: #303f9f; /* Darker Indigo */
+  }
+  

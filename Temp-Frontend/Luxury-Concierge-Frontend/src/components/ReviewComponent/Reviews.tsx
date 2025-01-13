@@ -3,6 +3,7 @@ import { Review } from "../../interfaces/Review";
 import ReviewList from "./ReviewList";
 import axios from "axios";
 import Supplementaries from "../../SupplementaryClass";
+import "./review.css"
 
 // Adjust to match your backend base URL
 const API_BASE_URL = Supplementaries.serverLink;
@@ -60,11 +61,11 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
   };
 
   return (
-    <div>
-      <h2>Reviews for Hotel #{hotelId}</h2>
+    <div className="hotel-reviews-container">
+      <h2 className="hotel-reviews-header">Reviews for Hotel #{hotelId}</h2>
 
-      {/* Form: Create top-level review */}
-      <form onSubmit={handleCreateReview}>
+      {/* Form: Create a top-level review */}
+      <form onSubmit={handleCreateReview} className="review-form">
         <div>
           <label>Review Body:</label>
           <textarea
@@ -78,6 +79,7 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
           <label>Rating:</label>
           <input
             type="number"
+            className="rating-input"
             value={newReviewRating}
             min={1}
             max={5}
@@ -86,11 +88,18 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
           />
         </div>
 
-        <button type="submit">Submit Review</button>
+        <button type="submit" className="submit-button">
+          Submit Review
+        </button>
       </form>
 
-      {/* Show all reviews (includes nested replies) */}
-      <ReviewList reviews={reviews} hotelId={hotelId} userId={userId}  onRefresh={fetchReviews} />
+      {/* Display all reviews and nested replies */}
+      <ReviewList 
+        reviews={reviews} 
+        hotelId={hotelId} 
+        userId={userId} 
+        onRefresh={fetchReviews} 
+      />
     </div>
   );
 };

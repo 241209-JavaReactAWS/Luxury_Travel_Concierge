@@ -8,6 +8,7 @@ import BookingPage from '../BookingComponent/BookingPage';
 import BookingDataChart from '../BookingDataChart/BookingDataChart';
 import { FormControl, InputLabel, Select, MenuItem, Box, Grid, TextField, Typography, Card, CardContent, CardMedia, IconButton } from '@mui/material';
 import { Padding } from '@mui/icons-material';
+import HotelReviews from '../ReviewComponent/Reviews';
 
 function Rooms() {
     const { hotelId } = useParams();
@@ -189,8 +190,10 @@ return (
                 <p>Unfortunately, there are no rooms available for this hotel. Please try again later.</p>
             )}
         
+        
         </main>
     </div>
+    <HotelReviews hotelId={parseInt(hotelId as string)}></HotelReviews>
     </div>
 )
 }
