@@ -29,20 +29,27 @@ function BookingPage(props : Room) {
   useEffect(() => {
     const fetchUserId = async () => {
       try {
-        const response = await axios.get(`${Supplementaries.serverLink}currentUser`);
-        const userId = response.data.userId;
-        setNewBooking((prevBooking) => ({
-          ...prevBooking,
-          roomId: props.roomId,
-          userId: userId
-        }));
+        const response = await axios.get(`${Supplementaries.serverLink}users/currentUser`, { withCredentials: true });
+        if (response.data && response.data.userId) {
+          const userId = response.data.userId;
+          console.log("Fetched userId:", userId);
+          setNewBooking(prevBooking => ({
+            ...prevBooking,
+            roomId: props.roomId,
+            userId: userId      
+          }));
+        } else {
+          console.error("No userId found in the response");
+        }
       } catch (error) {
         console.error("Error fetching user ID:", error);
       }
     };
 
-    fetchUserId();
-  }, [props.roomId]);
+    if (props.roomId) {
+      fetchUserId();
+    }
+  }, [props.roomId])
 
   const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
     setOpen(true);

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.revature.models.Booking;
 import com.revature.services.BookingService;
+import com.revature.services.EmailService;
 import com.revature.services.RoomService;
+import com.revature.services.UserService;
 
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")@RestController
 @RequestMapping("/bookings")
@@ -20,11 +22,15 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final RoomService roomService;
+    private final UserService userService;
+    private final EmailService emailService;
 
     @Autowired
-    public BookingController(BookingService bookingService, RoomService roomService) {
+    public BookingController(BookingService bookingService, RoomService roomService, UserService userService, EmailService emailService) {
         this.bookingService = bookingService;
         this.roomService=roomService;
+        this.userService=userService;
+        this.emailService = emailService;
     }
 
     @GetMapping
@@ -81,6 +87,14 @@ public class BookingController {
         if(actualBooking == null) {
             return ResponseEntity.badRequest().build();
         }
+
+        String userEmail = userService.findUserById(booking.getUserId()).get().getEmail();
+
+        if(userEmail == null) {
+            return ResponseEntity.status(404).build();
+        }
+
+        emailService.sendBookingConfirmationEmail(userEmail, booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getPrice());
         
         return ResponseEntity.status(201).body(actualBooking);
     }

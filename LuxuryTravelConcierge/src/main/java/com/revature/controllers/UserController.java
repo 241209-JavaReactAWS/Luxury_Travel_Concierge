@@ -139,4 +139,13 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> getCurrentUser(HttpSession session){
+        Object object = session.getAttribute("username");
+        if(object == null) return ResponseEntity.notFound().build();
+        String username = object.toString();
+        User user = userService.findUserByUsername(username).get();
+        return ResponseEntity.ok(user);
+    }
+
 }
