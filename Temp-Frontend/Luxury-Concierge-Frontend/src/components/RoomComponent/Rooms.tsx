@@ -200,12 +200,14 @@ return (
                 <p>Unfortunately, there are no rooms available for this hotel. Please try again later.</p>
             )}
         
+        
         </main>
 
     </div>
     <div style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
         <HotelReviews hotelId={parseInt(hotelId)} userId={1}/>
     </div>
+    
     </div>
 )
 }
