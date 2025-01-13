@@ -96,7 +96,7 @@ export default function BookingAdmin() {
             <TableHead>
               <TableRow>
                 <TableCell>Booking ID</TableCell>
-                <TableCell>Room Name</TableCell>
+                <TableCell>Room ID</TableCell>
                 <TableCell>User</TableCell>
                 <TableCell>Check-In Date</TableCell>
                 <TableCell>Check-Out Date</TableCell>

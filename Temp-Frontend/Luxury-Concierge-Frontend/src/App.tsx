@@ -45,6 +45,7 @@ function App() {
             <Route path="/test" element={<BookingDataChart></BookingDataChart>}></Route>
             <Route path="/reviews" element={<HotelReviews hotelId={1}></HotelReviews>}></Route>
             <Route path="/payment" element={<StripePaymentForm></StripePaymentForm>}></Route>
+            <Route path="/bookingAdmin" element={<BookingAdmin/>}></Route>
           </Routes>
         </BrowserRouter>
     </>

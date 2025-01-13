@@ -62,6 +62,10 @@ export default function nav() {
 
                         <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem>
 
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+
+                        <MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>
+
                     </Menu>
                 </Toolbar>
             </Container>

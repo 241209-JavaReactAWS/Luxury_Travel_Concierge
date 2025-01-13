@@ -53,27 +53,32 @@ public class BookingController {
     @PostMapping()
     public ResponseEntity<Booking> createBookingHandler(@RequestBody Booking booking) {
         
+        
+        List<Booking> bookings = bookingService.getAllBookings();
+        
+        // Check for overlapping bookings using local date and the same room
+        for (Booking b : bookings) {
+            boolean overlap = false;
+            LocalDate bCheckInDate = LocalDate.parse(b.getCheckInDate());
+            LocalDate bCheckOutDate = LocalDate.parse(b.getCheckOutDate());
+            LocalDate actualCheckInDate = LocalDate.parse(booking.getCheckInDate());
+            LocalDate actualCheckOutDate = LocalDate.parse(booking.getCheckOutDate());
+            
+            if(bCheckInDate.isBefore(actualCheckOutDate) && bCheckOutDate.isAfter(actualCheckInDate) && b.getRoomId() == booking.getRoomId()) {
+                overlap = true;
+            }
+            
+            if(overlap) {
+                return ResponseEntity.status(409).build();
+            }
+        }
+        
         Booking actualBooking = bookingService.createBooking(booking);
 
         if(actualBooking == null) {
             return ResponseEntity.badRequest().build();
         }
-
-        List<Booking> bookings = bookingService.getAllBookings();
-
-        // Check for overlapping bookings using local date and the same room
-        for (Booking b : bookings) {
-            boolean sameRoom = b.getRoomId() == booking.getRoomId();
-            boolean overlap = LocalDate.parse(booking.getCheckInDate()).isBefore(LocalDate.parse(b.getCheckOutDate())) &&
-                              LocalDate.parse(booking.getCheckOutDate()).isAfter(LocalDate.parse(b.getCheckInDate()));
-            boolean sameDates = booking.getCheckInDate().equals(b.getCheckInDate()) || 
-                                booking.getCheckOutDate().equals(b.getCheckOutDate());
         
-            if (sameRoom && (overlap || sameDates)) {
-                return ResponseEntity.status(409).build();
-            }
-        }
-
         return ResponseEntity.status(201).body(actualBooking);
     }
 

@@ -26,6 +26,24 @@ function BookingPage(props : Room) {
     status: 'Pending'
   })
 
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(`${Supplementaries.serverLink}currentUser`);
+        const userId = response.data.userId;
+        setNewBooking((prevBooking) => ({
+          ...prevBooking,
+          roomId: props.roomId,
+          userId: userId
+        }));
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+
+    fetchUserId();
+  }, [props.roomId]);
+
   const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
     setOpen(true);
     setScroll(scrollType);
