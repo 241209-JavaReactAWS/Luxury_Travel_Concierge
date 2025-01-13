@@ -8,6 +8,7 @@ import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.models.Booking;
@@ -27,6 +28,7 @@ public class BookingController {
         this.roomService=roomService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<Booking>> getAllBookingsHandler() {
 
@@ -34,6 +36,7 @@ public class BookingController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingByIdHandler(@PathVariable Integer id) {
 
@@ -41,6 +44,7 @@ public class BookingController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Booking>> getBookingsByUserIdHandler(@PathVariable Integer userId) {
 
@@ -48,11 +52,13 @@ public class BookingController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/room/{roomId}")
     public ResponseEntity<List<Booking>> getBookingsByRoomIdHandler(@PathVariable Integer roomId) {
         return ResponseEntity.ok(bookingService.getBookingsByRoomId(roomId));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping()
     public ResponseEntity<Booking> createBookingHandler(@RequestBody Booking booking) {
         
@@ -81,6 +87,7 @@ public class BookingController {
         return ResponseEntity.status(201).body(actualBooking);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Booking> updateBookingHandler(@PathVariable Integer id, @RequestBody Booking booking) {
         if (!bookingService.getBookingById(id).isPresent()) {
@@ -92,6 +99,7 @@ public class BookingController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Booking> deleteBookingHandler(@PathVariable Integer id) {
 

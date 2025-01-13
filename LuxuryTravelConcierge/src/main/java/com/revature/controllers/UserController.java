@@ -2,11 +2,16 @@ package com.revature.controllers;
 
 import java.util.List;
 
+import com.revature.DAOS.DTOs.UserDTO;
 import com.revature.models.Admin;
+import com.revature.security.JwtUtil;
 import com.revature.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.exceptions.NoAddressException;
@@ -40,12 +45,18 @@ public class UserController {
 
     }
 
-
     @PostMapping("/register")
     public ResponseEntity registerUserHandler(@RequestBody User user){
         try{
-            User newUser = userService.registerUser(user);
-            return ResponseEntity.status(HttpStatus.OK).body(newUser);
+            User returnedUser = userService.registerUser(user);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(returnedUser.getUsername());
+            userDTO.setUserId(returnedUser.getUserId());
+            userDTO.setToken(JwtUtil.generateToken(returnedUser.getUsername()));
+            userDTO.setRole("CUSTOMER");
+
+            return ResponseEntity.status(HttpStatus.OK).body(userDTO);
         }
         catch(UsernameException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is invalid");
@@ -74,13 +85,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> userLoginHandler(@RequestBody User user,HttpSession session,HttpServletResponse http){
+    public ResponseEntity<UserDTO> userLoginHandler(@RequestBody User user){
         try{
+
             User returnedUser = userService.userLogin(user);
 
-            session.setAttribute("username", returnedUser.getUsername());
+            UserDTO userDTO = new UserDTO();
+            userDTO.setUsername(returnedUser.getUsername());
+            userDTO.setUserId(returnedUser.getUserId());
+            userDTO.setToken(JwtUtil.generateToken(returnedUser.getUsername()));
 
-            return ResponseEntity.status(HttpStatus.OK).body(returnedUser);
+            return ResponseEntity.status(HttpStatus.OK).body(userDTO);
         }
         catch(WrongPasswordException | NoUserFoundException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -90,47 +105,53 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/favorites")
-    public ResponseEntity<List<Hotel>> getUserFavorites(HttpSession session) {
-        if (session.isNew() || session.getAttribute("username") == null) {
-            System.out.println(session.getAttribute("username"));
-            return ResponseEntity.status(401).build();
+    public ResponseEntity<List<Hotel>> getUserFavorites(@AuthenticationPrincipal UserDetails userDetails) {
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try {
-            List<Hotel> favorites = userService.getFavoritesForUser((String) session.getAttribute("username"));
+            List<Hotel> favorites = userService.getFavoritesForUser((String) userDetails.getUsername());
             return ResponseEntity.ok(favorites);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/favorites/{hotelId}")
-    public ResponseEntity<User> addHotelToFavorites(HttpSession session, @PathVariable int hotelId){
-        if (session.isNew() || session.getAttribute("username") == null){
-            return ResponseEntity.status(401).build();
+    public ResponseEntity<User> addHotelToFavorites(@AuthenticationPrincipal UserDetails userDetails,@PathVariable int hotelId){
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User returnedUser = userService.addHotelToFavorites( (String) session.getAttribute("username"), hotelId);
+        User returnedUser = userService.addHotelToFavorites( (String) userDetails.getUsername(), hotelId);
         if (returnedUser == null){
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(returnedUser);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/favorites/{hotelId}")
-    public ResponseEntity<User> removeHotelFromFavorites(HttpSession session, @PathVariable int hotelId){
-        if (session.isNew() || session.getAttribute("username") == null){
-            return ResponseEntity.status(401).build();
+    public ResponseEntity<User> removeHotelFromFavorites(@AuthenticationPrincipal UserDetails userDetails,@PathVariable int hotelId){
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User returnedUser = userService.removeHotelFromFavorites((String) session.getAttribute("username"), hotelId);
+        User returnedUser = userService.removeHotelFromFavorites((String) userDetails.getUsername(), hotelId);
         if (returnedUser == null){
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(returnedUser);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user")
-    public ResponseEntity obtainUserSession(HttpSession session){
-        Object object = session.getAttribute("username");
+    public ResponseEntity obtainUserSession(@AuthenticationPrincipal UserDetails userDetails){
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Object object = userDetails.getUsername();
         if(object == null) return ResponseEntity.notFound().build();
         String username = object.toString();
         String role;

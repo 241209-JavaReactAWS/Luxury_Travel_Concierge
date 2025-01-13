@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,17 +23,19 @@ public class RoomController {
 
     private final RoomService roomService;
     private final HotelService hotelService;
+    private final AdminService adminService;
 
 
     @Autowired
-    public RoomController(RoomService roomService, HotelService hotelService) {
+    public RoomController(RoomService roomService, HotelService hotelService, AdminService adminService) {
         this.roomService = roomService;
         this.hotelService = hotelService;
+        this.adminService = adminService;
     }
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("{hotelId}")
-    public ResponseEntity<List<Room>> getAllRoomsInHotel(@PathVariable Integer hotelId, HttpSession session){
+    public ResponseEntity<List<Room>> getAllRoomsInHotel(@PathVariable Integer hotelId, @AuthenticationPrincipal UserDetails userDetails){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
@@ -39,14 +44,16 @@ public class RoomController {
         return ResponseEntity.ok(allRooms);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("{hotelId}")
-    public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> createNewRoom(@RequestBody Room room,@PathVariable Integer hotelId ,@AuthenticationPrincipal UserDetails userDetails){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew() || curAdminId==null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if(gottenHotel.get().getAdmin().getAdminId() != curAdminId)  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         room.setHotel(gottenHotel.get());
@@ -56,13 +63,16 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newRoom);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{hotelId}")
-    public ResponseEntity<Room> changeRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> changeRoom(@RequestBody Room room,@PathVariable Integer hotelId ,@AuthenticationPrincipal UserDetails userDetails){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew() || curAdminId==null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if(gottenHotel.get().getAdmin().getAdminId() != curAdminId)  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Room newRoom = roomService.updateRoomInfo(room);
@@ -71,13 +81,16 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(newRoom);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{hotelId}")
-    public ResponseEntity<Room> deleteRoom(@RequestBody Room room,@PathVariable Integer hotelId ,HttpSession session){
+    public ResponseEntity<Room> deleteRoom(@RequestBody Room room,@PathVariable Integer hotelId ,@AuthenticationPrincipal UserDetails userDetails){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
 
-        Integer curAdminId = (Integer)session.getAttribute("adminId");
-        if(session.isNew() || curAdminId==null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        Integer curAdminId = adminService.getAdminByUsername(userDetails.getUsername()).get().getAdminId();
+        if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         if(gottenHotel.get().getAdmin().getAdminId() != curAdminId)  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Room newRoom = roomService.updateRoomInfo(room);
@@ -86,6 +99,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(newRoom);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/markAsReserved/{roomId}")
     public ResponseEntity<Room> markRoomAsReserved(@PathVariable int roomId) {
         Room updatedRoom = roomService.markRoomAsReserved(roomId);
@@ -95,6 +109,7 @@ public class RoomController {
         return ResponseEntity.ok(updatedRoom);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/markAsAvailable/{roomId}")
     public ResponseEntity<Room> markRoomAsAvailable(@PathVariable int roomId) {
         Room updatedRoom = roomService.markRoomAsAvailable(roomId);
@@ -104,6 +119,7 @@ public class RoomController {
         return ResponseEntity.ok(updatedRoom);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/updateStatus/{roomId}")
     public ResponseEntity<Room> updateRoomStatus(@PathVariable int roomId, @RequestParam String status) {
         Room updatedRoom = roomService.updateRoomStatus(roomId, status);
