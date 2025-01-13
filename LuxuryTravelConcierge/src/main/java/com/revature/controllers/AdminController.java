@@ -30,6 +30,7 @@ public class AdminController {
         this.hotelService = hotelService;
     }
     @GetMapping
+    @Transactional
     public ResponseEntity<List<Admin>> getAllAdminsHandler(){
         return new ResponseEntity<>(adminService.getAllAdmins(),HttpStatus.OK);
     }
@@ -172,20 +173,6 @@ public class AdminController {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //    }
-
-    @PostMapping(value="cookie")
-    public ResponseEntity removeLoginCookie(HttpServletResponse servlet){
-        Cookie cookie = new Cookie("Admin_Id",null);
-        cookie.setMaxAge(0);
-        cookie.setPath("../");
-        servlet.addCookie(cookie);
-        return ResponseEntity.status(HttpStatus.OK).body("Logged Out");
-    }
-
-    @GetMapping(value = "cookie")
-    public ResponseEntity getLoginCookie(@CookieValue(value = "Admin_Id", defaultValue = "none") String cookie){
-        if(cookie.equals("none")) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No Cookie Found");
-        return ResponseEntity.status(HttpStatus.OK).body(cookie);
-    }
+    
 
 }
