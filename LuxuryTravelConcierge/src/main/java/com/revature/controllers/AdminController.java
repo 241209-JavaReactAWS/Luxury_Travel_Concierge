@@ -63,7 +63,7 @@ public class AdminController {
             userDTO.setUserId(possibleAdmin.get().getAdminId());
             userDTO.setToken(JwtUtil.generateToken(possibleAdmin.get().getUsername()));
             userDTO.setRole("ADMIN");
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(userDTO);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
@@ -106,6 +106,7 @@ public class AdminController {
             newHotel.setDescription(hotel.getDescription());
             newHotel.setAdmin(targetAdmin.get());
             Optional<Admin> newAdmin = adminService.getAdminById(curAdminId);
+            hotelService.createNewHotel(newHotel);
             return new ResponseEntity<>(newAdmin.get(), HttpStatus.OK);
         }
         else{

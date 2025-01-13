@@ -31,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             return User.builder()
                     .username(user.get().getUsername())
                     .password(user.get().getPassword())
+                    .roles("CUSTOMER")
                     .build();
         }
 
@@ -38,6 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(admin -> org.springframework.security.core.userdetails.User.builder()
                         .username(admin.getUsername())
                         .password(admin.getPassword())
+                        .roles("ADMIN")
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
