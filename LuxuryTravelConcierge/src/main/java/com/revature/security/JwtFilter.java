@@ -1,7 +1,5 @@
-package com.revature.Security;
+package com.revature.security;
 
-import com.revature.Security.*;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,13 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static com.revature.Security.JwtUtil.validateToken;
+import static com.revature.security.JwtUtil.validateToken;
 
 public class JwtFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final com.revature.Security.CustomUserDetailsService userDetailsService;
+    private final com.revature.security.CustomUserDetailsService userDetailsService;
 
-    public JwtFilter(com.revature.Security.CustomUserDetailsService userDetailsService) {
+    public JwtFilter(com.revature.security.CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 

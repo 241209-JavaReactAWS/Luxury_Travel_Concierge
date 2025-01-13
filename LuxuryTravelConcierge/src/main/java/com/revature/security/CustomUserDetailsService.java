@@ -1,4 +1,4 @@
-package com.revature.Security;
+package com.revature.security;
 
 import com.revature.models.*;
 import com.revature.DAOS.AdminDAO;
