@@ -8,6 +8,7 @@ import BookingPage from '../BookingComponent/BookingPage';
 import BookingDataChart from '../BookingDataChart/BookingDataChart';
 import { FormControl, InputLabel, Select, MenuItem, Box, Grid, TextField, Typography, Card, CardContent, CardMedia, IconButton } from '@mui/material';
 import { Padding } from '@mui/icons-material';
+import HotelReviews from '../ReviewComponent/Reviews';
 
 function Rooms() {
     const { hotelId } = useParams();
@@ -15,7 +16,15 @@ function Rooms() {
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
     const [filters, setFilters] = useState({ status: '', roomType: '', maxOccupancy: ''});
-    
+    const [userId, setUserId] = useState(1);
+    const data = {
+        hotelId: hotelId,
+        userId: userId
+    }
+
+    if( hotelId == null) {
+        return <p>Hotel ID not found</p>
+    }
 
     useEffect(() => {
         axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true})
@@ -25,6 +34,10 @@ function Rooms() {
         .catch((error) => {
             console.error("Error fetching hotel details", error);
         });
+
+        axios.get(`${Supplementaries.serverLink}users/userId`, { withCredentials: true })
+        .then((response) => { setUserId(response.data) })
+        .catch((error) => { setUserId(-1) })
         
         
         axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`)
@@ -152,17 +165,15 @@ return (
                             component="img"
                             sx={{ width: 300, height: 200 }}
                             image={room.imageUrl}
-                            alt={`${room.roomName} image`}
+                            alt={`${room.roomNumber} image`}
                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column', padding: '10px' }}>
                             <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography component="div" variant="h5">
-                                    Name: {room.roomName}
-                                </Typography>
+                                {/* <Typography component="div" variant="h5">
+                                    {room.roomName}
+                                </Typography> */}
                                 <Typography
-                                    variant="subtitle1"
-                                    component="div"
-                                    sx={{ color: 'text.secondary' }}
+                                    component="div" variant="h5"
                                 >
                                     Type: {room.roomType}
                                 </Typography>
@@ -171,7 +182,7 @@ return (
                                     component="div"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Max Occupancy: 
+                                    Guest: 
                                     {room.maxOccupancy}
                                 </Typography>
                                 <Typography
@@ -189,8 +200,14 @@ return (
                 <p>Unfortunately, there are no rooms available for this hotel. Please try again later.</p>
             )}
         
+        
         </main>
+
     </div>
+    <div style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+        <HotelReviews hotelId={parseInt(hotelId)} userId={1}/>
+    </div>
+    
     </div>
 )
 }

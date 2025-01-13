@@ -16,7 +16,7 @@ export default function nav() {
         }).catch((error) => {
             setRole("")
         })
-    }, []);
+    });
     //State for the dropdown menu
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

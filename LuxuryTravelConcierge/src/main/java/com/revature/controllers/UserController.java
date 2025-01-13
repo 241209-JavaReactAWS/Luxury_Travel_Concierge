@@ -138,6 +138,16 @@ public class UserController {
         if(adminService.getAdminByUsername(username).isPresent()) return ResponseEntity.ok("ADMIN");
         return ResponseEntity.notFound().build();
     }
+    
+    @GetMapping("/userId")
+    public ResponseEntity getUserId(HttpSession session){
+        Object object = session.getAttribute("username");
+        if(object == null) return ResponseEntity.notFound().build();
+        String username = object.toString();
+        User user = userService.findUserByUsername(username).get();
+        return ResponseEntity.ok(user.getUserId());
+
+    }
 
     @GetMapping("/currentUser")
     public ResponseEntity<User> getCurrentUser(HttpSession session){
@@ -147,5 +157,4 @@ public class UserController {
         User user = userService.findUserByUsername(username).get();
         return ResponseEntity.ok(user);
     }
-
 }
