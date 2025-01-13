@@ -15,8 +15,11 @@ function Rooms() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
-    const [filters, setFilters] = useState({ status: '', roomType: '', maxOccupancy: ''});
+    const [filters, setFilters] = useState({ isAvailable: '', roomType: '', maxOccupancy: ''});
     const [userId, setUserId] = useState(1);
+    const [roomTypes, setRoomTypes] = useState<string[]>([]);
+    const [uniqueRoomTypes, setUniqueRoomTypes] = useState<string[]>([]);
+    
     const data = {
         hotelId: hotelId,
         userId: userId
@@ -48,7 +51,10 @@ function Rooms() {
             Authorization: "Bearer " + localStorage.getItem("token")
         }})
             .then((res) => {
+                console.log('Rooms fetched:', res.data);
                 setRooms(res.data);
+                const roomTypes = Array.from(new Set(res.data.map((room) => room.roomType)));
+                setUniqueRoomTypes(roomTypes);
             })
             .catch((error) => {
                 console.error("Error fetching rooms", error);
@@ -59,16 +65,24 @@ function Rooms() {
         setFilters(prevFilters => {
             const updatedFilters = { ...prevFilters, ...newFilters };
             const queryParams = new URLSearchParams(updatedFilters).toString();
-            navigate(`?${queryParams}`, { replace: true}); 
+            navigate(`?${queryParams}`, { replace: true });
             return updatedFilters;
         });
     };
+
+    const filteredRooms = rooms.filter((room) => {
+        const matchesType = filters.roomType === '' || room.roomType === filters.roomType;
+        const matchesAvailability = filters.isAvailable === '' || String(room.isAvailable) === filters.isAvailable;
+        const matchesCapacity = filters.maxOccupancy === '' || room.maxOccupancy >= parseInt(filters.maxOccupancy, 10);
+        return matchesType && matchesAvailability && matchesCapacity;
+    });    
+
+    
 
 return (
     <div>
         <header>
             {hotel ? (
-
 
             <div className="hotel-summary">
 
@@ -105,9 +119,9 @@ return (
             <p style={{padding:'30px'}}>Loading hotel details...</p>
             )}
         </header>
-    {/* <h1>Rooms for Hotel {hotelId}</h1> */}
-    
-    <div style={{ marginBottom: '20px' }}>
+        {/* <h1>Rooms for Hotel {hotelId}</h1> */}
+        
+        <div style={{ marginBottom: '20px' }}>
             <Box
                 sx={{
                     marginBottom: '20px',
@@ -124,7 +138,8 @@ return (
                         <FormControl fullWidth>
                             <InputLabel>Availability</InputLabel>
                             <Select
-                                onChange={(e) => handleFilterChange({ availability: e.target.value })}
+                                value={filters.isAvailable}
+                                onChange={(e) => handleFilterChange({ isAvailable: e.target.value })}
                                 label="Availability"
                             >
                                 <MenuItem value="">All</MenuItem>
@@ -137,21 +152,27 @@ return (
                         <FormControl fullWidth>
                             <InputLabel>Room Type</InputLabel>
                             <Select
+                                value={filters.roomType}
                                 onChange={(e) => handleFilterChange({ roomType: e.target.value })}
                                 label="Room Type"
                             >
                                 <MenuItem value="">All</MenuItem>
-                                <MenuItem value="deluxe">Deluxe</MenuItem>
-                                <MenuItem value="standard">Standard</MenuItem>
+                                {uniqueRoomTypes.map((type) => (
+                                    <MenuItem key={type} value={type}>
+                                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </Grid>
+
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
                             type="number"
                             label="Capacity"
-                            onChange={(e) => handleFilterChange({ capacity: e.target.value })}
+                            value={filters.maxOccupancy}
+                            onChange={(e) => handleFilterChange({ maxOccupancy: e.target.value })}
                             placeholder="Capacity"
                         />
                     </Grid>
@@ -161,15 +182,16 @@ return (
         
         <main style={{ display: 'grid',gridTemplateColumns: 'repeat(auto-fill, minmax(650px, 1fr))', paddingLeft:'20px'}}>
             {/* <h2>Rooms Available</h2> */}
-            {rooms.length > 0 ? (
-                rooms.map(room => (
+            {filteredRooms.length > 0 ? (
+                filteredRooms
+                .map((room) => (
                     <Card 
                         key={room.roomId} 
                         sx={{ display: 'flex', maxWidth: 650, marginBottom: '20px' }}
                     >
                         <CardMedia
                             component="img"
-                            sx={{ width: 300, height: 200 }}
+                            sx={{ width: 400, height: 300 }}
                             image={room.imageUrl}
                             alt={`${room.roomNumber} image`}
                         />
@@ -181,20 +203,24 @@ return (
                                 <Typography
                                     component="div" variant="h5"
                                 >
-                                    Type: {room.roomType}
+                                    {room.roomType}
+                                </Typography>
+                                <br/>
+                                <Typography
+                                    variant="subtitle1"
+                                    component="div"
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    Guest: {room.maxOccupancy}
                                 </Typography>
                                 <Typography
                                     variant="subtitle1"
                                     component="div"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Guest: 
-                                    {room.maxOccupancy}
+                                    Price: {room.price}
                                 </Typography>
                                 <Typography
-                                    variant="subtitle1"
-                                    component="div"
-                                    sx={{ color: 'text.secondary' }}
                                 >
                                     <BookingPage {...room} />
                                 </Typography>

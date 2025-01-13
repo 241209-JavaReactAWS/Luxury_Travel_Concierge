@@ -30,6 +30,16 @@ const onFailure: onError = (error : any) =>{
   const [address,setAddress] = useState("")
   const [error,setError] = useState("")
   const [key, setKey] = useState("")
+
+  let data2 = {
+    firstName: firstname,
+    lastName: lastname,
+    username: username,
+    email: email,
+    address: address,
+    password: password,
+  }
+
   let data : any = <>
   
     <h1>Hotel Owner Registration</h1>
@@ -50,7 +60,7 @@ const onFailure: onError = (error : any) =>{
                     <p className='InfoLink'><a href={Supplementaries.clientLink}>Already a User?</a></p>
               </div>
                   <SubmissionButton type="POST" onError={onFailure} onSuccess={onSuccess} endpoint={`${Supplementaries.serverLink}admin/register`} 
-                  statusChanger={setStatus} placeholder='Register as Owner' data={Supplementaries.generateUserJson(NaN,username,password,firstname,lastname,email)}></SubmissionButton>
+                  statusChanger={setStatus} placeholder='Register as Owner' data={data2}></SubmissionButton>
               </div>
             </div>
   </>
