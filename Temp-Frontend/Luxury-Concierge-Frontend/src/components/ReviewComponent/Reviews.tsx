@@ -25,7 +25,9 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
    */
   const fetchReviews = async () => {
     try {
-      const res = await axios.get<Review[]>(`${API_BASE_URL}reviews/hotel/${hotelId}`);
+      const res = await axios.get<Review[]>(`${API_BASE_URL}reviews/hotel/${hotelId}`,{headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
       setReviews(res.data);
     } catch (err) {
       console.error("Failed to fetch reviews:", err);
@@ -34,7 +36,9 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
 
   useEffect(() => {
     fetchReviews();
-    axios.get(`${API_BASE_URL}hotel/${hotelId}`).then((res) => { setHotelName(res.data.name) });
+    axios.get(`${API_BASE_URL}hotel/${hotelId}`,{headers: {
+      Authorization: "Bearer " + localStorage.getItem("token")
+  }}).then((res) => { setHotelName(res.data.name) });
   }, [hotelId]);
 
   /**
@@ -51,7 +55,9 @@ function HotelReviews({ hotelId, userId }: HotelReviewsProps) {
       parentReview: null,
     };
     try {
-      await axios.post<Review>(`${API_BASE_URL}reviews`, newReviewPayload);
+      await axios.post<Review>(`${API_BASE_URL}reviews`, newReviewPayload,{headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
       // Re-fetch updated data
       await fetchReviews();
       // Clear form

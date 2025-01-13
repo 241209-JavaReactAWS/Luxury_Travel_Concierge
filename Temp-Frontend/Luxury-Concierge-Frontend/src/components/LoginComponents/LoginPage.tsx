@@ -19,7 +19,9 @@ function LoginPage() {
 
     // TODO: When Homepage per user is done, connect to homepage
     useEffect(() => {
-        axios.get(Supplementaries.serverLink + "users/user", {withCredentials: true})
+        axios.get(Supplementaries.serverLink + "users/user", {withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
         .then((data)=>{
             window.location.href = Supplementaries.clientLink + "Hotels";
         })
@@ -28,6 +30,7 @@ function LoginPage() {
 
     const onSuccess: onSuccess = (data : any) =>{
         setStatus(0);
+        localStorage.setItem("token",data.data.token)
         window.location.href = Supplementaries.clientLink + "Hotels"
     }
     

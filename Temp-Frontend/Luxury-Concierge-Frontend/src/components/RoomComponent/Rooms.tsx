@@ -27,7 +27,9 @@ function Rooms() {
     }
 
     useEffect(() => {
-        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true})
+        axios.get<Hotel>(`${Supplementaries.serverLink}hotel/${hotelId}`,{withCredentials:true, headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }})
         .then((res) => {
         setHotel(res.data);
         })
@@ -35,12 +37,16 @@ function Rooms() {
             console.error("Error fetching hotel details", error);
         });
 
-        axios.get(`${Supplementaries.serverLink}users/userId`, { withCredentials: true })
+        axios.get(`${Supplementaries.serverLink}users/userId`, { withCredentials: true, headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        } })
         .then((response) => { setUserId(response.data) })
         .catch((error) => { setUserId(-1) })
         
         
-        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`)
+        axios.get<Room[]>(`${Supplementaries.serverLink}room/${hotelId}`,{headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }})
             .then((res) => {
                 setRooms(res.data);
             })

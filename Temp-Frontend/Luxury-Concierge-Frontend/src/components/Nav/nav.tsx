@@ -10,7 +10,9 @@ export default function nav() {
     const [role, setRole] = useState<string>("");
 
     useEffect(() => {
-        axios.get(Supplementaries.serverLink + "users/user", { withCredentials: true })
+        axios.get(Supplementaries.serverLink + "users/user", { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
         .then((response) => {
             setRole(response.data)
         }).catch((error) => {
@@ -36,7 +38,9 @@ export default function nav() {
     }
 
     let logout = () => {
-        axios.post(Supplementaries.serverLink+"admin/logout", {}, { withCredentials: true })
+        axios.post(Supplementaries.serverLink+"admin/logout", {}, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
             .then(() => {
                 navToPage('/')
             })

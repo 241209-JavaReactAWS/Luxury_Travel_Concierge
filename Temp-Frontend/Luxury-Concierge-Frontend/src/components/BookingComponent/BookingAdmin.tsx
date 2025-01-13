@@ -18,7 +18,9 @@ export default function BookingAdmin() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(Supplementaries.serverLink + 'bookings');
+      const response = await axios.get(Supplementaries.serverLink + 'bookings',{headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
       console.log(response.data);
       setBookings(response.data);
     } catch (error) {
@@ -38,7 +40,9 @@ export default function BookingAdmin() {
       const response = await axios.put(Supplementaries.serverLink + `bookings/${booking.bookingId}`, {
         ...booking,
         status: 'Accepted'
-      });
+      }, { headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
       setBookings(prev => prev.map(b =>
         b.bookingId === booking.bookingId ? { ...b, status: 'Accepted' } : b
       ));
@@ -53,7 +57,7 @@ export default function BookingAdmin() {
       const response = await axios.put(`${Supplementaries.serverLink}bookings/${booking.bookingId}`, {
         ...booking,
         status: 'Denied'
-      });
+      }, { headers: { Authorization: "Bearer " + localStorage.getItem("token") } });
       setBookings(prev => prev.map(b =>
         b.bookingId === booking.bookingId ? { ...b, status: 'Denied' } : b
       ));
@@ -65,7 +69,7 @@ export default function BookingAdmin() {
 
   const handleDeleteBooking = async (bookingId: number) => {
     try {
-      await axios.delete(`${Supplementaries.serverLink}bookings/${bookingId}`);
+      await axios.delete(`${Supplementaries.serverLink}bookings/${bookingId}`, { headers : { Authorization: "Bearer " + localStorage.getItem("token") } });
       setBookings(prev => prev.filter(booking => booking.bookingId !== bookingId));
       setNotification({ open: true, message: 'Booking deleted successfully', severity: 'success' });
     } catch (error) {

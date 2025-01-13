@@ -63,7 +63,9 @@ function ReviewItem({ review, hotelId, userId, onRefresh } : ReviewItemProps) {
     };
 
     try {
-      await axios.post(`${Supplementaries.serverLink}reviews`, replyPayload);
+      await axios.post(`${Supplementaries.serverLink}reviews`, replyPayload,{headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
       await onRefresh();
       // reset the form and hide it:
       setReplyBody("");

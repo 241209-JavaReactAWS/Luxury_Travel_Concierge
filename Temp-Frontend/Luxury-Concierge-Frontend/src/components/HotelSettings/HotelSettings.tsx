@@ -34,7 +34,9 @@ const HotelSettings = () => {
         imageUrl: imageUrl
     }
     useEffect(() => {
-        axios.get(Supplementaries.serverLink + `hotel/${hotelId}`, { withCredentials: true })
+        axios.get(Supplementaries.serverLink + `hotel/${hotelId}`, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
         .then((response) => {
             let hotel = response.data;
             setName(hotel.name);
@@ -71,7 +73,9 @@ const HotelSettings = () => {
             No</button>
             
             <button onClick={() => {
-                axios.delete(Supplementaries.serverLink + "hotel/" + hotelId, { withCredentials: true,data:data })
+                axios.delete(Supplementaries.serverLink + "hotel/" + hotelId, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                },data:data })
                 .then(() => {
                     alert("Hotel deleted successfully");
                     window.location.href = Supplementaries.clientLink + "HotelManagement";

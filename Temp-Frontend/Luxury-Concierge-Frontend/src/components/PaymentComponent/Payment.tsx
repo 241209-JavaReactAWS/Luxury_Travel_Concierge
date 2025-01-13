@@ -30,7 +30,9 @@ function PaymentForm(){
       // Create a payment intent on the server
       const response = await axios.post(Supplementaries.serverLink + "payments/create-payment-intent", {
         amount: amount * 100, // Convert dollars to cents
-      });
+      },{headers: {
+        Authorization: "Bearer " + localStorage.getItem("token")
+    }});
 
       const { clientSecret } = response.data;
 

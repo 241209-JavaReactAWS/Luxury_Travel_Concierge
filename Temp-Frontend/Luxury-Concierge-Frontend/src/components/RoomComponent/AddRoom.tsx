@@ -46,12 +46,16 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
                 await axios.put(
                     `${Supplementaries.serverLink}room/${hotelId}`,
                     { ...room },
-                    { withCredentials: true }
+                    { withCredentials: true , headers: {
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    }}
                 );
                 alert('Room updated successfully');
                 onSave();
             } else {
-                await axios.post(`${Supplementaries.serverLink}room/${hotelId}`, { ...room}, { withCredentials: true });
+                await axios.post(`${Supplementaries.serverLink}room/${hotelId}`, { ...room}, { withCredentials: true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } });
                 alert('Room added successfully');
                 onSave();
             }

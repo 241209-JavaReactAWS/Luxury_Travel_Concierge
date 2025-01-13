@@ -32,7 +32,9 @@ const HotelManagementPage: React.FC = () => {
 
   // Fetch hotels owned by the logged-in user
 useEffect(() => {
-  axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+  axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
         .then((response) => {setHotels(response.data);})
         .catch((error) => {throw new Error("Failed to fetch hotels");});
     }, []);
@@ -63,13 +65,17 @@ useEffect(() => {
     setNewHotel({ name: "", location: "", description: "", imageUrl: "" });
     setIsModalOpen(false);
 
-    await axios.post(`${Supplementaries.serverLink}admin/hotels`, data, { withCredentials: true })
+    await axios.post(`${Supplementaries.serverLink}admin/hotels`, data, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
     .then((response) => {
         setHotels([...hotels, response.data]);
     })
     .catch((error) => { throw new Error("Failed to add hotel"); });
 
-    axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials: true })
+    axios.get(Supplementaries.serverLink + "admin/hotels", { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
         .then((response) => {setHotels(response.data);})
         .catch((error) => {throw new Error("Failed to fetch hotels");});
   }
