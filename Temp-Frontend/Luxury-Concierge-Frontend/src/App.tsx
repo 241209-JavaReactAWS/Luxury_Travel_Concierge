@@ -38,6 +38,7 @@ function App() {
         <Nav></Nav>
           <Routes>
             <Route path="/" element={<LoginPage></LoginPage>}></Route>
+            <Route path="/BookingPage" element={<BookingPage></BookingPage>}></Route>
             <Route path="/OwnerRegistration" element={<AdminRegister></AdminRegister>}></Route>
             <Route path='/Hotels' element={<AllHotels></AllHotels>}></Route>
             <Route path="/HotelManagement" element={<HotelManagementPage></HotelManagementPage>}></Route>

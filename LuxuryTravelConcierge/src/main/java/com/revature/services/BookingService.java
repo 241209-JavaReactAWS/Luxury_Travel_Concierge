@@ -3,6 +3,7 @@ package com.revature.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.revature.enums.BookingStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +53,16 @@ public class BookingService {
     }
 
 
+    public Booking cancelBooking(String id) {
+        Optional<Booking> booking = bookingDAO.findById(Integer.parseInt(id));
+        return booking.map(value -> bookingDAO.save(value)).orElse(null);
+    }
 
+    public Booking updateStatus(String id, BookingStatus status) {
+        Optional<Booking> booking = bookingDAO.findById(Integer.parseInt(id));
+        return booking.map(value -> {
+            value.setStatus(status);
+            return bookingDAO.save(value);
+        }).orElse(null);
+    }
 }

@@ -9,5 +9,4 @@ class LuxuryTravelConciergeApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
