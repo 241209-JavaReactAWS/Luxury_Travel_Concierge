@@ -69,7 +69,7 @@ function LoginPage() {
                 </div>
                 <div>
                     <TextInput id="username_input" for="Username" onValueChange={setUsername} width='90%'></TextInput>
-                    <TextInput id="password_input" for="Password" onValueChange={setPassword} width='90%'></TextInput>
+                    <TextInput id="password_input" for="Password" type='password' onValueChange={setPassword} width='90%'></TextInput>
                 </div>
                 <div id='bottomOfLoginForm'>
                     <p className='ErrorText'>{error}</p>
