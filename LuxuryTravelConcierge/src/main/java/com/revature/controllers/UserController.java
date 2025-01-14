@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.util.List;
+import java.util.Set;
 
 import com.revature.DAOS.DTOs.UserDTO;
 import com.revature.models.Admin;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.exceptions.NoAddressException;
@@ -107,12 +109,12 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/favorites")
-    public ResponseEntity<List<Hotel>> getUserFavorites(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Set<Hotel>> getUserFavorites(@AuthenticationPrincipal UserDetails userDetails) {
         if(!userDetails.isAccountNonExpired() || !userDetails.isAccountNonLocked() || !userDetails.isCredentialsNonExpired() || !userDetails.isEnabled()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         try {
-            List<Hotel> favorites = userService.getFavoritesForUser((String) userDetails.getUsername());
+            Set<Hotel> favorites = userService.getFavoritesForUser((String) userDetails.getUsername());
             return ResponseEntity.ok(favorites);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -139,9 +141,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         User returnedUser = userService.removeHotelFromFavorites((String) userDetails.getUsername(), hotelId);
-        if (returnedUser == null){
-            return ResponseEntity.badRequest().build();
-        }
+        // if (returnedUser == null){
+        //     return ResponseEntity.badRequest().build();
+        // }
         return ResponseEntity.ok(returnedUser);
     }
 
