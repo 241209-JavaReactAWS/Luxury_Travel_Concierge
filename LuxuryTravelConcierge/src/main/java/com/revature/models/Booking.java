@@ -1,16 +1,13 @@
 package com.revature.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import com.revature.enums.BookingStatus;
 
 @Entity
 @Table(name = "bookings")
 public class Booking {
-    
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +15,8 @@ public class Booking {
 
     //Will use a foreign key to room id later
     private int roomId;
+
+    private int hotelId;
 
     //Will need to link this to a user
     private int userId;
@@ -31,24 +30,35 @@ public class Booking {
 
     private int numberOfGuests;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
+
 
 
 
     public Booking() {
     }
 
-    public Booking(int bookingId, int roomId, int userId, String checkInDate, String checkOutDate, int price) {
+    public Booking(int bookingId, int hotelId, int roomId, int userId, String checkInDate, String checkOutDate, int price, BookingStatus status) {
         this.bookingId = bookingId;
+        this.hotelId = hotelId;
         this.roomId = roomId;
         this.userId = userId;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.price = price;
+        this.status = status;
     }
 
+    public int getHotelId() {
+        return hotelId;
+    }
 
-    public long getBookingId() {
+    public void setHotelId(int hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public int getBookingId() {
         return this.bookingId;
     }
 
@@ -106,12 +116,12 @@ public class Booking {
     public void setNumberOfGuests(int numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
-    
-    public String getStatus() {
+
+    public BookingStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(BookingStatus status) {
         this.status = status;
     }
 }

@@ -3,6 +3,9 @@ package com.revature.controllers;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.revature.DTO.BookingListDTO;
+import com.revature.enums.BookingStatus;
+import com.revature.services.BookingServiceImpl;
 import org.apache.catalina.connector.Response;
 import org.apache.el.stream.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +23,11 @@ public class BookingController {
 
     private final BookingService bookingService;
     private final RoomService roomService;
+    private final BookingServiceImpl bookingServiceImpl;
 
     @Autowired
-    public BookingController(BookingService bookingService, RoomService roomService) {
+    public BookingController(BookingServiceImpl bookingServiceImpl,BookingService bookingService, RoomService roomService) {
+        this.bookingServiceImpl = bookingServiceImpl;
         this.bookingService = bookingService;
         this.roomService=roomService;
     }
@@ -41,11 +46,10 @@ public class BookingController {
 
     }
 
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Booking>> getBookingsByUserIdHandler(@PathVariable Integer userId) {
-
-        return ResponseEntity.ok(bookingService.getBookingsByUserId(userId));
-
+    public List<BookingListDTO> listUserBookings(@PathVariable int userId) {
+        return bookingServiceImpl.listUserBookings(userId);
     }
 
     @GetMapping("/room/{roomId}")
@@ -105,6 +109,18 @@ public class BookingController {
         
         roomService.markRoomAsAvailable(possibleBooking.get().getRoomId());
         return ResponseEntity.status(204).body(possibleBooking.get());
+    }
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<Booking> cancelBooking(@PathVariable String id) {
+        return ResponseEntity.ok(bookingService.cancelBooking(id));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Booking> updateStatus(
+            @PathVariable String id,
+            @RequestParam BookingStatus status
+    ) {
+        return ResponseEntity.ok(bookingService.updateStatus(id, status));
     }
     
 }

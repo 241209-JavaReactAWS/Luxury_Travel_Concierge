@@ -1,143 +1,113 @@
-import { useEffect, useState } from "react";
-import "./Bookingform.css";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogProps, DialogTitle } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Booking } from "../../interfaces/Booking";
-import axios from "axios";
-import { Room } from "../../interfaces/Room";
-import dayjs from "dayjs";
-import Supplementaries from "../../SupplementaryClass";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Supplementaries from '../../SupplementaryClass';
+import { Booking } from '../../interfaces/Booking';
+
+// 定义预订数据的接口
 
 
-function BookingPage(props : Room) {
+// API 响应接口
+// interface ApiResponse {
+//   data: Booking[];
+//   message: string;
+//   status: number;
+// }
 
-  const [open, setOpen] = useState(false);
-  const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
-  const [curRoom , setCurRoom] = useState<any[]>([]);
-  const [newBooking, setNewBooking] = useState<Booking>({
-    bookingId: 0,
-    roomId: 0,
-    userId: 0,
-    checkInDate: "",
-    checkOutDate: "",
-    price: 0,
-    numberOfGuests: 1,
-    status: 'Pending'
-  })
+const BookingList: React.FC = () => {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const userId = 2;
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
-  const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
-    setOpen(true);
-    setScroll(scrollType);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-
-  const handleBooking = async () => {
+  const fetchBookings = async () => {
     try {
-      const res = await axios.post(`${Supplementaries.serverLink}bookings`, newBooking);
-      console.log(res.data);
-      handleClose();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewBooking({
-        ...newBooking,
-        [name]: value
-    });
-};
-
-const handleDateChange = (date: any, field: string) => {
-  const formattedDate = date ? date.format('YYYY-MM-DD') : '';
-  
-  const updatedBooking = { ...newBooking, [field]: formattedDate };
-
-  if (updatedBooking.checkInDate && updatedBooking.checkOutDate) {
-    const checkIn = dayjs(updatedBooking.checkInDate);
-    const checkOut = dayjs(updatedBooking.checkOutDate);
-    
-    const daysDifference = checkOut.diff(checkIn, 'day') + 1;
-    
-    const price = daysDifference * 10;
-    updatedBooking.price = price;
-  }
-  setNewBooking(updatedBooking);
-};
-
-  const increaseCapacity = () => {
-    if (newBooking.numberOfGuests < props.maxOccupancy) {
-      setNewBooking({
-        ...newBooking,
-        numberOfGuests: newBooking.numberOfGuests + 1
-      });
+      setLoading(true);
+      console.log('Fetching URL:', `${Supplementaries.serverLink}bookings/user/${userId}`);
+      const response = await axios.get(
+        `${Supplementaries.serverLink}bookings/user/${userId}`, 
+        { withCredentials: true }
+      );
+       
+      setBookings(response.data);
+    } catch (err) {
+      const errorMessage = 
+        axios.isAxiosError(err) && err.response?.data?.message
+          ? err.response.data.message
+          : 'Failed to fetch bookings';
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const decreaseCapacity = () => {
-    if (newBooking.numberOfGuests > 1) {
-      setNewBooking({
-        ...newBooking,
-        numberOfGuests: newBooking.numberOfGuests - 1
-      });
+  const handleCancelBooking = async (bookingId: number) => {
+    if (!window.confirm('Are you sure to cancel this booking?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `${Supplementaries.serverLink}bookings/${bookingId}`,
+        { withCredentials: true }
+      );
+      
+      setBookings(prevBookings => 
+        prevBookings.filter(booking => booking.bookingId !== bookingId)
+      );
+    } catch (err) {
+      const errorMessage = 
+        axios.isAxiosError(err) && err.response?.data?.message
+          ? err.response.data.message
+          : 'Failed to cancel booking';
+      alert(errorMessage);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // if (bookings.length === 0) {
+  //   return <div>No bookings found</div>;
+  // }
 
   return (
-    <div className="booking-page">
-      <div>
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
-      </div>
-      <Button onClick={handleClickOpen('paper')}> Create A Reservation </Button>
-
-      <Dialog 
-      open={open} 
-      onClose={handleClose} 
-      scroll={scroll}
-      fullWidth={true}>
-      <DialogTitle>Booking Title (Hotel, so on)</DialogTitle>
-        <DialogContent>
-          <p>Room Name: {props.roomName}</p>
-          <p>Rooms Type: {props.roomType}</p>
-          <p>Capacity (max capacity: {props.maxOccupancy}): {newBooking.numberOfGuests}</p>
-          <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>
-          <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.maxOccupancy}>+</Button>
-          
-          <p>Price: {newBooking.price}</p>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div>
-              <DatePicker
-                label="Check-In Date"
-                name="checkInDate"
-                onChange={(date) => handleDateChange(date, 'checkInDate')}
-              />
-            </div>
-            <div>
-              <DatePicker
-                label="Check-Out Date"
-                name="checkOutDate"
-                onChange={(date) => handleDateChange(date, 'checkOutDate')}
-              />
-            </div>
-          </LocalizationProvider>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleBooking}>Book</Button>
-        </DialogActions>
-      </Dialog>
+    <div>
+      <h1>My Bookings</h1>
+      {bookings && bookings.length > 0 ?(
+        bookings.map(booking => (
+        <div key={booking.bookingId}>
+          <h2>Hotel: {booking.hotelName}</h2>
+          <h3>Room: {booking.roomTypeName}</h3>
+          <div>Check-in: {booking.checkInDate}</div>
+          <div>Check-out: {booking.checkOutDate}</div>
+          <div>Number of Guests: {booking.numberOfGuests}</div>
+          <div>Status: {booking.status}</div>
+          <div>Price: ${booking.totalPrice}</div>
+          {booking.bookingId !== undefined && booking.status === 'PENDING' &&(
+            <button 
+              onClick={() => handleCancelBooking(booking.bookingId)}
+              style={{ color: 'red' }}
+            >
+              Cancel Booking
+            </button>
+          )}
+          <hr />
+        </div>
+      )))
+      :(
+        <div>No bookings found</div>
+      )
+      }
     </div>
   );
 };
 
-export default BookingPage;
+export default BookingList;
