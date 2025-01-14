@@ -44,27 +44,32 @@ function AllHotels() {
     },[])
 
     const handleSearch = () => {
-        const fuse = new Fuse(allHotels, fuseOptions);
-        const results = fuse.search(searchName || searchLocation);
-        const filteredResults = results.map((result) => result.item);
+        let results = allHotels;
     
-        const finalResults = filteredResults.filter((hotel) => {
-            const matchesPrice =
-                hotel.rooms &&
-                Array.isArray(hotel.rooms) &&
-                hotel.rooms.length > 0 &&
-                hotel.rooms.some((room) => {
-                    const roomPrice = room.price;
-                    return (
-                        (minPrice ? roomPrice >= minPrice : true) &&
-                        (maxPrice ? roomPrice <= maxPrice : true)
-                    );
-                });
-                return matchesPrice;
+        if (searchName || searchLocation) {
+            const fuse = new Fuse(allHotels, fuseOptions);
+            const fuseResults = fuse.search(searchName || searchLocation);
+            results = fuseResults.map((result) => result.item);
+        }
+    
+        if (minPrice !== undefined || maxPrice !== undefined) {
+            results = results.filter((hotel) => {
+                return (
+                    hotel.rooms &&
+                    hotel.rooms.some((room) => {
+                        const roomPrice = room.price;
+                        return (
+                            (minPrice ? roomPrice >= minPrice : true) &&
+                            (maxPrice ? roomPrice <= maxPrice : true)
+                        );
+                    })
+                );
             });
+        }
     
-            setFilteredHotels(finalResults.length > 0 ? finalResults : allHotels); 
-        };
+        setFilteredHotels(results);
+    };
+    
 
     useEffect(() => {
         axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials:true, headers: {

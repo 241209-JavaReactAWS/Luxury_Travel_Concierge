@@ -5,6 +5,6 @@ export interface Hotel {
     name: string;
     location: string;
     imageUrl: string;
-    rooms: Room;
+    rooms?: Room[];
     //owner: Owner;
 }
