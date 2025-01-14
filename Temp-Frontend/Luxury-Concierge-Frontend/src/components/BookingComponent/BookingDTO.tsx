@@ -9,6 +9,6 @@ export interface BookingDTO {
     checkOutDate: string;
     numberOfGuests: number;
     duration: string;
-    status: 'Pending' | 'Confirmed' | 'Cancelled';
+    status: 'PENDING' | 'CONFIRMED' | 'CONCELLED';
     totalPrice: number;
   }

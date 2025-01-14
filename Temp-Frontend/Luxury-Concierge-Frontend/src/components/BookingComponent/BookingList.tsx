@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Supplementaries from '../../SupplementaryClass';
-import { Booking } from './Booking';
+import { BookingDTO } from './BookingDTO';
 import './BookingList.css';
 
 const useCurrentUser = () => {
@@ -37,7 +37,7 @@ const useCurrentUser = () => {
   return { userId, error };
 }
 const BookingList: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingDTO[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const currentUser = useCurrentUser();
