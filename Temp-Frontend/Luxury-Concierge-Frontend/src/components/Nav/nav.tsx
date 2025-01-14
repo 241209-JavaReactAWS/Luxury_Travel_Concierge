@@ -67,10 +67,10 @@ export default function nav() {
 
                         {role == "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
                         
-                        {role != "" ? <MenuItem onClick={() => navToPage('/BookingPage')}>My Bookings</MenuItem> : <></>}
+                        {role != "" ? <MenuItem onClick={() => navToPage('/BookingList')}>My Bookings</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
-                        
+                                                
                         {role != "" ? <MenuItem onClick={() => navToPage('/Hotels')}>Hotels Listing</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}

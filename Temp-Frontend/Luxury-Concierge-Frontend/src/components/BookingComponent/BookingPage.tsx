@@ -186,6 +186,8 @@ function BookingPage(props: Room) {
           {errorMessage}
         </MuiAlert>
       </Snackbar>
+      
+
     </div>
   );
 };

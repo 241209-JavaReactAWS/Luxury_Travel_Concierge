@@ -11,6 +11,8 @@ import com.revature.DAOS.BookingDAO;
 import com.revature.models.Booking;
 import org.springframework.stereotype.Service;
 
+import static com.revature.enums.BookingStatus.CANCELLED;
+
 @Service
 public class BookingService {
     
@@ -55,7 +57,10 @@ public class BookingService {
 
     public Booking cancelBooking(String id) {
         Optional<Booking> booking = bookingDAO.findById(Integer.parseInt(id));
-        return booking.map(value -> bookingDAO.save(value)).orElse(null);
+        return booking.map(value -> {
+            value.setStatus(CANCELLED);
+            return bookingDAO.save(value);
+        }).orElse(null);
     }
 
     public Booking updateStatus(String id, BookingStatus status) {

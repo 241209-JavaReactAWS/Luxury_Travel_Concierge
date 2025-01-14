@@ -11,8 +11,9 @@ public class BookingListDTO {
     private String checkOutDate;
     private int totalPrice;
     private BookingStatus status;
+    private int numberOfGuests;
 
-    public BookingListDTO(int bookingId, String hotelName, String roomTypeName, String checkInDate, String checkOutDate, int totalPrice, BookingStatus status) {
+    public BookingListDTO(int bookingId, String hotelName, String roomTypeName, String checkInDate, String checkOutDate, int totalPrice, BookingStatus status, int numberOfGuests) {
         this.bookingId = bookingId;
         this.hotelName = hotelName;
         this.roomTypeName = roomTypeName;
@@ -20,6 +21,7 @@ public class BookingListDTO {
         this.checkOutDate = checkOutDate;
         this.totalPrice = totalPrice;
         this.status = status;
+        this.numberOfGuests = numberOfGuests;
     }
 
     public BookingListDTO() {
@@ -80,6 +82,14 @@ public class BookingListDTO {
 
     public void setStatus(BookingStatus status) {
         this.status = status;
+    }
+
+    public int getNumberOfGuests() {
+        return numberOfGuests;
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
     }
 }
 
