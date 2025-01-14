@@ -84,6 +84,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>luxury-travel-concierge</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<resources>
