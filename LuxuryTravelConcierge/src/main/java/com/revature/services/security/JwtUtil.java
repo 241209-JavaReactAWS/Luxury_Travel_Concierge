@@ -1,4 +1,4 @@
-package com.revature.security;
+package com.revature.services.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

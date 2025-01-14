@@ -1,11 +1,9 @@
 package com.revature.controllers;
 
-import java.util.List;
 import java.util.Set;
 
 import com.revature.DAOS.DTOs.UserDTO;
-import com.revature.models.Admin;
-import com.revature.security.JwtUtil;
+import com.revature.services.security.JwtUtil;
 import com.revature.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.exceptions.NoAddressException;
@@ -28,10 +25,6 @@ import com.revature.exceptions.WrongPasswordException;
 import com.revature.models.Hotel;
 import com.revature.models.User;
 import com.revature.services.UserService;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", maxAge=3600, allowCredentials = "true")

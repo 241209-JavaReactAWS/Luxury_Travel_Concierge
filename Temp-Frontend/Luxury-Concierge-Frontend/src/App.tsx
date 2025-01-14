@@ -46,8 +46,6 @@ function App() {
             <Route path="/hotels/:hotelId" element={<Rooms />} />
             <Route path="/UserRegistration" element={<UserRegistration></UserRegistration>}></Route>
             <Route path="/test" element={<BookingDataChart></BookingDataChart>}></Route>
-            <Route path="/reviews" element={<HotelReviews hotelId={1}></HotelReviews>}></Route>
-            <Route path="/payment" element={<StripePaymentForm></StripePaymentForm>}></Route>
             <Route path="/bookingAdmin" element={<BookingAdmin/>}></Route>
           </Routes>
         </BrowserRouter>
