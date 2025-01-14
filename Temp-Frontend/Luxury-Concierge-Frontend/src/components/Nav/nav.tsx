@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import { AppBar, Box, Button, Container, Divider, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import Supplementaries from "../../SupplementaryClass";
+import { color } from "chart.js/helpers";
 
 
 export default function nav() {
@@ -43,16 +44,18 @@ export default function nav() {
     }
 
     return (
-        <AppBar position="sticky">
+        <AppBar position="sticky"  style={{backgroundColor:"Navy"}}>
             <Container>
-                <Toolbar>
+                <Toolbar sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
                     {/* button for the dropdown menu */}
-                    <Button color="inherit" onClick={handleMenuClick}>
+                    <Button color="inherit" onClick={handleMenuClick}
+                        
+                    >
                         Menu
                     </Button>
 
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        Luxury Concierge
+                    <Typography variant="h6" sx={{ alignItems:"flex-end" }}>
+                        LuxuryConcierge
                     </Typography>
 
                     <Menu
