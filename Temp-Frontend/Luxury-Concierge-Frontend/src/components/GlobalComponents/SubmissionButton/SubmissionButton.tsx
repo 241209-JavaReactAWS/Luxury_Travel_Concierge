@@ -9,22 +9,30 @@ function SubmissionButton(props : EndpointProp) {
 
   function submit(){
     if(props.type == "GET"){
-      axios.get(props.endpoint,{withCredentials:true})
+      axios.get(props.endpoint,{withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "POST"){
-      axios.post(props.endpoint,props.data != null ? props.data : {},{withCredentials:true})
+      axios.post(props.endpoint,props.data != null ? props.data : {},{withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "DELETE"){
-      axios.delete(props.endpoint,{withCredentials:true})
+      axios.delete(props.endpoint,{withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }
     else if(props.type == "PUT"){
-      axios.put(props.endpoint,props.data != null ? props.data : {},{withCredentials:true})
+      axios.put(props.endpoint,props.data != null ? props.data : {},{withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }})
       .then((data : any) => {props.onSuccess(data)})
       .catch((error : any) => {props.onError(error)})
     }

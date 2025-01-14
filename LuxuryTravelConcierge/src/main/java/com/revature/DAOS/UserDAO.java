@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserDAO extends JpaRepository<User, Integer> {
     public Optional<User> findUserByUsername(String username);
 
     @Query("SELECT h FROM Hotel h JOIN h.favoritedBy u WHERE u.username = :username")
-    List<Hotel> findFavoritesByUsername(@Param("username") String username);
+    Set<Hotel> findFavoritesByUsername(@Param("username") String username);
 //    public List<Hotel> findFavoritesByUsername(String username);
 }

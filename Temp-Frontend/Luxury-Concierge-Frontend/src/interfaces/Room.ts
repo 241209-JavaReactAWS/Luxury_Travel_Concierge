@@ -1,9 +1,10 @@
 export interface Room {
     roomId: number;
-    roomName: string;
+    roomNumber: number;
     roomType: string;
+    hotel: number;
     maxOccupancy: number;
-    availability: boolean;
+    isAvailable: boolean;
     imageUrl: string;
     status: String;
     price: number;

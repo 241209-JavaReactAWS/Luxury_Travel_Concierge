@@ -7,6 +7,7 @@ import Supplementaries from '../../SupplementaryClass';
 import TextInput from '../GlobalComponents/TextInput/TextInput';
 import SubmissionButton from '../GlobalComponents/SubmissionButton/SubmissionButton';
 import Popup from '../GlobalComponents/Popup/Popup';
+import RoomManagement from '../RoomComponent/RoomManagement';
 
 const HotelSettings = () => {
     const { hotelId } = useParams();
@@ -20,6 +21,11 @@ const HotelSettings = () => {
     const [originalDescription, setOriginalDescription] = React.useState("");
     const [originalImageUrl, setOriginalImageUrl] = React.useState("");
 
+    if( hotelId == null) {
+        window.location.href = Supplementaries.clientLink + "HotelManagement";
+    }
+
+
     const data = {
         hotelId: hotelId,
         name: name,
@@ -28,7 +34,9 @@ const HotelSettings = () => {
         imageUrl: imageUrl
     }
     useEffect(() => {
-        axios.get(Supplementaries.serverLink + `hotel/${hotelId}`, { withCredentials: true })
+        axios.get(Supplementaries.serverLink + `hotel/${hotelId}`, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
         .then((response) => {
             let hotel = response.data;
             setName(hotel.name);
@@ -65,7 +73,9 @@ const HotelSettings = () => {
             No</button>
             
             <button onClick={() => {
-                axios.delete(Supplementaries.serverLink + "hotel/" + hotelId, { withCredentials: true,data:data })
+                axios.delete(Supplementaries.serverLink + "hotel/" + hotelId, { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                },data:data })
                 .then(() => {
                     alert("Hotel deleted successfully");
                     window.location.href = Supplementaries.clientLink + "HotelManagement";
@@ -89,8 +99,6 @@ const HotelSettings = () => {
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <button onClick={() => window.location.href = Supplementaries.clientLink + "HotelManagement"} 
                 style={{backgroundColor:'#db9d17', color:'white', padding:'10px', borderRadius:'5px', border:'none'}}>Back</button>
-                <button onClick={() => window.location.href = Supplementaries.clientLink + "HotelManagement"} 
-                style={{backgroundColor:'#db9d17', marginLeft: '5px', color:'white', padding:'10px', borderRadius:'5px', border:'none'}}>Rooms</button>
                 <button onClick={() => setIsModalOpen(true)} 
                 style={{backgroundColor:'red', marginLeft: '5px', color:'white', padding:'10px', borderRadius:'5px', border:'none'}}>Delete</button>
             </div>
@@ -108,6 +116,12 @@ const HotelSettings = () => {
             <TextInput id="hotel_description" for={"Description"} onValueChange={setDescription} width='99%'/>
             <TextInput id="hotel_imageUrl" for={"ImageUrl"} onValueChange={setImageUrl} width='99%'/>
             <SubmissionButton endpoint={Supplementaries.serverLink + "hotel/" + hotelId} type={"PUT"} data={data} onSuccess={onSuccess} onError={onFailure}/>
+        </div>
+    </div>
+    <div id="room-container" style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+        <h1>Update Rooms</h1>
+        <div style={{backgroundColor:'#f5f5f5', padding:'20px', borderRadius:'10px', border:'1px solid #db9d17'}}>
+            <RoomManagement hotelId={parseInt(hotelId!)}/>
         </div>
     </div>
     <div id="data-contaienr" style={{width:'70%', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>

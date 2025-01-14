@@ -17,7 +17,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
 
     const fetchRooms = async () => {
         try {
-            const response = await axios.get(`${Supplementaries.serverLink}room/${hotelId}`, { withCredentials: true });
+            const response = await axios.get(`${Supplementaries.serverLink}room/${hotelId}`, { withCredentials: true, headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            } });
             setRooms(response.data);
         } catch (error) {
             console.error('Error fetching rooms:', error);
@@ -29,6 +31,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
             await axios.put(`${Supplementaries.serverLink}room/updateStatus/${roomId}`, null, {
                 params: { status: newStatus },
                 withCredentials: true,
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
             });
             alert(`Room status updated to ${newStatus}`);
             fetchRooms();
@@ -46,7 +51,9 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
         }
 
         try {
-            await axios.delete(`${Supplementaries.serverLink}room/delete/${roomId}`, { withCredentials: true });
+            await axios.delete(`${Supplementaries.serverLink}room/delete/${roomId}`, { withCredentials: true, headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            } });
             alert('Room deleted successfully');
             fetchRooms();
         } catch (error) {
@@ -77,7 +84,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Image</TableCell>
-                        <TableCell >Name</TableCell>
+                        <TableCell >Number</TableCell>
                         <TableCell >Type</TableCell>
                         <TableCell >Price</TableCell>
                         <TableCell >Max Occupancy</TableCell>
@@ -95,14 +102,14 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                         >
                             <TableCell component="th" scope="row">
                                 <Avatar src={room.imageUrl} 
-                                    alt={`Room image of ${room.roomName}`}
+                                    alt={`Room image of ${room.roomNumber}`}
                                 >
                                     
                                     {room.imageUrl}
                                 </Avatar>
                             </TableCell>
                             <TableCell>
-                                {room.roomName}
+                                {room.roomNumber}
                             </TableCell>
                             <TableCell>
                                 {room.roomType}
@@ -122,7 +129,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                                             value={String(room.status)} 
                                             label="Status"
                                             onChange={handleStatusChange(room.roomId)}
-                                            disabled={room.status === 'Reserved'}
+                                            // disabled={room.status === 'Reserved'}
                                         >
                                             <MenuItem value="Available">Available</MenuItem>
                                             <MenuItem value="Reserved">Reserved</MenuItem>

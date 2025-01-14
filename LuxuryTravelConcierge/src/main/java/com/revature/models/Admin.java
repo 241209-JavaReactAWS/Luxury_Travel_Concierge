@@ -2,6 +2,8 @@ package com.revature.models;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 
@@ -23,7 +25,7 @@ public class Admin {
     @Column (name="lastName",nullable = false)
     private String lastName;
     @JsonManagedReference(value="admin_hotel")
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "admin")
     private Set<Hotel> ownedHotels;
     private String description;
     public Admin() {

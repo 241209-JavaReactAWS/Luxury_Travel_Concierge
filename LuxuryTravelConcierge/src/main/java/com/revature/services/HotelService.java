@@ -52,7 +52,7 @@ public class HotelService {
     public void deleteHotel(Hotel hotel, int hotelId)  {
 
         if(hotelDAO.existsById(hotel.getHotelId())){
-            hotelDAO.deleteById(hotelId);
+            hotelDAO.deleteById(hotel.getHotelId());
         }
         else {
             throw new IllegalArgumentException("Hotel not found");

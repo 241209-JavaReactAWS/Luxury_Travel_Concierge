@@ -2,6 +2,8 @@ package com.revature.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="room",schema="public")
@@ -18,7 +20,8 @@ public class Room {
     @Column(name="roomType",nullable = false)
     private String roomType;
 
-    @ManyToOne
+    @ManyToOne(cascade=CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     @JoinColumn(name="hotelId")
     private Hotel hotel;

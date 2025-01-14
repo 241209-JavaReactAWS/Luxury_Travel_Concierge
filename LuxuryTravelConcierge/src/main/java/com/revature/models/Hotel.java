@@ -3,6 +3,8 @@ package com.revature.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Set;
 @Entity
@@ -30,7 +32,9 @@ public class Hotel {
     private Set<Room> rooms;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "favorites")
+    @ManyToMany(mappedBy = "favorites", cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+
     private Set<User> favoritedBy;
 
     public Hotel() {
