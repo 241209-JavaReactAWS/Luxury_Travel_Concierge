@@ -15,7 +15,7 @@ function Rooms() {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [hotel, setHotel] = useState<Hotel>();
     const navigate = useNavigate();
-    const [filters, setFilters] = useState({ isAvailable: '', roomType: '', maxOccupancy: ''});
+    const [filters, setFilters] = useState({ status: '', roomType: '', maxOccupancy: ''});
     const [userId, setUserId] = useState(1);
     const [roomTypes, setRoomTypes] = useState<string[]>([]);
     const [uniqueRoomTypes, setUniqueRoomTypes] = useState<string[]>([]);
@@ -64,6 +64,7 @@ function Rooms() {
     const handleFilterChange = (newFilters: any) => {
         setFilters(prevFilters => {
             const updatedFilters = { ...prevFilters, ...newFilters };
+            console.log("Updated Filters: ", updatedFilters);
             const queryParams = new URLSearchParams(updatedFilters).toString();
             navigate(`?${queryParams}`, { replace: true });
             return updatedFilters;
@@ -72,10 +73,10 @@ function Rooms() {
 
     const filteredRooms = rooms.filter((room) => {
         const matchesType = filters.roomType === '' || room.roomType === filters.roomType;
-        const matchesAvailability = filters.isAvailable === '' || String(room.isAvailable) === filters.isAvailable;
+        const matchesAvailability = filters.status === '' || room.status === filters.status;
         const matchesCapacity = filters.maxOccupancy === '' || room.maxOccupancy >= parseInt(filters.maxOccupancy, 10);
         return matchesType && matchesAvailability && matchesCapacity;
-    });    
+    });      
 
     
 
@@ -138,13 +139,16 @@ return (
                         <FormControl fullWidth>
                             <InputLabel>Availability</InputLabel>
                             <Select
-                                value={filters.isAvailable}
-                                onChange={(e) => handleFilterChange({ isAvailable: e.target.value })}
+                                value={filters.status}
+                                onChange={(e) => {
+                                    console.log('Availability Filter Selected: ', e.target.value);
+                                    handleFilterChange({ status: e.target.value})
+                                }}
                                 label="Availability"
                             >
                                 <MenuItem value="">All</MenuItem>
-                                <MenuItem value="true">Available</MenuItem>
-                                <MenuItem value="false">Unavailable</MenuItem>
+                                <MenuItem value="Available">Available</MenuItem>
+                                <MenuItem value="Reserved">Unavailable</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

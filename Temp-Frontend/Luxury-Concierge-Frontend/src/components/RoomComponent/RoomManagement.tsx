@@ -129,7 +129,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
                                             value={String(room.status)} 
                                             label="Status"
                                             onChange={handleStatusChange(room.roomId)}
-                                            disabled={room.status === 'Reserved'}
+                                            // disabled={room.status === 'Reserved'}
                                         >
                                             <MenuItem value="Available">Available</MenuItem>
                                             <MenuItem value="Reserved">Reserved</MenuItem>

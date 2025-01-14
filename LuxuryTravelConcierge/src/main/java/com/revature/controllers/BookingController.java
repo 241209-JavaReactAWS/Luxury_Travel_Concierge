@@ -101,7 +101,7 @@ public class BookingController {
         }
         
         emailService.sendBookingConfirmationEmail(userEmail, booking.getRoomId(), booking.getCheckInDate(), booking.getCheckOutDate(), booking.getPrice());
-        
+        roomService.markRoomAsReserved(booking.getRoomId());
         return ResponseEntity.status(201).body(actualBooking);
     }
 
