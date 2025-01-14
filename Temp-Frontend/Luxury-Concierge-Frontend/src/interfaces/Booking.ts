@@ -1,12 +1,11 @@
-import { Room } from './Room';
-
 export interface Booking {
     bookingId?: number;
-    userId: number;
     roomId: number;
+    hotelId?: number;
+    userId: number;
     checkInDate: string;
     checkOutDate: string;
-    price: Room["price"];
+    price: number;
     numberOfGuests: number;
-    status: 'Pending' | 'Accepted' | 'Denied';
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
   }

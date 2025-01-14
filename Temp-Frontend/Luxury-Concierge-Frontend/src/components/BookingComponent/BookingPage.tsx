@@ -17,14 +17,13 @@ function BookingPage(props: Room) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [newBooking, setNewBooking] = useState<Booking>({
-    bookingId: 0,
     roomId: 0,
     userId: 0,
     checkInDate: "",
     checkOutDate: "",
     price: 0,
     numberOfGuests: 1,
-    status: 'Pending'
+    status: 'PENDING'
   });
 
   useEffect(() => {
@@ -39,7 +38,7 @@ function BookingPage(props: Room) {
         setNewBooking((prevBooking) => ({
           ...prevBooking,
           roomId: props.roomId,
-          userId: userId || 0,
+          userId: userId || 0
         }));
 
         const bookedResponse = await axios.get(`${Supplementaries.serverLink}bookings/room/${props.roomId}`, {
@@ -82,10 +81,12 @@ function BookingPage(props: Room) {
   const handleBooking = async () => {
     try {
       handleClose();
+      console.log("Booking:", newBooking);
       const res = await axios.post(`${Supplementaries.serverLink}bookings`, newBooking, { 
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       });
     } catch (error) {
+      console.log("Booking:", newBooking);
       console.error("Error booking:", error);
       setErrorMessage("Booking failed. Please try again.");
       setOpenSnackbar(true);

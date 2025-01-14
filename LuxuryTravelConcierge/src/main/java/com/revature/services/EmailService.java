@@ -26,7 +26,6 @@ public class EmailService {
 
     public void sendBookingConfirmationEmail(String toEmail, int roomName, String checkInDate, String checkOutDate, int price) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("cy8wolf@gmail.com");
         message.setTo(toEmail);
         message.setSubject("Booking Confirmation");
         message.setText("Your booking for roomID: " + roomName + " has been confirmed. \n" +
