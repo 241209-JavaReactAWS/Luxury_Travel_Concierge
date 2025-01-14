@@ -9,8 +9,14 @@ import { Room } from "../../interfaces/Room";
 import dayjs from "dayjs";
 import Supplementaries from "../../SupplementaryClass";
 import MuiAlert from '@mui/material/Alert';
+import StripePaymentForm from "../PaymentComponent/Payment";
 
 function BookingPage(props: Room) {
+  interface PaymentInput{
+    amount : number;
+    callBackToParentAfterSuccessfulPayment: ()=>void;
+  }
+
   const [open, setOpen] = useState(false);
   const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
   const [bookedDates, setBookedDates] = useState<string[]>([]);
@@ -78,6 +84,7 @@ function BookingPage(props: Room) {
     setOpen(false);
   };
 
+
   const handleBooking = async () => {
     try {
       handleClose();
@@ -143,7 +150,7 @@ function BookingPage(props: Room) {
       </div>
       <Button onClick={handleClickOpen('paper')}>Create A Reservation</Button>
 
-      <Dialog open={open} onClose={handleClose} scroll={scroll} fullWidth={true}>
+      <Dialog className="dialoge-box" open={open} onClose={handleClose} scroll={scroll} maxWidth="md" fullWidth={true}>
         <DialogTitle>Booking Title (Hotel, so on)</DialogTitle>
         <DialogContent>
           <p>Room Name: {props.roomId}</p>
@@ -176,8 +183,9 @@ function BookingPage(props: Room) {
           </LocalizationProvider>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleBooking}>Book</Button>
+          <Button onClick={handleClose}>Close Booking </Button>
+          <br/>
+          <StripePaymentForm amount = {newBooking.price} callBackToParentAfterSuccessfulPayment = {handleBooking}/>
         </DialogActions>
       </Dialog>
 

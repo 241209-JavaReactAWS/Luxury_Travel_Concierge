@@ -59,33 +59,29 @@ export default function nav() {
                         anchorEl={anchorEl}
                         open={Boolean(anchorEl)}
                         onClose={handleMenuClose}>
-                        <MenuItem onClick={() => navToPage('/')}>Home</MenuItem>
+                        {/* <MenuItem onClick={() => navToPage('/')}>Home</MenuItem>
 
-                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
+                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> */}
                         
                         {role == "" ? <MenuItem onClick={() => navToPage('/UserRegistration')}>New Account</MenuItem> : <></>}
 
                         {role == "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
                         
-                        {role != "" ? <MenuItem onClick={() => navToPage('/BookingList')}>My Bookings</MenuItem> : <></>}
+                        {role == "CUSTOMER" ? <MenuItem onClick={() => navToPage('/BookingList')}>My Bookings</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
                                                 
                         {role != "" ? <MenuItem onClick={() => navToPage('/Hotels')}>Hotels Listing</MenuItem> : <></>}
 
-                        {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
-
-                        {role != "" ? <MenuItem onClick={() => navToPage('/payment')}>Payment</MenuItem> : <></>}
-
-                        {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
+                        {role == "ADMIN" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
                         {role == "ADMIN" ?<MenuItem onClick={() => navToPage('/HotelManagement')}>Manage Hotels</MenuItem> : <></>}
                         
                         {role == "ADMIN" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
-                        {role == "ADMIN" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />:<></>}
-
                         {role == "ADMIN" ?<MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>:<></>}
+
+                        {role != "" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />:<></>}
 
                         {role != "" ? <MenuItem onClick={() => logout()}>LogOut</MenuItem>: <></>}
 
