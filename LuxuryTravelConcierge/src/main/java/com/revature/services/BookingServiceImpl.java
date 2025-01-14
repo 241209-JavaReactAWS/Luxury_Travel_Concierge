@@ -70,6 +70,7 @@ public class BookingServiceImpl {
                     dto.setCheckOutDate(booking.getCheckOutDate());
                     dto.setTotalPrice(booking.getPrice());
                     dto.setStatus(booking.getStatus());
+                    dto.setNumberOfGuests(booking.getNumberOfGuests());
 
                     return dto;
                 })

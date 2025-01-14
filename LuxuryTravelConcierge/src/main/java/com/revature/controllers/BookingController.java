@@ -59,7 +59,7 @@ public class BookingController {
 
 
     
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/{userId}")
     public List<BookingListDTO> listUserBookings(@PathVariable int userId) {
         return bookingServiceImpl.listUserBookings(userId);

@@ -1,10 +1,10 @@
-interface Booking {
+export interface Booking {
     bookingId: number;
     hotelName: string;
     roomTypeName: string;
     checkInDate: string;
     checkOutDate: string;
-    numberOfGuest: number;
+    numberOfGuests: number;
     duration: string;
     status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
     totalPrice: number;
