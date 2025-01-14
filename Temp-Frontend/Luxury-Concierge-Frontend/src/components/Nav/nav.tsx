@@ -54,8 +54,8 @@ export default function nav() {
                         Menu
                     </Button>
 
-                    <Typography variant="h6" sx={{ alignItems:"flex-end" }}>
-                        LuxuryConcierge
+                    <Typography variant="h6" sx={{ alignItems:"flex-end", fontFamily: "Raleway, serif", fontWeight:"3" }}>
+                        Luxury Concierge
                     </Typography>
 
                     <Menu
