@@ -28,7 +28,7 @@ function RoomManagement({ hotelId }: { hotelId: number }) {
 
     const updateRoomStatus = async (roomId: number, newStatus: string) => {
         try {
-            await axios.put(`${Supplementaries.serverLink}room/updateStatus/${roomId}`, null, {
+            await axios.patch(`${Supplementaries.serverLink}room/updateStatus/${roomId}`, null, {
                 params: { status: newStatus },
                 withCredentials: true,
                 headers: {

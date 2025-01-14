@@ -17,7 +17,7 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
     const [room, setRoom] = useState<Room>({
         roomId: 0,
         roomNumber: 0,
-        hotel: hotelId,
+        hotelId: hotelId,
         roomType: '',
         maxOccupancy: 0,
         isAvailable: true,
@@ -37,13 +37,14 @@ function AddRoom({ hotelId, onClose, onSave, roomToEdit }: AddRoomProps) {
       setRoom((prevRoom) => ({
           ...prevRoom,
           [name]: value,
+          hotelId: hotelId,
       }));
     };
 
     const handleSubmit = async () => {
         try {
             if (roomToEdit) {
-                await axios.put(
+                await axios.patch(
                     `${Supplementaries.serverLink}room/${hotelId}`,
                     { ...room },
                     { withCredentials: true , headers: {

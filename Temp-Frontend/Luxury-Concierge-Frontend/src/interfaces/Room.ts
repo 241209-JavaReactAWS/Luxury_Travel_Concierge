@@ -2,7 +2,7 @@ export interface Room {
     roomId: number;
     roomNumber: number;
     roomType: string;
-    hotel: number;
+    hotelId: number;
     maxOccupancy: number;
     isAvailable: boolean;
     imageUrl: string;
