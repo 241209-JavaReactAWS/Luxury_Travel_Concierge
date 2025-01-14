@@ -89,7 +89,7 @@ public class RoomController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("{hotelId}")
+    @PutMapping("{hotelId}")
     public ResponseEntity<Room> changeRoom(@RequestBody Room room,@PathVariable Integer hotelId ,@AuthenticationPrincipal UserDetails userDetails){
         Optional<Hotel> gottenHotel = hotelService.getHotelById(hotelId);
         if(gottenHotel.isEmpty()) ResponseEntity.notFound().build();
@@ -101,8 +101,6 @@ public class RoomController {
         if(gottenHotel.get().getAdmin().getAdminId() != curAdminId)  return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Room newRoom = roomService.updateRoomInfo(room);
-
-        newRoom.setHotel(gottenHotel.get());
 
         if(newRoom == null) ResponseEntity.noContent().build();
         return ResponseEntity.status(HttpStatus.OK).body(newRoom);
