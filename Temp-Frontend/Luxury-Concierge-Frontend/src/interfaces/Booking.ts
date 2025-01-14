@@ -1,9 +1,6 @@
 import { Room } from './Room';
 
 export interface Booking {
-    totalPrice: ReactNode;
-    hotelName: ReactNode;
-    roomTypeName: ReactNode;
     bookingId?: number;
     userId: number;
     roomId: number;
