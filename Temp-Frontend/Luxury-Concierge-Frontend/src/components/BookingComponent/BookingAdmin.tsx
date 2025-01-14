@@ -39,15 +39,16 @@ export default function BookingAdmin() {
     try {
       const response = await axios.put(Supplementaries.serverLink + `bookings/${booking.bookingId}`, {
         ...booking,
-        status: 'Accepted'
+        status: 'CONFIRMED'
       }, { headers: {
         Authorization: "Bearer " + localStorage.getItem("token")
     }});
       setBookings(prev => prev.map(b =>
-        b.bookingId === booking.bookingId ? { ...b, status: 'Accepted' } : b
+        b.bookingId === booking.bookingId ? { ...b, status: 'CONFIRMED' } : b
       ));
       setNotification({ open: true, message: 'Booking accepted successfully', severity: 'success' });
     } catch (error) {
+      console.log(booking);
       setNotification({ open: true, message: 'Failed to accept booking', severity: 'error' });
     }
   };
@@ -56,10 +57,10 @@ export default function BookingAdmin() {
     try {
       const response = await axios.put(`${Supplementaries.serverLink}bookings/${booking.bookingId}`, {
         ...booking,
-        status: 'Denied'
+        status: 'CANCELLED'
       }, { headers: { Authorization: "Bearer " + localStorage.getItem("token") } });
       setBookings(prev => prev.map(b =>
-        b.bookingId === booking.bookingId ? { ...b, status: 'Denied' } : b
+        b.bookingId === booking.bookingId ? { ...b, status: 'CANCELLED' } : b
       ));
       setNotification({ open: true, message: 'Booking denied successfully', severity: 'success' });
     } catch (error) {
@@ -120,7 +121,7 @@ export default function BookingAdmin() {
                   <TableCell>{booking.numberOfGuests}</TableCell>
                   <TableCell>{booking.status}</TableCell>
                   <TableCell>
-                    {booking.status === 'Pending' ? (
+                    {booking.status === 'PENDING' ? (
                       <>
                         <Button
                           color="primary"

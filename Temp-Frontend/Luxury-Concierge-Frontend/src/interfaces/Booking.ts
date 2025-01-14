@@ -1,15 +1,11 @@
-import { Room } from './Room';
-
 export interface Booking {
-    totalPrice: ReactNode;
-    hotelName: ReactNode;
-    roomTypeName: ReactNode;
     bookingId?: number;
-    userId: number;
     roomId: number;
+    hotelId?: number;
+    userId: number;
     checkInDate: string;
     checkOutDate: string;
-    price: Room["price"];
+    price: number;
     numberOfGuests: number;
-    status: 'Pending' | 'Accepted' | 'Denied';
+    status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
   }

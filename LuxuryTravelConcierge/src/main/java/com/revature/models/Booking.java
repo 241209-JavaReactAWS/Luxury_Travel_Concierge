@@ -50,78 +50,79 @@ public class Booking {
         this.status = status;
     }
 
-    public int getHotelId() {
-        return hotelId;
-    }
-
-    public void setHotelId(int hotelId) {
-        this.hotelId = hotelId;
-    }
-
+    
     public int getBookingId() {
         return this.bookingId;
     }
-
+    
     public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
-
-
+    
+    
     public String getCheckInDate() {
         return checkInDate;
     }
-
+    
     public void setCheckInDate(String checkInDate) {
         this.checkInDate = checkInDate;
     }
-
+    
     public String getCheckOutDate() {
         return checkOutDate;
     }
-
+    
     public void setCheckOutDate(String checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
-
-
+    
+    
     public int getPrice() {
         return price;
     }
-
+    
     public void setPrice(int price) {
         this.price = price;
     }
-
+    
     public int getRoomId() {
         return roomId;
     }
-
+    
     public void setRoomId(int roomId) {
         this.roomId = roomId;
     }
-
+    
     public int getUserId() {
         return userId;
     }
-
+    
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
+    
     
     public int getNumberOfGuests() {
         return numberOfGuests;
     }
-
+    
     public void setNumberOfGuests(int numberOfGuests) {
         this.numberOfGuests = numberOfGuests;
     }
-
+    
     public BookingStatus getStatus() {
         return status;
     }
-
+    
     public void setStatus(BookingStatus status) {
         this.status = status;
+    }
+    
+    public int getHotelId() {
+        return hotelId;
+    }
+    
+    public void setHotelId(int hotelId) {
+        this.hotelId = hotelId;
     }
 }

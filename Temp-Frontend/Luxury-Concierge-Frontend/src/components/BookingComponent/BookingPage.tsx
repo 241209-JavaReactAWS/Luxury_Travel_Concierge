@@ -1,170 +1,195 @@
+import { useEffect, useState } from "react";
+import "./Bookingform.css";
+import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, Snackbar } from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Booking } from "../../interfaces/Booking";
+import axios from "axios";
+import { Room } from "../../interfaces/Room";
+import dayjs from "dayjs";
+import Supplementaries from "../../SupplementaryClass";
+import MuiAlert from '@mui/material/Alert';
 
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Supplementaries from '../../SupplementaryClass';
-import { Booking } from './Booking';
-import './BookingPage.css';
-
-const useCurrentUser = () => {
-  const [userId, setUserId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
+function BookingPage(props: Room) {
+  const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
+  const [bookedDates, setBookedDates] = useState<string[]>([]);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [newBooking, setNewBooking] = useState<Booking>({
+    roomId: 0,
+    userId: 0,
+    checkInDate: "",
+    checkOutDate: "",
+    price: 0,
+    numberOfGuests: 1,
+    status: 'PENDING'
+  });
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
+    const fetchUserIdAndBookedDates = async () => {
       try {
-        const response = await axios.get(
-          `${Supplementaries.serverLink}users/currentUser`,
-          {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`
-            }
+        const userResponse = await axios.get(`${Supplementaries.serverLink}users/currentUser`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+        });
+        const userId = userResponse.data.userId;
+        console.log("Fetched userId:", userId);
+
+        setNewBooking((prevBooking) => ({
+          ...prevBooking,
+          roomId: props.roomId,
+          userId: userId || 0
+        }));
+
+        const bookedResponse = await axios.get(`${Supplementaries.serverLink}bookings/room/${props.roomId}`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+        });
+
+        const dates = bookedResponse.data.map((booking: Booking) => {
+          let dates = [];
+          const checkIn = dayjs(booking.checkInDate);
+          const checkOut = dayjs(booking.checkOutDate);
+          for (let date = checkIn; date.isBefore(checkOut); date = date.add(1, 'day')) {
+            dates.push(date.format('YYYY-MM-DD'));
           }
-        );
-        console.log("fetching"+response.data.userId);
-        setUserId(response.data.userId);
-        console.log(userId);
-      } catch (err) {
-        const errorMessage = 
-          axios.isAxiosError(err) && err.response?.data?.message
-            ? err.response.data.message
-            : 'Failed to fetch user';
-        setError(errorMessage);
+          return dates;
+        }).flat();
+
+        setBookedDates(dates);
+
+        console.log("Booked dates for room:", dates);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchCurrentUser();
-  }, []);
-  return { userId, error };
-}
-const BookingList: React.FC = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const currentUser = useCurrentUser();
-  const userId = currentUser.userId;
-  console.log(userId);
-  useEffect(() => {
-    fetchBookings();
-  }, [userId]);
-  
-  const fetchBookings = async () => {
-    if (!userId) return;
-    try {
-      setLoading(true);
-      console.log('Fetching URL:', `${Supplementaries.serverLink}bookings/user/${userId}`);
-
-      const response = await axios.get(
-        `${Supplementaries.serverLink}bookings/user/${userId}`, 
-        { withCredentials:true, headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-      }}
-      );
-      console.log(response.data)
-      setBookings(response.data);
-    } catch (err) {
-      const errorMessage = 
-        axios.isAxiosError(err) && err.response?.data?.message
-          ? err.response.data.message
-          : 'Failed to fetch bookings';
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-
-  };
-  }
-
-  const handleCancelBooking = async (bookingId: number) => {
-    if (!window.confirm('Are you sure to cancel this booking?')) {
-      return;
+    if (props.roomId) {
+      fetchUserIdAndBookedDates();
     }
+  }, [props.roomId]);
 
+  const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
+    setOpen(true);
+    setScroll(scrollType);
+  };
+
+  const handleClose = async () => {
+    setOpen(false);
+  };
+
+  const handleBooking = async () => {
     try {
-      await axios.put(
-        `${Supplementaries.serverLink}bookings/${bookingId}/cancel`,
-        { withCredentials: true }
-      );
+      handleClose();
+      console.log("Booking:", newBooking);
+      const res = await axios.post(`${Supplementaries.serverLink}bookings`, newBooking, { 
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+      });
+    } catch (error) {
+      console.log("Booking:", newBooking);
+      console.error("Error booking:", error);
+      setErrorMessage("Booking failed. Please try again.");
+      setOpenSnackbar(true);
+    }
+  };
+
+  const handleDateChange = (date: any, field: string) => {
+    const formattedDate = date ? date.format('YYYY-MM-DD') : '';
+    
+    const updatedBooking = { ...newBooking, [field]: formattedDate };
+
+    if (updatedBooking.checkInDate && updatedBooking.checkOutDate) {
+      const checkIn = dayjs(updatedBooking.checkInDate);
+      const checkOut = dayjs(updatedBooking.checkOutDate);
       
-      setBookings(prevBookings => 
-        prevBookings.filter(booking => booking.bookingId !== bookingId)
-      );
-    } catch (err) {
-      const errorMessage = 
-        axios.isAxiosError(err) && err.response?.data?.message
-          ? err.response.data.message
-          : 'Failed to cancel booking';
-      alert(errorMessage);
+      const daysDifference = checkOut.diff(checkIn, 'day') + 1;
+      const price = daysDifference * props.price;
+      updatedBooking.price = price;
+    }
+    setNewBooking(updatedBooking);
+  };
+
+  const increaseCapacity = () => {
+    if (newBooking.numberOfGuests < props.maxOccupancy) {
+      setNewBooking({
+        ...newBooking,
+        numberOfGuests: newBooking.numberOfGuests + 1
+      });
     }
   };
 
+  const decreaseCapacity = () => {
+    if (newBooking.numberOfGuests > 1) {
+      setNewBooking({
+        ...newBooking,
+        numberOfGuests: newBooking.numberOfGuests - 1
+      });
+    }
+  };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const shouldDisableDate = (date: any) => {
+    const dateStr = date.format('YYYY-MM-DD');
+    return bookedDates.includes(dateStr);
+  };
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (bookings.length === 0) {
-    return <div>No bookings found</div>;
-  }
-  
-  
-  
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
-    <div className="booking-container">
-      <h1 className="booking-title">My Bookings</h1>
-      <div className="booking-list">
-        {bookings.map(booking => (
-          <div key={booking.bookingId} className="booking-card">
-            <div className="card-header">
-              <div className="hotel-info">
-                <h2 className="hotel-name">{booking.hotelName}</h2>
-                <h3 className="room-type">{booking.roomTypeName}</h3>
-              </div>
-              <div className="price-info">
-                <div className="total-price">${booking.totalPrice}</div>
-                <div className={`status-badge ${booking.status.toLowerCase()}`}>
-                  {booking.status}
-                </div>
-              </div>
-            </div>
-            
-            <div className="booking-details">
-              <div className="dates">
-                <div className="detail-item">
-                  <span className="detail-label">Check-in:</span>
-                  {new Date(booking.checkInDate).toLocaleDateString()}
-                </div>
-                <div className="detail-item">
-                  <span className="detail-label">Check-out:</span>
-                  {new Date(booking.checkOutDate).toLocaleDateString()}
-                </div>
-              </div>
-              <div className="guest-info">
-                <div className="detail-item">
-                  <span className="detail-label">Guests:</span>
-                  {booking.numberOfGuests}
-                </div>
-              </div>
-            </div>
-
-            {booking.bookingId !== undefined && booking.status === 'PENDING' && (
-              <button 
-                onClick={() => handleCancelBooking(booking.bookingId)}
-                className="cancel-button"
-              >
-                Cancel Booking
-              </button>
-            )}
-          </div>
-        ))}
+    <div className="booking-page">
+      <div>
+        <br /><br /><br /><br />
       </div>
+      <Button onClick={handleClickOpen('paper')}>Create A Reservation</Button>
+
+      <Dialog open={open} onClose={handleClose} scroll={scroll} fullWidth={true}>
+        <DialogTitle>Booking Title (Hotel, so on)</DialogTitle>
+        <DialogContent>
+          <p>Room Name: {props.roomId}</p>
+          <p>Room Type: {props.roomType}</p>
+          <p>Price Per Day: {props.price}</p>
+          <p>Max Occupancy: {props.maxOccupancy}</p>
+          <p># of Person(s):    {newBooking.numberOfGuests}
+          <Button onClick={decreaseCapacity} disabled={newBooking.numberOfGuests <= 1}>-</Button>
+          <Button onClick={increaseCapacity} disabled={newBooking.numberOfGuests >= props.maxOccupancy}>+</Button>
+          </p>
+          
+          <p>Total Price: {newBooking.price}</p>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div>
+              <DatePicker
+                label="Check-In Date"
+                name="checkInDate"
+                onChange={(date) => handleDateChange(date, 'checkInDate')}
+                shouldDisableDate={shouldDisableDate}
+              />
+            </div>
+            <div>
+              <DatePicker
+                label="Check-Out Date"
+                name="checkOutDate"
+                onChange={(date) => handleDateChange(date, 'checkOutDate')}
+                shouldDisableDate={shouldDisableDate} 
+              />
+            </div>
+          </LocalizationProvider>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+          <Button onClick={handleBooking}>Book</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <MuiAlert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </MuiAlert>
+      </Snackbar>
+      
+
     </div>
   );
 };
 
-
-export default BookingList;
+export default BookingPage;

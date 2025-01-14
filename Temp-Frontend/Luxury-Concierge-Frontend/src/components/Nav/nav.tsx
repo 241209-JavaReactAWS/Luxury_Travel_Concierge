@@ -67,10 +67,10 @@ export default function nav() {
 
                         {role == "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
                         
-                        {role != "" ? <MenuItem onClick={() => navToPage('/BookingPage')}>My Bookings</MenuItem> : <></>}
+                        {role != "" ? <MenuItem onClick={() => navToPage('/BookingList')}>My Bookings</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
-                        
+                                                
                         {role != "" ? <MenuItem onClick={() => navToPage('/Hotels')}>Hotels Listing</MenuItem> : <></>}
 
                         {role != "" ? <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
@@ -83,11 +83,11 @@ export default function nav() {
                         
                         {role == "ADMIN" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} /> : <></>}
 
+                        {role == "ADMIN" ?<Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />:<></>}
+
+                        {role == "ADMIN" ?<MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>:<></>}
+
                         {role != "" ? <MenuItem onClick={() => logout()}>LogOut</MenuItem>: <></>}
-
-                        <Divider orientation="horizontal" flexItem sx={{ mx: 2, borderWidth: 2 }} />
-
-                        <MenuItem onClick={() => navToPage('/bookingAdmin')}>Booking Admin</MenuItem>
 
                     </Menu>
                 </Toolbar>

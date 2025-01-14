@@ -8,11 +8,15 @@ import "./payment.css";
 // Initialize Stripe with publishable key BY using test card
 const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx"); 
 
-function PaymentForm(){
+interface PaymentInput{
+  amount : number;
+  callBackToParentAfterSuccessfulPayment: ()=>void;
+}
+
+function PaymentForm({amount, callBackToParentAfterSuccessfulPayment} : PaymentInput){
   const stripe = useStripe();
   const elements = useElements();
 
-  const [amount, setAmount] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -50,6 +54,7 @@ function PaymentForm(){
         setMessage(result.error.message || "Payment failed");
       } else if (result.paymentIntent?.status === "succeeded") {
         setMessage("Payment successful!");
+        callBackToParentAfterSuccessfulPayment();
       }
     } catch (error: any) {
       setMessage(error.response?.data?.message || "Error processing payment");
@@ -78,15 +83,7 @@ function PaymentForm(){
       <h2>Make a Payment</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="amount">Amount (USD): </label>
-          <input
-            type="number"
-            id="amount"
-            value={amount}
-            onChange={(e) => setAmount(parseFloat(e.target.value))}
-            required
-            disabled={isLoading}
-          />
+          <label htmlFor="amount">Amount (USD): {amount}</label>
         </div>
         <div>
           <CardElement options={cardStyle}/>
@@ -100,11 +97,14 @@ function PaymentForm(){
   );
 };
 
-function StripePaymentForm (){
+function StripePaymentForm ({amount, callBackToParentAfterSuccessfulPayment} : PaymentInput){
     return (
         <div className="elements-container">
             <Elements stripe={stripePromise}>
-                <PaymentForm />
+                <PaymentForm 
+                amount={amount} 
+                callBackToParentAfterSuccessfulPayment={callBackToParentAfterSuccessfulPayment}
+                />
             </Elements>
         </div> 
     )

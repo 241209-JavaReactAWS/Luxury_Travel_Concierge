@@ -38,9 +38,9 @@ const UserRegistration = () => {
             <TextInput id="lastname_input" for="Lastname" onValueChange={setLastname} width='45%'></TextInput>
         </div>
         <TextInput id="username_input" for="Username" onValueChange={setUsername} width='70%'></TextInput>
-        <TextInput id="email_input" for="Email" onValueChange={setEmail} width='70%'></TextInput>
+        <TextInput id="email_input" for="Email" type='email' onValueChange={setEmail} width='70%'></TextInput>
         <TextInput id="address_input" for="Address" onValueChange={setAddress} width='70%'></TextInput>
-        <TextInput id="password_input" for="Password" onValueChange={setPassword} width='70%'></TextInput>
+        <TextInput id="password_input" for="Password" type='password' onValueChange={setPassword} width='70%'></TextInput>
         <div id='bottomOfForm'>
             <p className='ErrorText'>{error}</p>
             <div id='bottomRightOfForm'>
