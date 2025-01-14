@@ -37,8 +37,9 @@ Luxury Travel Concierge is a platform designed to connect users with hotels, ena
 - **Node.js**: Download and install Node.js.
 - **Java JDK**: Install Java Development Kit (JDK) version 11 or above. You can download it from Oracle or OpenJDK.
 - **Maven**: Install Apache Maven for managing the Spring Boot backend dependencies.
-- **Git**: Install Git for version control. Download it from here.
+- **Git**: Install Git for version control. 
 - **IDE/Text Editor**: Use an IDE like IntelliJ IDEA for the backend and VS Code for the frontend.
+- **Docker**: Download and Install Docker.
 
 ### Installation
 - **Clone the Respository**
