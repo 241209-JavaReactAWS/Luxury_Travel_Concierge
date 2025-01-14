@@ -43,25 +43,11 @@ function AllHotels() {
             })
     },[])
 
-    useEffect(() => {
-        axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials:true, headers: {
-                    Authorization: "Bearer " + localStorage.getItem("token")
-                } })
-          .then((res) => {
-            setFavorites(res.data); 
-          })
-          .catch((err) => {
-            console.error('Error fetching favorites:', err);
-          });
-      }, []);
-
-
-
-      const handleSearch = () => {
+    const handleSearch = () => {
         const fuse = new Fuse(allHotels, fuseOptions);
         const results = fuse.search(searchName || searchLocation);
         const filteredResults = results.map((result) => result.item);
-
+    
         const finalResults = filteredResults.filter((hotel) => {
             const matchesPrice =
                 hotel.rooms &&
@@ -74,19 +60,62 @@ function AllHotels() {
                         (maxPrice ? roomPrice <= maxPrice : true)
                     );
                 });
-            return matchesPrice;
-        });
+                return matchesPrice;
+            });
+    
+            setFilteredHotels(finalResults.length > 0 ? finalResults : allHotels); 
+        };
 
-        setFilteredHotels(finalResults.length > 0 ? finalResults : allHotels); 
-    };
+    useEffect(() => {
+        axios.get<Hotel[]>(Supplementaries.serverLink + 'users/favorites', { withCredentials:true, headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                } })
+          .then((res) => {
+            setFavorites(res.data); 
+          })
+          .catch((err) => {
+            console.error('Error fetching favorites:', err);
+          });
+      }, []);
 
-      const handleFavorite = (hotel: Hotel) => {
-        if (favorites.some((fav) => fav.hotelId === hotel.hotelId)) {
-            setFavorites(favorites.filter((fav) => fav.hotelId !== hotel.hotelId));
-        } else {
-            setFavorites([...favorites, hotel]);
+      const handleAddFavorite = (hotelId: number) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("No token found in localStorage");
+            return;
         }
+    
+        const newHotel = allHotels.find((hotel) => hotel.hotelId === hotelId);
+        if (newHotel) {
+            setFavorites((prevFavorites) => [...prevFavorites, newHotel]);
+        }
+    
+        axios
+            .post(`${Supplementaries.serverLink}users/favorites/${hotelId}`, {}, {  
+                withCredentials: true, 
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            .then((response) => {
+                console.log('Hotel added to favorites:', response.data);
+            })
+            .catch((err) => {
+                console.error("Error adding hotel to favorites:", err);
+                if (err.response) {
+                    console.error("Response Data:", err.response.data);
+                    console.error("Status Code:", err.response.status);
+                    console.error("Headers:", err.response.headers);
+                } else {
+                    console.error("Error Message:", err.message);
+                }
+    
+                setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.hotelId !== hotelId));
+            });
     };
+    
+    
+    
 
     const isFavorite = (hotelId: number) => {
         return favorites.some((fav) => fav.hotelId === hotelId);
@@ -118,7 +147,10 @@ function AllHotels() {
         return result;
     };
 
-    const FavoritesCarousel: React.FC<{ favorites: any[]; handleRemoveFromFavorites: any; navigate: any }> = ({ favorites, handleRemoveFromFavorites, navigate }) => {
+    const FavoritesCarousel: React.FC<{ 
+        favorites: any[]; handleRemoveFromFavorites: any; navigate: any }> = ({ 
+            favorites, handleRemoveFromFavorites, navigate }) => {
+
         const [activeStep, setActiveStep] = useState(0);
         const chunkSize = 4; 
         const maxSteps = Math.ceil(favorites.length / chunkSize);
@@ -313,8 +345,8 @@ function AllHotels() {
                                     '&:hover': {
                                         backgroundColor: 'grey',
                                     },
-                                    width: '50px', // Fixes the size of the button
-                                    height: '50px', // Ensures it's a perfect circle
+                                    width: '50px', 
+                                    height: '50px',
                                 }}
                                 aria-label="search"
                             >
@@ -353,7 +385,7 @@ function AllHotels() {
                                 >
                                     <FavoriteBorderIcon
                                         color="warning"
-                                        onClick={() => handleFavorite(hotel)}
+                                        onClick={() => handleAddFavorite(hotel.hotelId)}
                                         sx={{ 
                                             cursor: 'pointer', 
                                             transition: 'transform 0.3s ease, box-shadow 0.3s ease',

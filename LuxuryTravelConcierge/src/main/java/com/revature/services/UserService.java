@@ -9,6 +9,7 @@ import com.revature.models.Room;
 import com.revature.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -78,11 +79,12 @@ public class UserService {
 
     }
 
-    public List<Hotel> getFavoritesForUser(String username) {
+    @Transactional
+    public Set<Hotel> getFavoritesForUser(String username) {
         return userDAO.findFavoritesByUsername(username);
     }
     
-
+    @Transactional
     public User addHotelToFavorites(String username, int hotelId){
         Optional<User> possibleUser = userDAO.findUserByUsername(username);
         Optional<Hotel> possibleHotel = hotelDAO.findById(hotelId);
@@ -97,6 +99,7 @@ public class UserService {
         return userDAO.save(returnedUser);
     }
 
+    
     public User removeHotelFromFavorites(String username, int hotelId){
         Optional<User> possibleUser = userDAO.findUserByUsername(username);
         Optional<Hotel> possibleHotel = hotelDAO.findById(hotelId);
