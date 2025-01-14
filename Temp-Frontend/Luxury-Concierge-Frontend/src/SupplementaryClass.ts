@@ -2,8 +2,8 @@ import UserInterface from "./interfaces/UserInterface";
 
 class Supplementaries{
 
-    static serverLink = "http://localhost:8080/"
-    static clientLink = "http://localhost:5173/"
+    static serverLink = "http://18.222.55.166/"
+    static clientLink = "http://luxury-concierge-hotels-frontend.s3-website.us-east-2.amazonaws.com/"
 
     static generateUserJson(id:number = NaN, username:string = "", password:string = "", firstname:string = "", 
         lastname:string = "", email:string = "", address:string = "", birthday:Date = new Date() ) : UserInterface

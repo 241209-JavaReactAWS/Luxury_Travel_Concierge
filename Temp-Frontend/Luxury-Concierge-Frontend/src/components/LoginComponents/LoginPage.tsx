@@ -7,8 +7,11 @@ import Supplementaries from '../../SupplementaryClass'
 import onSuccess from '../../interfaces/onSuccessInterface'
 import onError from '../../interfaces/onErrorInterface'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function LoginPage() {
+
+    const navigate = useNavigate()
 
     let images = ["https://digital.ihg.com/is/image/ihg/exp-crowne-plaza-tamuning-8691101738-16x5?ts=1735586660671&dpr=off",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC5nQoXkVHv-OqR4aFog04K9iOAJ9wKSeiqQ&s",
@@ -31,7 +34,8 @@ function LoginPage() {
     const onSuccess: onSuccess = (data : any) =>{
         setStatus(0);
         localStorage.setItem("token",data.data.token)
-        window.location.href = Supplementaries.clientLink + "Hotels"
+        //window.location.href = Supplementaries.clientLink + "Hotels"
+        navigate("/Hotels")
     }
     
     const onFailure: onError = (error : any) =>{
